@@ -1,0 +1,74 @@
+{
+  "category": "custom",
+  "template": "A highly customized and advanced prompt for ${idea}. Instructions: ${instructions}. Style: ${style}. Output Format: ${outputFormat}. Constraints: ${constraints}. Target: ${target}. Additional Context: ${context}.",
+  "questions": [
+    {
+      "id": "instructions",
+      "title_ar": "تعليمات مخصصة",
+      "title_en": "Custom Instructions",
+      "type": "select",
+      "options": [
+        { "label_ar": "فكر خطوة بخطوة", "label_en": "Think step-by-step", "value": "analyze the request and think step-by-step to provide a logical answer" },
+        { "label_ar": "كن مبدعاً للغاية", "label_en": "Be highly creative", "value": "ignore standard conventions and provide a highly creative and unique output" },
+        { "label_ar": "كن دقيقاً ومختصراً", "label_en": "Be precise and concise", "value": "provide a strictly factual and concise output without any fluff" }
+      ]
+    },
+    {
+      "id": "style",
+      "title_ar": "الأسلوب العام",
+      "title_en": "Overall Style",
+      "type": "select",
+      "options": [
+        { "label_ar": "سايبربانك", "label_en": "Cyberpunk", "value": "cyberpunk and high-tech" },
+        { "label_ar": "كلاسيكي", "label_en": "Classic", "value": "elegant and classic" },
+        { "label_ar": "صناعي", "label_en": "Industrial", "value": "raw and industrial" },
+        { "label_ar": "طبيعي", "label_en": "Natural", "value": "organic and nature-inspired" }
+      ]
+    },
+    {
+      "id": "outputFormat",
+      "title_ar": "تنسيق المخرج",
+      "title_en": "Output Format",
+      "type": "select",
+      "options": [
+        { "label_ar": "JSON", "label_en": "JSON", "value": "valid JSON object" },
+        { "label_ar": "XML", "label_en": "XML", "value": "valid XML structure" },
+        { "label_ar": "جدول (Table)", "label_en": "Table", "value": "well-formatted Markdown table" },
+        { "label_ar": "كود برمجي", "label_en": "Code Block", "value": "formatted code block" }
+      ]
+    },
+    {
+      "id": "constraints",
+      "title_ar": "القيود",
+      "title_en": "Constraints",
+      "type": "select",
+      "options": [
+        { "label_ar": "بدون كلمات معينة", "label_en": "No specific words", "value": "avoid using common AI clichés" },
+        { "label_ar": "طول محدد", "label_en": "Specific length", "value": "keep the output under 100 words" },
+        { "label_ar": "لغة فصحى فقط", "label_en": "Formal Arabic", "value": "use strictly formal Modern Standard Arabic" }
+      ]
+    },
+    {
+      "id": "target",
+      "title_ar": "الهدف",
+      "title_en": "Goal",
+      "type": "select",
+      "options": [
+        { "label_ar": "تحويل برمجيات", "label_en": "Software Migration", "value": "migrating legacy systems to modern stacks" },
+        { "label_ar": "حل مشكلات", "label_en": "Problem Solving", "value": "complex problem solving and debugging" },
+        { "label_ar": "توليد أفكار", "label_en": "Ideation", "value": "generating innovative business ideas" }
+      ]
+    },
+    {
+      "id": "context",
+      "title_ar": "سياق إضافي",
+      "title_en": "Additional Context",
+      "type": "select",
+      "options": [
+        { "label_ar": "تقني", "label_en": "Technical", "value": "provide high-level technical context" },
+        { "label_ar": "أدبي", "label_en": "Literary", "value": "provide literary and artistic context" },
+        { "label_ar": "تجاري", "label_en": "Business", "value": "provide strategic business context" }
+      ]
+    }
+  ]
+}

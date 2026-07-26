@@ -1,0 +1,3 @@
+import { AdminScreen } from 'app/features/admin/screen'
+
+export default AdminScreen

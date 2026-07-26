@@ -1,0 +1,39 @@
+{
+  "home": {
+    "title": "Promptless",
+    "subtitle": "The AI Image Prompt Operating System",
+    "categories": {
+      "cinematic": "Cinematic",
+      "photography": "Photography",
+      "characters": "Characters",
+      "products": "Products",
+      "architecture": "Architecture"
+    }
+  },
+  "input": {
+    "label": "What is on your mind?",
+    "placeholder": "Describe your image idea in detail...",
+    "next": "Next",
+    "generate": "Generate Prompt",
+    "char_count": "chars"
+  },
+  "preview": {
+    "title": "Final Result",
+    "subtitle": "Your professional prompt is ready",
+    "copy": "Copy",
+    "save": "Save",
+    "share": "Share",
+    "edit": "Edit"
+  },
+  "history": {
+    "title": "History",
+    "empty": "No saved prompts yet",
+    "search": "Search in history...",
+    "no_results": "No matching results found"
+  },
+  "settings": {
+    "title": "Settings",
+    "language": "Language",
+    "darkMode": "Dark Mode"
+  }
+}
