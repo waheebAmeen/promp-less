@@ -2,6 +2,7 @@ import React from 'react';
 import { TouchableOpacity as RNTouchableOpacity, TouchableOpacityProps } from 'react-native';
 import { Typography } from './Typography';
 import { styled } from 'nativewind';
+import { useTheme } from '../design/useTheme';
 
 const StyledTouchableOpacity = styled(RNTouchableOpacity);
 
@@ -19,15 +20,16 @@ export const Button: React.FC<ButtonProps> = ({
   textClassName = '',
   ...props
 }) => {
+  const theme = useTheme();
   let bgClass = 'bg-primary shadow-neon-primary';
   let textClass = 'text-white';
 
   if (variant === 'secondary') {
-    bgClass = 'bg-surface-light border border-slate-700';
-    textClass = 'text-slate-300';
+    bgClass = theme.isDark ? 'bg-surface-light border border-slate-700' : 'bg-transparent border border-light-outline-variant';
+    textClass = theme.isDark ? 'text-slate-300' : 'text-light-on-variant';
   } else if (variant === 'outline') {
     bgClass = 'bg-transparent border-2 border-primary';
-    textClass = 'text-primary-light';
+    textClass = 'text-primary';
   }
 
   return (

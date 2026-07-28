@@ -8,11 +8,13 @@ import { Icon } from '../../components/Icon';
 import { useTranslation } from 'react-i18next';
 import { useRouter } from 'solito/router';
 import { useAppStore } from '../../storage/store';
+import { useTheme } from '../../design/useTheme';
 
 export function AuthScreen() {
   const { t, i18n } = useTranslation();
+  const theme = useTheme();
   const isRtl = i18n.language === 'ar';
-  const { login, signup, isAuthenticated } = useAppStore();
+  const { login, signup, loginAsGuest, isAuthenticated } = useAppStore();
   const { push, back } = useRouter();
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState('');
@@ -57,80 +59,103 @@ export function AuthScreen() {
           <View className="max-w-md mx-auto w-full px-8 pt-16">
             
             <View className="items-center mb-12">
-               <View className="w-20 h-20 bg-primary/20 rounded-3xl items-center justify-center border-2 border-primary/30 shadow-neon-blue mb-6">
-                  <Typography className="text-4xl font-black text-white">P</Typography>
+               <View className="w-20 h-20 rounded-3xl items-center justify-center border-2 mb-6" style={{ backgroundColor: theme.colors.primary + '33', borderColor: theme.colors.primary + '4D' }}>
+                  <Typography className="text-4xl font-black" style={{ color: theme.text }}>P</Typography>
                </View>
-               <Typography variant="h1" className="text-3xl font-black text-white text-center tracking-tight">
-                 {isLogin ? (isRtl ? 'مرحباً بك مجدداً' : 'Welcome Back') : (isRtl ? 'انضم إلينا' : 'Create Account')}
+               <Typography variant="h1" className="text-3xl font-black text-center tracking-tight" style={{ color: theme.text }}>
+                 {isLogin ? t('auth.title_login', { defaultValue: 'Welcome Back' }) : t('auth.title_signup', { defaultValue: 'Create Account' })}
                </Typography>
-               <Typography className="text-slate-500 text-center font-medium mt-2">
-                 {isLogin ? (isRtl ? 'سجل دخولك للمتابعة' : 'Sign in to continue your creative journey') : (isRtl ? 'ابدأ رحلتك الإبداعية معنا' : 'Join the most advanced prompt system')}
+               <Typography className="text-center font-medium mt-2" style={{ color: theme.textSecondary }}>
+                 {t('auth.subtitle', { defaultValue: 'Choose sign-in method to continue' })}
                </Typography>
             </View>
 
             {error ? (
-              <View className="mb-6 p-4 bg-red-500/10 border border-red-500/20 rounded-2xl">
-                 <Typography className="text-red-400 text-center text-sm font-bold">{error}</Typography>
+              <View className="mb-6 p-4 rounded-2xl border" style={{ backgroundColor: 'rgba(239, 68, 68, 0.1)', borderColor: 'rgba(239, 68, 68, 0.2)' }}>
+                 <Typography className="text-center text-sm font-bold" style={{ color: '#f87171' }}>{error}</Typography>
               </View>
             ) : null}
 
             <View className="gap-5">
               {!isLogin && (
                 <View>
-                  <View className="bg-surface/60 rounded-2xl border border-white/5 p-1 backdrop-blur-md">
+                  <View className="rounded-2xl border p-1 backdrop-blur-md" style={{ backgroundColor: theme.surface + '99', borderColor: theme.borderSubtle }}>
                     <Input
-                      placeholder={isRtl ? 'الاسم الكامل' : 'Full Name'}
+                      placeholder={t('auth.full_name', { defaultValue: 'Full Name' })}
                       value={name}
                       onChangeText={setName}
-                      className="bg-transparent border-0 px-5 h-14 text-white"
+                      className="bg-transparent border-0 px-5 h-14"
+                      style={{ color: theme.text }}
                     />
                   </View>
                 </View>
               )}
 
               <View>
-                <View className="bg-surface/60 rounded-2xl border border-white/5 p-1 backdrop-blur-md">
+                <View className="rounded-2xl border p-1 backdrop-blur-md" style={{ backgroundColor: theme.surface + '99', borderColor: theme.borderSubtle }}>
                   <Input
-                    placeholder={isRtl ? 'البريد الإلكتروني' : 'Email Address'}
+                    placeholder={t('auth.email', { defaultValue: 'Email Address' })}
                     value={email}
                     onChangeText={setEmail}
                     autoCapitalize="none"
                     keyboardType="email-address"
-                    className="bg-transparent border-0 px-5 h-14 text-white"
+                    className="bg-transparent border-0 px-5 h-14"
+                    style={{ color: theme.text }}
                   />
                 </View>
               </View>
 
               <View>
-                <View className="bg-surface/60 rounded-2xl border border-white/5 p-1 backdrop-blur-md">
+                <View className="rounded-2xl border p-1 backdrop-blur-md" style={{ backgroundColor: theme.surface + '99', borderColor: theme.borderSubtle }}>
                   <Input
-                    placeholder={isRtl ? 'كلمة المرور' : 'Password'}
+                    placeholder={t('auth.password', { defaultValue: 'Password' })}
                     value={password}
                     onChangeText={setPassword}
                     secureTextEntry
-                    className="bg-transparent border-0 px-5 h-14 text-white"
+                    className="bg-transparent border-0 px-5 h-14"
+                    style={{ color: theme.text }}
                   />
                 </View>
               </View>
 
               <Button 
-                title={isLogin ? (isRtl ? 'دخول' : 'Sign In') : (isRtl ? 'تسجيل' : 'Register')}
+                title={isLogin ? t('auth.sign_in', { defaultValue: 'Sign In' }) : t('auth.sign_up', { defaultValue: 'Register' })}
                 onPress={handleSubmit}
-                className="mt-4 h-16 rounded-2xl bg-primary shadow-neon-blue"
+                className="mt-4 h-16 rounded-2xl"
+                style={{ backgroundColor: theme.colors.primary }}
               />
 
               <TouchableOpacity 
                 onPress={() => { setIsLogin(!isLogin); setError(''); }}
                 className="py-4 items-center"
               >
-                 <Typography className="text-slate-400 font-bold">
-                   {isLogin ? (isRtl ? 'لا تملك حساباً؟ سجل الآن' : "New here? Create an account") : (isRtl ? 'لديك حساب بالفعل؟ سجل دخولك' : 'Already have an account? Sign in')}
+                 <Typography className="font-bold" style={{ color: theme.textSecondary }}>
+                   {isLogin ? t('auth.switch_signup', { defaultValue: "New here? Create an account" }) : t('auth.switch_login', { defaultValue: 'Already have an account? Sign in' })}
                  </Typography>
               </TouchableOpacity>
+              
+              <View className="items-center mt-2">
+                <Button 
+                  title={t('auth.guest', { defaultValue: 'Continue as Guest' })}
+                  onPress={() => {
+                     try {
+                        loginAsGuest();
+                     } catch(e: any) {
+                        setError(e.message);
+                     }
+                  }}
+                  className="h-14 rounded-2xl w-full"
+                  style={{ backgroundColor: 'transparent', borderColor: theme.borderSubtle, borderWidth: 1 }}
+                  textStyle={{ color: theme.text }}
+                />
+                <Typography className="text-center text-xs mt-3" style={{ color: theme.textMuted }}>
+                  {t('auth.guest_note', { defaultValue: 'Note: You can create Prompts as guest, but saving requires signing in.' })}
+                </Typography>
+              </View>
             </View>
 
             <View className="mt-12 items-center opacity-30">
-               <Typography variant="caption" className="font-bold uppercase tracking-widest text-[10px]">Promptless OS Secure Login</Typography>
+               <Typography variant="caption" className="font-bold uppercase tracking-widest text-[10px]" style={{ color: theme.text }}>Promptless OS Secure Login</Typography>
             </View>
           </View>
         </ScrollView>

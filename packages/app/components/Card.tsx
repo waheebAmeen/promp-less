@@ -1,6 +1,7 @@
 import React from 'react';
 import { TouchableOpacity as RNTouchableOpacity, TouchableOpacityProps, View as RNView } from 'react-native';
 import { styled } from 'nativewind';
+import { useTheme } from '../design/useTheme';
 
 const StyledView = styled(RNView);
 const StyledTouchableOpacity = styled(RNTouchableOpacity);
@@ -17,11 +18,14 @@ export const Card: React.FC<CardProps> = ({
   onPress,
   ...props
 }) => {
+  const theme = useTheme();
+  const cardClass = `${theme.cardBg} rounded-2xl p-4 ${theme.cardShadow} border ${theme.cardBorder}`;
+
   if (onPress) {
     return (
       <StyledTouchableOpacity
         onPress={onPress}
-        className={`bg-surface/80 rounded-2xl p-4 shadow-lg border border-slate-700/50 ${className}`}
+        className={`${cardClass} ${className}`}
         {...props}
       >
         {children}
@@ -31,7 +35,7 @@ export const Card: React.FC<CardProps> = ({
   
   return (
     <StyledView
-      className={`bg-surface/80 rounded-2xl p-4 shadow-lg border border-slate-700/50 ${className}`}
+      className={`${cardClass} ${className}`}
     >
       {children}
     </StyledView>

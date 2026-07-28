@@ -2,6 +2,7 @@ import React from 'react';
 import { Text as RNText, TextProps } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { styled } from 'nativewind';
+import { useTheme } from '../design/useTheme';
 
 const StyledText = styled(RNText);
 
@@ -19,8 +20,9 @@ export const Typography: React.FC<TypographyProps> = ({
 }) => {
   const { i18n } = useTranslation();
   const isRTL = i18n.language === 'ar';
+  const theme = useTheme();
 
-  const baseStyles = 'text-slate-100'; // base color
+  const baseStyles = theme.text;
   
   let variantStyles = '';
   switch (variant) {
@@ -34,7 +36,7 @@ export const Typography: React.FC<TypographyProps> = ({
       variantStyles = 'text-base';
       break;
     case 'caption':
-      variantStyles = 'text-sm text-slate-400';
+      variantStyles = `text-sm ${theme.textMuted}`;
       break;
   }
 

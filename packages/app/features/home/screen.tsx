@@ -166,10 +166,10 @@ export function HomeScreen() {
           <View className="mb-16">
             <Typography className="text-primary-glow font-black uppercase text-[10px] tracking-[0.3em] mb-4">Promptless AI OS</Typography>
             <Typography variant="h1" className="text-white mb-4 text-4xl md:text-6xl font-black leading-tight tracking-tighter">
-               Creative Director System
+               نظام المدير الإبداعي 
             </Typography>
             <Typography variant="caption" className="text-lg text-slate-400 font-medium max-w-xl leading-relaxed">
-               Build high-end visual prompts using professional art direction workflows.
+               قم ببناء مطالبات بصرية متطورة باستخدام تدفقات عمل التوجية الفني الاحترافي 
             </Typography>
           </View>
 

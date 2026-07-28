@@ -111,5 +111,51 @@
     "darkMode": "Dark Mode",
     "lightMode": "Light Mode",
     "theme": "Theme"
+  },
+  "landing": {
+    "nav_signin": "Sign In",
+    "nav_start": "Get Started",
+    "hero_badge": "AI-Powered Prompt Engineering",
+    "hero_title": "Transform Your Ideas Into Perfect Prompts",
+    "hero_subtitle": "The smart operating system for creating professional-grade visual prompts.",
+    "hero_cta": "Start Creating",
+    "hero_cta2": "Learn More",
+    "how_badge": "How It Works",
+    "how_title": "From Idea to Perfect Prompt",
+    "how_steps": [
+      {"title": "Select Field", "desc": "Choose your specific creative domain."},
+      {"title": "Answer Questions", "desc": "Provide details through our guided workflow."},
+      {"title": "Generate Prompt", "desc": "AI crafts a precise prompt for your needs."},
+      {"title": "Copy & Create", "desc": "Use the prompt with any major AI model."}
+    ],
+    "features_badge": "Features",
+    "features_title": "Built for Creativity",
+    "features_items": [
+      {"title": "Guided Art Direction", "desc": "Professional terminology and setups."},
+      {"title": "Quality Boosters", "desc": "Automatic injection of pro keywords."},
+      {"title": "Multi-Model Ready", "desc": "Optimized for Midjourney, Flux, SDXL."},
+      {"title": "Clean Syntax", "desc": "Strict formatting for AI parsers."},
+      {"title": "No Experience Needed", "desc": "Smart dialogue guides you."},
+      {"title": "Fast & Efficient", "desc": "From idea to prompt in seconds."}
+    ],
+    "stats_badge": "Trusted Platform",
+    "stats_items": [
+      {"label": "Creative Categories"},
+      {"label": "AI Models Supported"},
+      {"label": "Prompts Generated"}
+    ],
+    "faq_badge": "FAQ",
+    "faq_title": "Frequently Asked Questions",
+    "faq_items": [
+      {"q": "Do I need AI experience?", "a": "No! Promptless guides you step-by-step."},
+      {"q": "Which models are supported?", "a": "It works great with Midjourney, ChatGPT, Claude, and more."},
+      {"q": "Is there a mobile app?", "a": "We offer a seamless mobile web experience."},
+      {"q": "Can I save my prompts?", "a": "Yes, just create an account to access your library."},
+      {"q": "Is it free to use?", "a": "Yes, basic prompt generation is free."}
+    ],
+    "cta_title": "Ready to create amazing prompts?",
+    "cta_subtitle": "Join thousands of creators using Promptless today.",
+    "cta_button": "Get Started Now",
+    "footer_copy": "© 2026 Promptless. All rights reserved."
   }
 }
