@@ -10,6 +10,7 @@ import {
   Platform
 } from 'react-native'
 import { styled } from 'nativewind'
+import { useAppStore } from '../storage/store'
 
 export const View = styled(ReactNativeView)
 export const ScrollView = styled(ReactNativeScrollView)
@@ -21,9 +22,12 @@ export const FlatList = styled(ReactNativeFlatList)
 export const Switch = styled(ReactNativeSwitch)
 
 export const ScreenContainer = ({ children, className = "", ...props }: any) => {
+  const { darkMode } = useAppStore();
+  const bgClass = darkMode ? 'bg-background text-slate-100' : 'bg-light-background text-slate-900';
+
   return (
     <View 
-      className={`flex-1 bg-background ${className}`} 
+      className={`flex-1 ${bgClass} ${className}`} 
       style={{ 
         height: '100%',
         width: '100%',
@@ -39,26 +43,35 @@ export const ScreenContainer = ({ children, className = "", ...props }: any) => 
   )
 }
 
-export const DecorativeBackground = () => (
-  <View 
-    style={{ 
-      position: 'absolute', 
-      top: 0, 
-      left: 0, 
-      right: 0, 
-      bottom: 0, 
-      overflow: 'hidden',
-      zIndex: -1,
-      width: '100%',
-      height: '100%'
-    }}
-    pointerEvents="none"
-  >
+export const DecorativeBackground = () => {
+  const { darkMode } = useAppStore();
+
+  return (
     <View 
-      className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-primary/20 rounded-full blur-[80px] opacity-60" 
-    />
-    <View 
-      className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-accent-purple/20 rounded-full blur-[80px] opacity-40" 
-    />
-  </View>
-)
+      style={{ 
+        position: 'absolute', 
+        top: 0, 
+        left: 0, 
+        right: 0, 
+        bottom: 0, 
+        overflow: 'hidden',
+        zIndex: -1,
+        width: '100%',
+        height: '100%'
+      }}
+      pointerEvents="none"
+    >
+      <View 
+        className={`absolute top-[-10%] left-[-10%] w-[50%] h-[50%] rounded-full blur-[80px] ${
+          darkMode ? 'bg-primary/20 opacity-60' : 'bg-primary/10 opacity-70'
+        }`} 
+      />
+      <View 
+        className={`absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] rounded-full blur-[80px] ${
+          darkMode ? 'bg-accent-purple/20 opacity-40' : 'bg-secondary/15 opacity-50'
+        }`} 
+      />
+    </View>
+  );
+}
+

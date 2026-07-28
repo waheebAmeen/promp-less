@@ -1,14 +1,13 @@
-import React, { useEffect, useState } from 'react';
-import { View, ScreenContainer, ActivityIndicator, TouchableOpacity, DecorativeBackground } from '../../design/view';
+import React from 'react';
+import { View, ScreenContainer, TouchableOpacity, DecorativeBackground } from '../../design/view';
 import { createParam } from 'solito';
 import { useRouter } from 'solito/router';
 import { QuestionnaireEngine } from '../../engine/QuestionnaireEngine';
-import { Questionnaire } from '../../engine/types';
 import { generatePrompt } from '../../engine/PromptGenerator';
 import { Typography } from '../../components/Typography';
+import { Button } from '../../components/Button';
 import { Icon } from '../../components/Icon';
 import { useTranslation } from 'react-i18next';
-
 import { useAppStore } from '../../storage/store';
 
 const { useParam } = createParam<{ category: string; idea: string }>();
@@ -16,22 +15,22 @@ const { useParam } = createParam<{ category: string; idea: string }>();
 export function QuestionnaireScreen() {
   const [category] = useParam('category');
   const [idea] = useParam('idea');
-  const { t, i18n } = useTranslation();
+  const { i18n } = useTranslation();
   const { push, back } = useRouter();
   const { workflows, qualityBoosters } = useAppStore();
 
-  const questionnaire = workflows.find(w => w.id === category);
+  const workflow = workflows.find(w => w.id === category);
 
   const handleGenerate = (answers: Record<string, string>) => {
-    if (!questionnaire || !idea) return;
-    const generatedPrompt = generatePrompt(questionnaire.template, idea, answers, qualityBoosters);
+    if (!workflow || !idea) return;
+    const generatedPrompt = generatePrompt(workflow.template, idea, answers, qualityBoosters, 'midjourney');
     push({
       pathname: '/preview',
       query: { generatedPrompt, category },
     });
   };
 
-  if (!questionnaire) {
+  if (!workflow) {
     return (
       <View className="flex-1 bg-background justify-center items-center p-10">
         <Typography variant="h2" className="text-white mb-4 text-center">Workflow Not Found</Typography>
@@ -39,6 +38,12 @@ export function QuestionnaireScreen() {
       </View>
     );
   }
+
+  const questionnaireData = {
+    category: workflow.id,
+    template: workflow.template,
+    questions: workflow.questions,
+  };
 
   return (
     <ScreenContainer>
@@ -51,7 +56,7 @@ export function QuestionnaireScreen() {
           </TouchableOpacity>
           <View className="flex-1 pr-10 items-center">
             <Typography variant="h2" className="text-2xl font-bold text-white tracking-wide">
-               {i18n.language === 'ar' ? questionnaire.name_ar : questionnaire.name_en}
+               {i18n.language === 'ar' ? workflow.name_ar : workflow.name_en}
             </Typography>
           </View>
         </View>
@@ -59,10 +64,11 @@ export function QuestionnaireScreen() {
 
       <View className="flex-1 max-w-4xl mx-auto w-full">
         <QuestionnaireEngine 
-          questionnaire={questionnaire} 
+          questionnaire={questionnaireData} 
           onGenerate={handleGenerate} 
         />
       </View>
     </ScreenContainer>
   );
 }
+

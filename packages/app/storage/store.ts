@@ -62,6 +62,8 @@ interface AppState {
   darkMode: boolean;
   history: PromptHistory[];
   isAuthenticated: boolean;
+  isGuest: boolean;
+  hasCompletedOnboarding: boolean;
   user: User | null;
   
   // Database-ready state
@@ -73,12 +75,14 @@ interface AppState {
   // User Actions
   setLanguage: (lang: 'ar' | 'en') => void;
   toggleDarkMode: () => void;
+  setHasCompletedOnboarding: (completed: boolean) => void;
   addPrompt: (prompt: PromptHistory) => void;
   removePrompt: (id: string) => void;
   toggleFavorite: (id: string) => void;
   clearHistory: () => void;
   login: (email: string, name: string) => void;
   signup: (email: string, name: string) => void;
+  loginAsGuest: () => void;
   logout: () => void;
   
   // Admin Actions
@@ -92,6 +96,245 @@ interface AppState {
 
 // Initial workflow data migrated from JSON files
 const INITIAL_WORKFLOWS: Workflow[] = [
+  {
+    id: 'study',
+    name_en: 'Study',
+    name_ar: 'الدراسة',
+    icon: 'apps',
+    color: 'bg-blue-500/10',
+    borderColor: 'border-blue-500/30',
+    iconColor: '#3b82f6',
+    isActive: true,
+    template: "Act as an expert academic tutor. Help with ${idea}. Objective: ${objective}, Subject Area: ${subject}, Style/Depth: ${depth}. Format output clearly with examples and step-by-step reasoning.",
+    questions: [
+      {
+        id: "objective",
+        title_ar: "الهدف من التطلب الدراسي",
+        title_en: "Study Objective",
+        type: "select",
+        options: [
+          { label_ar: "تلخيص PDF أو مستند", label_en: "Summarize PDF/Document", value: "Comprehensive document summarization with key takeaways" },
+          { label_ar: "شرح درس أو مفهوم معقد", label_en: "Explain Complex Lesson", value: "Clear step-by-step lesson explanation with real-world examples" },
+          { label_ar: "إنشاء أسئلة واختبارات مراجعة", label_en: "Generate Practice Quiz", value: "Practice quiz questions with detailed answer key" },
+          { label_ar: "حل واجبات ومسائل بالتفصيل", label_en: "Homework Assistance", value: "Detailed homework solution with breakdown" }
+        ]
+      },
+      {
+        id: "subject",
+        title_ar: "المادة الدراسية",
+        title_en: "Subject",
+        type: "select",
+        options: [
+          { label_ar: "علوم وتكنولوجيا", label_en: "Science & Tech", value: "Science, Engineering, and Technology" },
+          { label_ar: "رياضيات وإحصاء", label_en: "Math & Statistics", value: "Mathematics and Analytical Statistics" },
+          { label_ar: "لغات وآداب", label_en: "Languages & Literature", value: "Languages, Grammar, and Literature" },
+          { label_ar: "علوم إنسانية وإدارة", label_en: "Humanities & Business", value: "Business, Economics, and Social Sciences" }
+        ]
+      },
+      {
+        id: "depth",
+        title_ar: "مستوى وشكل الإخراج",
+        title_en: "Depth & Style",
+        type: "select",
+        options: [
+          { label_ar: "مبسط ومباشر للمبتدئين", label_en: "Simplified for Beginners", value: "simple beginner-friendly explanation" },
+          { label_ar: "أكاديمي متعمق ومفصل", label_en: "In-Depth Academic", value: "rigorous academic standards with citations" },
+          { label_ar: "نقاط سريعة للمراجعة (Bullet points)", label_en: "Quick Bullet Points", value: "bulleted bullet points for quick review" }
+        ]
+      }
+    ]
+  },
+  {
+    id: 'coding',
+    name_en: 'Coding',
+    name_ar: 'البرمجة',
+    icon: 'apps',
+    color: 'bg-emerald-500/10',
+    borderColor: 'border-emerald-500/30',
+    iconColor: '#10b981',
+    isActive: true,
+    template: "Act as a Senior Principal Software Engineer. Help with ${idea}. Task Goal: ${taskGoal}, Tech Stack: ${stack}, Code Quality Focus: ${qualityFocus}. Provide clean, performant, production-ready code with inline comments.",
+    questions: [
+      {
+        id: "taskGoal",
+        title_ar: "هدف المهمة البرمجية",
+        title_en: "Coding Goal",
+        type: "select",
+        options: [
+          { label_ar: "كتابة تطبيق / كود جديد", label_en: "Write New App/Feature", value: "building a new complete production-ready code feature" },
+          { label_ar: "تصحيح أخطاء ومراجعة كود (Debugging)", label_en: "Debugging & Fix", value: "debugging error stack trace and refactoring broken code" },
+          { label_ar: "شرح وتبسيط خوارزمية أو مكتبة", label_en: "Code Explanation", value: "explaining technical code concepts and architecture" },
+          { label_ar: "تحسين الأداء والحماية (Refactoring)", label_en: "Optimization & Security", value: "optimizing code execution speed and security best practices" }
+        ]
+      },
+      {
+        id: "stack",
+        title_ar: "البيئة والتقنيات المستخدمة",
+        title_en: "Technology Stack",
+        type: "select",
+        options: [
+          { label_ar: "React / Next.js / TypeScript", label_en: "React / Next.js / TS", value: "React, Next.js, Modern TypeScript, TailwindCSS" },
+          { label_ar: "Python / AI / Data Science", label_en: "Python / AI", value: "Python 3.11, PyTorch, pandas, FastAPI" },
+          { label_ar: "Node.js / Express / MongoDB / SQL", label_en: "Node.js Backend", value: "Node.js, Express, PostgreSQL, Prisma ORM" },
+          { label_ar: "تطبيقات موبايل (React Native / Flutter)", label_en: "Mobile App", value: "React Native, Expo, Mobile UX" }
+        ]
+      },
+      {
+        id: "qualityFocus",
+        title_ar: "معايير الكود المطلوبة",
+        title_en: "Code Standards",
+        type: "select",
+        options: [
+          { label_ar: "جاهز للإنتاج (Production Ready)", label_en: "Production Grade", value: "clean modular production grade code" },
+          { label_ar: "نموذج سريعة (MVP Prototype)", label_en: "Quick MVP", value: "quick lightweight working snippet" },
+          { label_ar: "شامل للاختبارات (With Unit Tests)", label_en: "With Unit Tests", value: "includes comprehensive unit tests and error handling" }
+        ]
+      }
+    ]
+  },
+  {
+    id: 'marketing',
+    name_en: 'Marketing',
+    name_ar: 'التسويق',
+    icon: 'apps',
+    color: 'bg-purple-500/10',
+    borderColor: 'border-purple-500/30',
+    iconColor: '#a855f7',
+    isActive: true,
+    template: "Act as a World-Class CMO & Marketing Strategist. Create marketing copy for ${idea}. Campaign Type: ${campaignType}, Target Platform: ${platform}, Tone of Voice: ${tone}. Include compelling hook, value proposition, and CTA.",
+    questions: [
+      {
+        id: "campaignType",
+        title_ar: "نوع الحملة / الطلب",
+        title_en: "Campaign Type",
+        type: "select",
+        options: [
+          { label_ar: "نص إعلان تسويقي جذاب (Ad Copy)", label_en: "High-Converting Ad Copy", value: "high-converting direct response ad copy" },
+          { label_ar: "استراتيجية وخطة تسويق كاملة", label_en: "Marketing Strategy Plan", value: "comprehensive marketing campaign strategy and roadmap" },
+          { label_ar: "منشورات وسائل التواصل الاجتماعي", label_en: "Social Content Calendar", value: "engaging viral social media posts calendar" },
+          { label_ar: "رسالة مبيعات وايميل تسويقي", label_en: "Email Sales Sequence", value: "persuasive email marketing campaign sequence" }
+        ]
+      },
+      {
+        id: "platform",
+        title_ar: "المنصة المستهدفة",
+        title_en: "Target Platform",
+        type: "select",
+        options: [
+          { label_ar: "إنستغرام وتيك توك (Instagram/TikTok)", label_en: "Instagram / TikTok", value: "Instagram Reels and TikTok visual dynamic marketing" },
+          { label_ar: "إعلانات جوجل وفيسبوك (Google/FB Ads)", label_en: "Google & Meta Ads", value: "Meta Ads and Google Performance Max campaigns" },
+          { label_ar: "لينكد إن للأعمال (LinkedIn B2B)", label_en: "LinkedIn B2B", value: "professional B2B thought leadership on LinkedIn" },
+          { label_ar: "الموقع الإلكتروني والبريد", label_en: "Website & Email", value: "high-converting landing page and newsletter" }
+        ]
+      },
+      {
+        id: "tone",
+        title_ar: "نبرة الخطاب (Tone of Voice)",
+        title_en: "Tone of Voice",
+        type: "select",
+        options: [
+          { label_ar: "جذابة ومثيرة للحماس (High Energy)", label_en: "High Energy", value: "vibrant, exciting, urgent call to action" },
+          { label_ar: "احترافية فاخرة (Luxury Pro)", label_en: "Professional Luxury", value: "sophisticated, authoritative, premium brand tone" },
+          { label_ar: "ودودة وقريبة للجمهور (Friendly)", label_en: "Warm & Friendly", value: "relatable, authentic, conversational story tone" }
+        ]
+      }
+    ]
+  },
+  {
+    id: 'writing',
+    name_en: 'Writing & Content',
+    name_ar: 'الكتابة والمحتوى',
+    icon: 'text',
+    color: 'bg-amber-500/10',
+    borderColor: 'border-amber-500/30',
+    iconColor: '#f59e0b',
+    isActive: true,
+    template: "Act as an Expert Content Author and Copywriter. Help write ${idea}. Content Format: ${format}, Writing Style: ${style}, Target Audience: ${audience}. Ensure captivating opening, smooth transitions, and high clarity.",
+    questions: [
+      {
+        id: "format",
+        title_ar: "قالب وشكل المحتوى",
+        title_en: "Content Format",
+        type: "select",
+        options: [
+          { label_ar: "مقالة / مدونة احترافية (Blog Post)", label_en: "SEO Blog Article", value: "SEO-optimized engaging blog article" },
+          { label_ar: "سيناريو فيديو / سكربت", label_en: "Video Script", value: "engaging video script with visual hook and timestamps" },
+          { label_ar: "منشور مفصل أو قصة قصيرة", label_en: "Story / Essay", value: "captivating narrative story or structured essay" },
+          { label_ar: "صياغة وتدقيق نص محدد", label_en: "Proofread & Rewrite", value: "flawless proofreading, polishing, and rewording" }
+        ]
+      },
+      {
+        id: "style",
+        title_ar: "أسلوب الكتابة",
+        title_en: "Writing Style",
+        type: "select",
+        options: [
+          { label_ar: "إبداعي وممتع (Creative)", label_en: "Creative & Engaging", value: "vivid, imaginative, immersive creative writing" },
+          { label_ar: "رسمي وموثق (Formal)", label_en: "Formal & Professional", value: "polished, clear, authoritative formal tone" },
+          { label_ar: "توعوي وتثقيفي (Informative)", label_en: "Informative Educational", value: "educational, structured, easy to digest" }
+        ]
+      }
+    ]
+  },
+  {
+    id: 'video',
+    name_en: 'Videos',
+    name_ar: 'الفيديوهات',
+    icon: 'clapperboard',
+    color: 'bg-red-500/10',
+    borderColor: 'border-red-500/30',
+    iconColor: '#ef4444',
+    isActive: true,
+    template: "Create a complete video storyboard and script prompt for ${idea}. Video Format: ${format}, Visual Aesthetic: ${visualStyle}, Pace: ${pacing}. Detailed scene-by-scene instructions with visual prompts.",
+    questions: [
+      {
+        id: "format",
+        title_ar: "نوع وقالب الفيديو",
+        title_en: "Video Format",
+        type: "select",
+        options: [
+          { label_ar: "فيديو يوتيوب كامل (Full YouTube Video)", label_en: "Full Length YouTube", value: "full length structured YouTube video with intro and timestamps" },
+          { label_ar: "فيديو قصير (Reels / Shorts / TikTok)", label_en: "Short Form Reels/TikTok", value: "viral 60-second vertical short video with fast hook" },
+          { label_ar: "فيديو توضيحي / إعلاني (Explainer)", label_en: "Commercial Explainer", value: "sleek commercial explainer video concept" }
+        ]
+      },
+      {
+        id: "visualStyle",
+        title_ar: "النمط البصري للفيديو",
+        title_en: "Visual Aesthetic",
+        type: "select",
+        options: [
+          { label_ar: "سينمائي عالي الجودة (Cinematic 4K)", label_en: "Cinematic 4K", value: "cinematic camera angles, filmic color grade, atmospheric lighting" },
+          { label_ar: "موشن جرافيك / ثري دي (3D Motion Graphics)", label_en: "3D Motion Graphics", value: "modern 3D animation, sleek motion typography" },
+          { label_ar: "توجيه تصوير شخصي (Vlog / Face-Cam)", label_en: "Vlog / Creator Style", value: "authentic creator vlog style, dynamic jump cuts" }
+        ]
+      }
+    ]
+  },
+  {
+    id: 'other',
+    name_en: 'Other',
+    name_ar: 'أخرى',
+    icon: 'apps',
+    color: 'bg-slate-500/10',
+    borderColor: 'border-slate-500/30',
+    iconColor: '#64748b',
+    isActive: true,
+    template: "Act as an expert AI prompt engineer. Craft a master prompt for ${idea}. Primary Focus: ${focus}, Expected Output: ${outputStyle}. Highly specific, well-structured, ready for maximum AI model accuracy.",
+    questions: [
+      {
+        id: "focus",
+        title_ar: "التركيز الرئيسي للطلب",
+        title_en: "Primary Focus",
+        type: "select",
+        options: [
+          { label_ar: "فكرة حرّة وإبداعية متكاملة", label_en: "Free Creative Idea", value: "free-form creative brainstorming and solution" },
+          { label_ar: "تحليل وتخطيط شامل", label_en: "Analysis & Planning", value: "structured breakdown, analysis, and execution plan" },
+          { label_ar: "توليد أوامر برومبت مخصصة", label_en: "Custom Prompt Architecture", value: "specialized custom system prompt architecture" }
+        ]
+      }
+    ]
+  },
   {
     id: 'cinematic',
     name_en: 'Cinematic',
@@ -138,7 +381,7 @@ const INITIAL_WORKFLOWS: Workflow[] = [
           { label_ar: "ألوان سينمائية (Teal & Orange)", label_en: "Teal & Orange", value: "teal and orange color grading" },
           { label_ar: "أبيض وأسود فاخر", label_en: "Luxury B&W", value: "high-contrast cinematic black and white" },
           { label_ar: "ألوان باهتة (Vintage)", label_en: "Vintage Film", value: "faded vintage film colors, kodachrome" },
-          { label_ar: "ألوان زاهية", label_en: "Vibrant", label_en: "Vibrant", value: "highly saturated vivid colors" },
+          { label_ar: "ألوان زاهية", label_en: "Vibrant", value: "highly saturated vivid colors" },
           { label_ar: "ألوان باردة", label_en: "Cold Tones", value: "moody blue and cold cinematic tones" }
         ]
       },
@@ -525,6 +768,379 @@ const INITIAL_WORKFLOWS: Workflow[] = [
         ]
       }
     ]
+  },
+  {
+    id: 'fashion',
+    name_en: 'Fashion & Luxury',
+    name_ar: 'أزياء وموضة',
+    icon: 'user',
+    color: 'bg-pink-500/10',
+    borderColor: 'border-pink-500/30',
+    iconColor: '#ec4899',
+    isActive: true,
+    template: "High-fashion editorial photography of ${idea}, ${garmentStyle}, ${fabricTexture}, ${setting}, ${lighting}, ${modelPose}, Vogue aesthetic, sharp focus, 8k, detailed clothing texture --ar ${aspectRatio}",
+    questions: [
+      {
+        id: "garmentStyle",
+        title_ar: "أسلوب الملابس (Garment Style)",
+        title_en: "Garment Style",
+        type: "select",
+        options: [
+          { label_ar: "أزياء راقية (Haute Couture)", label_en: "Haute Couture", value: "avant-garde haute couture fashion gown" },
+          { label_ar: "ستريت وير فاخر (Luxury Streetwear)", label_en: "Luxury Streetwear", value: "oversized high-end luxury streetwear outfit" },
+          { label_ar: "تصميم أدنى (Minimalist Chic)", label_en: "Minimalist Chic", value: "sleek minimalist silk suit, tailored lines" },
+          { label_ar: "فخامة عربية معاصرة", label_en: "Modern Arabian Luxury", value: "royal embroidered silk abaya, modern Arabian elegance" },
+          { label_ar: "ستايل فينتج كلاسيك", label_en: "Vintage Classic", value: "1970s retro glam fashion ensemble" }
+        ]
+      },
+      {
+        id: "fabricTexture",
+        title_ar: "خامة القماش والنسيج",
+        title_en: "Fabric & Texture",
+        type: "select",
+        options: [
+          { label_ar: "حرير لامع", label_en: "Flowing Silk", value: "lustrous flowing silk and satin reflection" },
+          { label_ar: "مخمل ثقيل", label_en: "Heavy Velvet", value: "rich deep-toned heavy velvet texture" },
+          { label_ar: "جلد مصقول", label_en: "Polished Leather", value: "sleek polished leather with specular highlights" },
+          { label_ar: "تطريز ذهبي دقيق", label_en: "Gold Embroidery", value: "intricate hand-stitched gold metallic thread embroidery" }
+        ]
+      },
+      {
+        id: "setting",
+        title_ar: "مكان التصوير (Editorial Setting)",
+        title_en: "Editorial Location",
+        type: "select",
+        options: [
+          { label_ar: "استوديو باريس بياض كلي", label_en: "Parisian Studio", value: "inside a minimalist high-ceiling Parisian studio" },
+          { label_ar: "مدرج عرض أزياء (Runway)", label_en: "Fashion Runway", value: "walking down a foggy lit fashion runway" },
+          { label_ar: "معمار مدريد الكلاسيكي", label_en: "Classic Architecture", value: "against classical marble column architecture" },
+          { label_ar: "طبيعة صحراوية راقية", label_en: "Luxury Desert", value: "surrounded by golden desert sand dunes at sunset" }
+        ]
+      },
+      {
+        id: "lighting",
+        title_ar: "إضاءة الأزياء",
+        title_en: "Fashion Lighting",
+        type: "select",
+        options: [
+          { label_ar: "إضاءة غلاف مجلة (Softbox)", label_en: "Magazine Cover Softbox", value: "flattering high-key softbox cover lighting" },
+          { label_ar: "ظلال حادة درامية", label_en: "Dramatic Hard Shadows", value: "harsh sun direct shadow play, high contrast" },
+          { label_ar: "ضوء شمس العصر الدافئ", label_en: "Warm Afternoon Sun", value: "warm golden sunlight casting artistic shadows" }
+        ]
+      },
+      {
+        id: "modelPose",
+        title_ar: "وقفة العارض/العارضة",
+        title_en: "Model Pose",
+        type: "select",
+        options: [
+          { label_ar: "حركة ديناميكية (Dynamic Walk)", label_en: "Dynamic Walk", value: "striding forward dynamically, flowing outfit movement" },
+          { label_ar: "وقفة قوة واثقة (Power Pose)", label_en: "Power Pose", value: "confident stance, direct magnetic eye contact" },
+          { label_ar: "لقطة مقربة للوجه والملامح", label_en: "Fashion Beauty Portrait", value: "intimate beauty portrait focusing on makeup and jewelry detail" }
+        ]
+      },
+      {
+        id: "aspectRatio",
+        title_ar: "أبعاد الصورة",
+        title_en: "Aspect Ratio",
+        type: "select",
+        options: [
+          { label_ar: "غلاف مجلة طولي (4:5)", label_en: "Magazine Portrait (4:5)", value: "4:5" },
+          { label_ar: "طولي كامل (9:16)", label_en: "Full Story (9:16)", value: "9:16" },
+          { label_ar: "مربع (1:1)", label_en: "Square (1:1)", value: "1:1" }
+        ]
+      }
+    ]
+  },
+  {
+    id: 'social_thumb',
+    name_en: 'Social & Thumbnails',
+    name_ar: 'منصات ومصغرات',
+    icon: 'apps',
+    color: 'bg-red-500/10',
+    borderColor: 'border-red-500/30',
+    iconColor: '#ef4444',
+    isActive: true,
+    template: "Eye-catching click-worthy YouTube thumbnail graphic of ${idea}, ${subjectExpression}, ${backgroundStyle}, ${colorTheme}, ${lightingEffect}, hyper-detailed, high visual contrast, 8k resolution, trending composition --ar ${aspectRatio}",
+    questions: [
+      {
+        id: "subjectExpression",
+        title_ar: "تعبير الشخصية الرئيسية",
+        title_en: "Main Subject Expression",
+        type: "select",
+        options: [
+          { label_ar: "صدمة ومفاجأة قوية", label_en: "Shocked & Surprised", value: "shocked expressive facial reaction, wide open eyes, mouth open" },
+          { label_ar: "ابتسامة نجاح واثقة", label_en: "Confident Smirk", value: "confident charismatic smile, pointing finger towards viewer" },
+          { label_ar: "غموض وتركيز شديد", label_en: "Intense Mystery", value: "intense curious gaze, dramatic shadow on half face" },
+          { label_ar: "تحدي وقوة", label_en: "Hero Challenge", value: "heroic posture, arms crossed, powerful vibe" }
+        ]
+      },
+      {
+        id: "backgroundStyle",
+        title_ar: "نمط الخلفية",
+        title_en: "Background Style",
+        type: "select",
+        options: [
+          { label_ar: "انفجار ألوان وجسيمات ضوئية", label_en: "Color Burst Sparks", value: "glowing neon background with flying embers and light sparks" },
+          { label_ar: "خلفية ضبابية معزولة (Bokeh)", label_en: "Blurred Depth of Field", value: "blurry dark background with heavy neon bokeh highlights" },
+          { label_ar: "محيط تكنولوجي مستقبلي", label_en: "Futuristic Tech Setup", value: "futuristic streaming setup with multiple glowing RGB monitors" },
+          { label_ar: "انقسام قبل وبعد (Split Screen)", label_en: "Split Contrast Background", "value": "half glowing blue half fiery orange high contrast background" }
+        ]
+      },
+      {
+        id: "colorTheme",
+        title_ar: "طابع الألوان المثير للانتباه",
+        title_en: "Attention Color Scheme",
+        type: "select",
+        options: [
+          { label_ar: "أصفر وأزرق نيون (High Click-Through)", label_en: "Vibrant Yellow & Blue", value: "electric yellow highlights against rich deep blue theme" },
+          { label_ar: "أحمر ونار درامي", label_en: "Fiery Red & Gold", value: "intense fiery red energy flames and metallic gold glow" },
+          { label_ar: "بنفسجي وسايبر", label_en: "Cyber Purple & Cyan", value: "ultra vibrant magenta purple and cyan neon style" }
+        ]
+      },
+      {
+        id: "lightingEffect",
+        title_ar: "مؤثرات الإضاءة المحيطية",
+        title_en: "Lighting & Effects",
+        type: "select",
+        options: [
+          { label_ar: "توهج حواف حاد (Rim Glow)", label_en: "Sharp Edge Rim Light", value: "intense glowing rim light outlining the subject silhouette" },
+          { label_ar: "إضاءة استوديو اليوتيوب الاحترافية", label_en: "Pro YouTube Lighting", value: "crisp key light with soft fill and vibrant backlight" },
+          { label_ar: "برق ومشرارة كهربائية", label_en: "Electric Lightning Sparks", value: "subtle electric lightning tendrils around the subject" }
+        ]
+      },
+      {
+        id: "aspectRatio",
+        title_ar: "أبعاد الصورة",
+        title_en: "Aspect Ratio",
+        type: "select",
+        options: [
+          { label_ar: "مصغرة يوتيوب / شاشة (16:9)", label_en: "YouTube Thumbnail (16:9)", value: "16:9" },
+          { label_ar: "ريلز وتيك توك (9:16)", label_en: "Reels / TikTok (9:16)", value: "9:16" },
+          { label_ar: "منشور إنستغرام (1:1)", label_en: "Instagram Feed (1:1)", value: "1:1" }
+        ]
+      }
+    ]
+  },
+  {
+    id: 'ai_influencer',
+    name_en: 'AI Influencer',
+    name_ar: 'مؤثر رقمي',
+    icon: 'user',
+    color: 'bg-purple-500/10',
+    borderColor: 'border-purple-500/30',
+    iconColor: '#a855f7',
+    isActive: true,
+    template: "Authentic lifestyle photograph of an AI influencer ${idea}, ${featuresAndEthnicity}, ${outfitStyle}, ${locationContext}, ${cameraAngle}, ${lightingStyle}, hyper-realistic skin texture with fine pores, natural hair, shot on iPhone 15 Pro, unedited raw photo --ar ${aspectRatio}",
+    questions: [
+      {
+        id: "featuresAndEthnicity",
+        title_ar: "ملامح وعرق المؤثر",
+        title_en: "Influencer Appearance & Ethnicity",
+        type: "select",
+        options: [
+          { label_ar: "ملامح عربية حديثة (شابة خليجية/عربية)", label_en: "Modern Arab Female", value: "striking modern 24yo Arab female influencer, hazel eyes, natural beauty" },
+          { label_ar: "ملامح عربية وسيمة (شاب خليجي/عربي)", label_en: "Modern Arab Male", value: "handsome 26yo Arab male content creator, well-groomed beard, sharp jawline" },
+          { label_ar: "ملامح عالمية مختلطة", label_en: "Global Mixed Features", value: "attractive mixed ethnicity digital creator, warm smile, expressive eyes" }
+        ]
+      },
+      {
+        id: "outfitStyle",
+        title_ar: "نمط الأزياء اليومية",
+        title_en: "Daily Outfit Style",
+        type: "select",
+        options: [
+          { label_ar: "أزياء سفر وكاجوال أنيق", label_en: "Travel Casual Elegant", value: "wearing stylish beige trench coat and designer sunglasses" },
+          { label_ar: "ملابس رياضية وصحية (Fitness Lifestyle)", label_en: "Athleisure Fitness", value: "wearing sleek modern activewear, post workout glow" },
+          { label_ar: "عباءة مودرن راقية / ثوب عصري", label_en: "Modern Heritage Chic", value: "wearing modern luxury minimalist Abaya, elegant jewelry" },
+          { label_ar: "ملابس كافيه ورستر كاجوال", label_en: "Cozy Café Style", value: "wearing cozy oversized cashmere sweater holding coffee cup" }
+        ]
+      },
+      {
+        id: "locationContext",
+        title_ar: "موقع الصورة ونمط الحياة",
+        title_en: "Lifestyle Location",
+        type: "select",
+        options: [
+          { label_ar: "مقهى عصري فاخر بدبي / الرياض", label_en: "Luxury Modern Café", value: "sitting at an outdoor upscale coffee shop table in Dubai downtown" },
+          { label_ar: "شوارع باريس / لندن الممطرة", label_en: "European City Street", value: "walking through a quaint cobblestone European street" },
+          { label_ar: "منتجع فاخر على شاطئ البحر", label_en: "Luxury Beach Resort", value: "relaxing at an infinity pool terrace overlooking turquoise ocean" },
+          { label_ar: "داخل سيارة فاخرة (Car Selfie)", label_en: "Luxury Car Interior", value: "inside a luxury sports car, daylight through panorama roof" }
+        ]
+      },
+      {
+        id: "cameraAngle",
+        title_ar: "منظور التصوير والكاميرا",
+        title_en: "Perspective & Framing",
+        type: "select",
+        options: [
+          { label_ar: "سيلفي كاميرا أمامية طبيعية", label_en: "Casual Front Camera Selfie", value: "candid handheld selfie angle, slight depth of field" },
+          { label_ar: "لقطة عفوية (Candid POV)", label_en: "Candid Third Person POV", value: "candid shot taken by a friend, looking away smiling" },
+          { label_ar: "بورتريه نصف جسم (Half Body)", label_en: "Half Body Portrait", value: "medium portrait shot, natural arm placement" }
+        ]
+      },
+      {
+        id: "lightingStyle",
+        title_ar: "إضاءة الصورة الواقعية",
+        title_en: "Natural Lighting",
+        type: "select",
+        options: [
+          { label_ar: "إضاءة شمس ذهبية (Golden Hour)", label_en: "Golden Hour Flare", value: "warm golden sunset lighting catching hair edges" },
+          { label_ar: "ضوء يوم طبيعي ناعم (Overcast Window)", label_en: "Soft Daylight", value: "soft diffused natural window sunlight, natural skin tone" },
+          { label_ar: "إضاءة ليلية دافئة بأضواء المدينة", label_en: "Warm Night City Lights", value: "nighttime city ambient lights, subtle street bokeh" }
+        ]
+      },
+      {
+        id: "aspectRatio",
+        title_ar: "أبعاد الصورة",
+        title_en: "Aspect Ratio",
+        type: "select",
+        options: [
+          { label_ar: "ستوري / ريلز (9:16)", label_en: "Story / Reels (9:16)", value: "9:16" },
+          { label_ar: "منشور إنستغرام طولي (4:5)", label_en: "Instagram Post (4:5)", value: "4:5" },
+          { label_ar: "مربع (1:1)", label_en: "Square (1:1)", value: "1:1" }
+        ]
+      }
+    ]
+  },
+  {
+    id: 'poster_art',
+    name_en: 'Poster Art',
+    name_ar: 'بوسترات وفن',
+    icon: 'apps',
+    color: 'bg-emerald-500/10',
+    borderColor: 'border-emerald-500/30',
+    iconColor: '#10b981',
+    isActive: true,
+    template: "High-impact graphic design key art poster of ${idea}, ${artStyle}, ${compositionLayout}, ${colorPalette}, ${textureFinish}, typography space, masterpiece artwork, award-winning poster design, 8k --ar ${aspectRatio}",
+    questions: [
+      {
+        id: "artStyle",
+        title_ar: "الأسلوب الفني للبوستر",
+        title_en: "Poster Art Style",
+        type: "select",
+        options: [
+          { label_ar: "بوستر فيلم سينمائي هوليودي", label_en: "Hollywood Movie Key Art", value: "blockbuster movie key art poster style, dramatic scale" },
+          { label_ar: "فن السايبربانك ونيون ريترو", label_en: "Cyberpunk Synthwave", value: "retro 1980s synthwave cyberpunk aesthetic, neon neon vector lineart" },
+          { label_ar: "تقليل ومينيماليزم فاخر", label_en: "Minimalist Graphic", value: "Swiss minimalist graphic design poster, bold geometric forms" },
+          { label_ar: "فن فنتازيا وأسطوري (Dark Fantasy)", label_en: "Dark Fantasy Epic", value: "epic dark fantasy oil painting poster, intricate detail" },
+          { label_ar: "فن البوب ارت والكوميكس", label_en: "Pop Art & Comic", value: "bold halftone dot pop art comic book cover aesthetic" }
+        ]
+      },
+      {
+        id: "compositionLayout",
+        title_ar: "تكوين البوستر وتوزيع العناصر",
+        title_en: "Poster Layout Composition",
+        type: "select",
+        options: [
+          { label_ar: "تكوين مركزي ضخم (Central Hero)", label_en: "Central Hero", value: "towering central hero subject with symmetric visual hierarchy" },
+          { label_ar: "تداخل طبقات متعددة (Collage Layers)", label_en: "Layered Montage", value: "cinematic montage layout with blended double exposure elements" },
+          { label_ar: "تأطير هندسي جرافيكي", "label_en": "Geometric Framing", value: "bold diagonal framing lines, structured grid layout" }
+        ]
+      },
+      {
+        id: "colorPalette",
+        title_ar: "لوحة الألوان المعتمدة",
+        title_en: "Color Palette",
+        type: "select",
+        options: [
+          { label_ar: "أحمر وأسود درامي (High Contrast)", label_en: "Dramatic Red & Black", value: "intense crimson red and obsidian black palette" },
+          { label_ar: "تيل وأورانج سينمائي (Teal & Amber)", label_en: "Teal & Amber", value: "deep cyan teal and glowing amber orange contrast" },
+          { label_ar: "ألوان ميتاليك وذهب فاخر", label_en: "Metallic Gold & Charcoal", value: "luxurious metallic gold leaf accents on dark charcoal background" }
+        ]
+      },
+      {
+        id: "textureFinish",
+        title_ar: "ملمس وتأثير الورق/الطباعة",
+        title_en: "Texture & Print Finish",
+        type: "select",
+        options: [
+          { label_ar: "ورق بوستر قديم مطوي (Folded Vintage Paper)", label_en: "Vintage Folded Paper", value: "subtle folded paper creases and screenprint texture" },
+          { label_ar: "طباعة غلوس حديثة نقية", label_en: "Modern Gloss Print", value: "ultra clean glossy print quality, sharp edges" },
+          { label_ar: "تأثير جرانج وحبيبات غبار", label_en: "Grunge Noise Grain", value: "heavy film grain, subtle grunge dust and distressed texture" }
+        ]
+      },
+      {
+        id: "aspectRatio",
+        title_ar: "أبعاد الصورة",
+        title_en: "Aspect Ratio",
+        type: "select",
+        options: [
+          { label_ar: "أبعاد بوستر كلاسيكي (2:3)", label_en: "Classic Poster (2:3)", value: "2:3" },
+          { label_ar: "أبعاد سينما (16:9)", label_en: "Widescreen Banner (16:9)", value: "16:9" },
+          { label_ar: "غلاف ألبوم مربع (1:1)", label_en: "Album Cover (1:1)", value: "1:1" }
+        ]
+      }
+    ]
+  },
+  {
+    id: 'arabic_heritage',
+    name_en: 'Arabic & Heritage',
+    name_ar: 'تراث وعرب',
+    icon: 'clapperboard',
+    color: 'bg-amber-500/10',
+    borderColor: 'border-amber-500/30',
+    iconColor: '#f59e0b',
+    isActive: true,
+    template: "Cinematic artwork of ${idea}, ${arabianTheme}, ${architecturalStyle}, ${lightingAtmosphere}, ${timeOfDay}, ${calligraphyDetails}, epic Arabian storytelling visual, masterpiece, highly detailed, 8k resolution --ar ${aspectRatio}",
+    questions: [
+      {
+        id: "arabianTheme",
+        title_ar: "طابع الفكرة العربية والتراثية",
+        title_en: "Arabian Narrative Theme",
+        type: "select",
+        options: [
+          { label_ar: "فروسية وأصالة خيل عربية", label_en: "Equestrian & Purebred Horses", value: "majestic Arabian purebred horse rider in desert dunes, flowing traditional bisht" },
+          { label_ar: "ألف ليلة وليلة وفنتازيا شرقية", label_en: "Arabian Nights Fantasy", value: "mythical Arabian fantasy scene, glowing magical lanterns and starlight" },
+          { label_ar: "مستقبل نيوم والمعمار العربي المعاصر", label_en: "Neo-Arabian Futurism", value: "futuristic neo-Arabian megacity, sleek golden architectural towers" },
+          { label_ar: "مجلس عربي ملكي وتكريم", label_en: "Royal Heritage Majlis", value: "opulent Arabian royal majlis, hand-woven carpets and brass coffee pots" }
+        ]
+      },
+      {
+        id: "architecturalStyle",
+        title_ar: "النمط المعماري والتصميم",
+        title_en: "Architectural Elements",
+        type: "select",
+        options: [
+          { label_ar: "نقوش إسلامية وزخارف هندسية", label_en: "Islamic Geometric Patterns", value: "intricate Islamic geometric arches and mosaic tilework" },
+          { label_ar: "طين نجد وتراث العلا والتاريخ", label_en: "Traditional Clay & Oasis", value: "ancient sun-baked mudbrick architecture, lush date palm oasis" },
+          { label_ar: "زجاج حديث منقوش بذهب", label_en: "Modern Gold Lattice Glass", value: "hyper-modern glass skyscraper with gold mashrabiya lattice facade" }
+        ]
+      },
+      {
+        id: "lightingAtmosphere",
+        title_ar: "إضاءة وأجواء المشهد",
+        title_en: "Lighting & Atmosphere",
+        type: "select",
+        options: [
+          { label_ar: "غروب صحراوي ذهبي وسحر الكثبان", label_en: "Golden Desert Sunset", value: "dramatic golden hour sunset over endless desert dunes, warm orange glow" },
+          { label_ar: "ليل صحراوي مجري ونجوم متلألئة", label_en: "Starlit Desert Night", value: "clear desert night sky filled with Milky Way galaxy stars, moonlit sand" },
+          { label_ar: "إضاءة الفجر والضباب الخفيف", label_en: "Dawn Misty Light", value: "peaceful early morning dawn light with soft desert haze" }
+        ]
+      },
+      {
+        id: "calligraphyDetails",
+        title_ar: "لمسات الفن والخط العربي",
+        title_en: "Calligraphy & Art Detail",
+        type: "select",
+        options: [
+          { label_ar: "خط كوفي معاصر ذهبي", label_en: "Golden Kufic Calligraphy", value: "subtle floating 3D golden Arabic Kufic calligraphic motifs" },
+          { label_ar: "تزويق بالذهب واللازورد", label_en: "Gold & Lapis Lazuli Accents", value: "royal lapis lazuli blue and gold leaf decorative accents" },
+          { label_ar: "واقعية سينمائية بدون كتابة", label_en: "Pure Cinematic Visual", value: "pure cinematic visual depth without text overlays" }
+        ]
+      },
+      {
+        id: "aspectRatio",
+        title_ar: "أبعاد الصورة",
+        title_en: "Aspect Ratio",
+        type: "select",
+        options: [
+          { label_ar: "سينمائي عريض جداً (21:9)", label_en: "Ultra-Wide Cinematic (21:9)", value: "21:9" },
+          { label_ar: "شاشة عريضة (16:9)", label_en: "Widescreen (16:9)", value: "16:9" },
+          { label_ar: "بورتريه طولي (9:16)", label_en: "Vertical Story (9:16)", value: "9:16" }
+        ]
+      }
+    ]
   }
 ];
 
@@ -535,6 +1151,8 @@ export const useAppStore = create<AppState>()(
       darkMode: true,
       history: [],
       isAuthenticated: false,
+      isGuest: false,
+      hasCompletedOnboarding: false,
       user: null,
       
       users: [
@@ -553,6 +1171,7 @@ export const useAppStore = create<AppState>()(
 
       setLanguage: (lang) => set({ language: lang }),
       toggleDarkMode: () => set((state) => ({ darkMode: !state.darkMode })),
+      setHasCompletedOnboarding: (completed) => set({ hasCompletedOnboarding: completed }),
       
       addPrompt: (prompt) => set((state) => {
         const newGlobalEntry: GlobalHistoryEntry = {
@@ -589,7 +1208,7 @@ export const useAppStore = create<AppState>()(
           if (existingUser.status === 'banned') {
             throw new Error("Your account has been suspended.");
           }
-          return { isAuthenticated: true, user: existingUser };
+          return { isAuthenticated: true, isGuest: false, user: existingUser };
         }
         
         // Auto-assign admin if email matches yours or contains admin
@@ -605,6 +1224,7 @@ export const useAppStore = create<AppState>()(
         
         return { 
           isAuthenticated: true, 
+          isGuest: false,
           user: newUser,
           users: [...state.users, newUser]
         };
@@ -622,12 +1242,26 @@ export const useAppStore = create<AppState>()(
         };
         return { 
           isAuthenticated: true, 
+          isGuest: false,
           user: newUser,
           users: [...state.users, newUser]
         };
       }),
 
-      logout: () => set({ isAuthenticated: false, user: null }),
+      loginAsGuest: () => set({
+        isAuthenticated: true,
+        isGuest: true,
+        user: {
+          id: 'guest',
+          name: 'زائر / Guest',
+          email: 'guest@promptless.ai',
+          role: 'user',
+          status: 'active',
+          createdAt: new Date().toISOString()
+        }
+      }),
+
+      logout: () => set({ isAuthenticated: false, isGuest: false, user: null }),
 
       // Admin Actions
       updateUser: (userId, updates) => set((state) => ({
@@ -653,8 +1287,33 @@ export const useAppStore = create<AppState>()(
       clearGlobalHistory: () => set({ globalHistory: [] }),
     }),
     {
-      name: 'promptless-db-storage',
+      name: 'promptless-db-storage-v2',
       storage: createJSONStorage(() => unifiedStorage),
+      merge: (persistedState: any, currentState: AppState) => {
+        const persisted = (persistedState as Partial<AppState>) || {};
+        const persistedWorkflows = persisted.workflows || [];
+        
+        // Map INITIAL_WORKFLOWS to ensure new categories are always present
+        const workflowMap = new Map<string, Workflow>();
+        INITIAL_WORKFLOWS.forEach(w => workflowMap.set(w.id, w));
+        
+        // Merge any user-customized workflows or extra properties
+        persistedWorkflows.forEach(w => {
+          const initial = workflowMap.get(w.id);
+          if (initial) {
+            workflowMap.set(w.id, { ...initial, ...w });
+          } else {
+            workflowMap.set(w.id, w);
+          }
+        });
+        
+        return {
+          ...currentState,
+          ...persisted,
+          workflows: Array.from(workflowMap.values()),
+        };
+      }
     }
   )
 );
+

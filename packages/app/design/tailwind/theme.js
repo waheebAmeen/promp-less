@@ -10,6 +10,11 @@ const theme = {
       background: '#020617', 
       surface: '#0f172a', 
       'surface-hover': '#1e293b',
+      'light-background': '#f8fafc',
+      'light-surface': '#ffffff',
+      'light-surface-hover': '#f1f5f9',
+      'light-card': '#ffffff',
+      'light-border': '#e2e8f0',
       'glass-border': 'rgba(255, 255, 255, 0.08)',
       'glass-bg': 'rgba(15, 23, 42, 0.7)',
       accent: '#0ea5e9',
@@ -23,6 +28,7 @@ const theme = {
       'neon-blue': '0 0 15px rgba(59, 130, 246, 0.4)',
       'neon-purple': '0 0 15px rgba(139, 92, 246, 0.4)',
       'premium': '0 20px 25px -5px rgba(0, 0, 0, 0.2), 0 10px 10px -5px rgba(0, 0, 0, 0.1)',
+      'light-glass': '0 10px 30px rgba(0, 0, 0, 0.05)',
     },
     borderRadius: {
       '3xl': '24px',
@@ -34,3 +40,4 @@ const theme = {
 module.exports = {
   theme,
 }
+

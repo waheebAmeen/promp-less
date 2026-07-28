@@ -1,3 +1,12 @@
+export type TargetModel = 
+  | 'midjourney' 
+  | 'flux' 
+  | 'sdxl' 
+  | 'dalle3' 
+  | 'ideogram' 
+  | 'recraft' 
+  | 'leonardo';
+
 export type QuestionType = 'select' | 'multiselect' | 'text' | 'textarea' | 'slider';
 
 export interface QuestionOption {
@@ -21,3 +30,4 @@ export interface Questionnaire {
   template: string;
   questions: Question[];
 }
+

@@ -46,8 +46,10 @@ export const QuestionnaireEngine: React.FC<Props> = ({ questionnaire, onGenerate
   };
 
   const totalSteps = questionnaire.questions.length;
-  const progress = ((currentStep + 1) / totalSteps) * 100;
   const currentQuestion = questionnaire.questions[currentStep];
+  if (!currentQuestion) return null;
+
+  const progress = ((currentStep + 1) / totalSteps) * 100;
   const isLastStep = currentStep === totalSteps - 1;
 
   // A step is considered "answered" if they have a selection OR custom text

@@ -1,39 +1,115 @@
 {
+  "app": {
+    "name": "Promptless",
+    "tagline": "منصة هندسة الأوامر الذكية"
+  },
+  "splash": {
+    "title": "Promptless",
+    "subtitle": "حوّل فكرتك إلى Prompt احترافي في أقل من دقيقة.",
+    "cta": "ابدأ الآن"
+  },
+  "onboarding": {
+    "skip": "تخطي",
+    "next": "التالي",
+    "start": "ابدأ",
+    "slides": [
+      {
+        "title": "أنشئ Prompts احترافية بسهولة",
+        "description": "منصة تساعد أي شخص على صياغة أفضل أفكاره وتحويلها إلى برومبت متكامل ودقيق."
+      },
+      {
+        "title": "لا تحتاج لأي خبرة",
+        "description": "دون الحاجة لمعرفة مسبقة بهندسة الأوامر (Prompt Engineering)، الحوار الذكي يوجهك خطوة بخطوة."
+      },
+      {
+        "title": "استخدمها مع ChatGPT و Claude و Gemini وغيرها",
+        "description": "انسخ الـ Prompt الناتج واستخدمه مباشرة في المنصة أو نموذج الذكاء الاصطناعي الذي تفضله."
+      }
+    ]
+  },
+  "auth": {
+    "title_login": "مرحباً بك مجدداً",
+    "title_signup": "انضم إلى Promptless",
+    "subtitle": "اختر طريقة الدخول للمتابعة",
+    "email": "البريد الإلكتروني",
+    "password": "كلمة المرور",
+    "full_name": "الاسم الكامل",
+    "google": "متابعة باستخدام Google",
+    "apple": "متابعة باستخدام Apple",
+    "guest": "الدخول كضيف",
+    "guest_note": "ملاحظة: يمكنك إنشاء Prompts كضيف، ولكن حفظ الـ Prompt يتطلب تسجيل الدخول.",
+    "sign_in": "تسجيل الدخول",
+    "sign_up": "إنشاء حساب",
+    "switch_signup": "لا تملك حساباً؟ سجل الآن",
+    "switch_login": "لديك حساب بالفعل؟ سجل دخولك"
+  },
   "home": {
-    "title": "برومبت ليس",
-    "subtitle": "نظام تشغيل أوامر الصور الذكاء الاصطناعي",
+    "title": "Promptless",
+    "subtitle": "ماذا تريد أن تنجز اليوم؟",
+    "hero_placeholder": "أريد تصميم شعار، أو شرح درس، أو بناء تطبيق، أو تلخيص ملف PDF...",
+    "start_custom": "توجيه الفكرة",
+    "quick_fields": "المجالات السريعة",
     "categories": {
+      "study": "الدراسة",
+      "coding": "البرمجة",
+      "marketing": "التسويق",
+      "writing": "الكتابة والمحتوى",
+      "images": "الصور",
+      "video": "الفيديوهات",
       "cinematic": "سينمائي",
       "photography": "فوتوغراف",
       "characters": "شخصيات",
       "products": "منتجات",
-      "architecture": "معمار"
+      "architecture": "معمار",
+      "fashion": "أزياء وموضة",
+      "social_thumb": "مصغرات وسوشيال",
+      "ai_influencer": "مؤثر رقمي",
+      "poster_art": "بوسترات وفن",
+      "arabic_heritage": "تراث وعرب",
+      "other": "أخرى"
     }
   },
   "input": {
     "label": "ما الذي يدور في ذهنك؟",
-    "placeholder": "صف فكرة الصورة بالتفصيل...",
+    "placeholder": "صف فكرتك أو طلبك بالتفصيل هنا...",
+    "file_upload": "إرفاق ملف (PDF / مستندات)",
+    "file_attached": "تم إرفاق الملف بنجاح",
+    "remove_file": "إزالة",
     "next": "التالي",
     "generate": "إنشاء الأمر",
     "char_count": "حرف"
   },
+  "review": {
+    "title": "مراجعة التفاصيل",
+    "subtitle": "راجع مدخلاتك قبل صياغة الـ Prompt",
+    "field": "المجال",
+    "task": "المهمة والطلب",
+    "target_model": "نموذج الذكاء الاصطناعي المستهدف",
+    "file_attached": "الملف المرفق",
+    "details": "التفاصيل الإضافية",
+    "generate_cta": "إنشاء Prompt احترافي"
+  },
   "preview": {
     "title": "النتيجة النهائية",
-    "subtitle": "أصبح أمرك الاحترافي جاهزاً",
-    "copy": "نسخ",
-    "save": "حفظ",
+    "subtitle": "أصبح أمرك الاحترافي جاهزاً للنسخ والاستخدام",
+    "copy": "نسخ الـ Prompt",
+    "save": "حفظ في المكتبة",
     "share": "مشاركة",
-    "edit": "تعديل"
+    "edit": "تعديل",
+    "guest_save_warning": "حفظ الـ Prompt يتطلب تسجيل الدخول. هل ترغب في تسجيل الدخول الآن؟"
   },
   "history": {
-    "title": "السجل",
+    "title": "مكتبتي",
+    "subtitle": "الأوامر المحفوظة",
     "empty": "لا توجد أوامر محفوظة بعد",
-    "search": "البحث في السجل...",
+    "search": "البحث في الأوامر...",
     "no_results": "لا توجد نتائج مطابقة"
   },
   "settings": {
     "title": "الإعدادات",
     "language": "اللغة",
-    "darkMode": "الوضع الليلي"
+    "darkMode": "الوضع الداكن",
+    "lightMode": "الوضع الساطع",
+    "theme": "المظهر"
   }
 }

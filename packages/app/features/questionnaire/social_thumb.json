@@ -1,0 +1,63 @@
+{
+  "category": "social_thumb",
+  "template": "Eye-catching click-worthy YouTube thumbnail graphic of ${idea}, ${subjectExpression}, ${backgroundStyle}, ${colorTheme}, ${lightingEffect}, hyper-detailed, high visual contrast, 8k resolution, trending composition --ar ${aspectRatio}",
+  "questions": [
+    {
+      "id": "subjectExpression",
+      "title_ar": "تعبير الشخصية الرئيسية",
+      "title_en": "Main Subject Expression",
+      "type": "select",
+      "options": [
+        { "label_ar": "صدمة ومفاجأة قوية", "label_en": "Shocked & Surprised", "value": "shocked expressive facial reaction, wide open eyes, mouth open" },
+        { "label_ar": "ابتسامة نجاح واثقة", "label_en": "Confident Smirk", "value": "confident charismatic smile, pointing finger towards viewer" },
+        { "label_ar": "غموض وتركيز شديد", "label_en": "Intense Mystery", "value": "intense curious gaze, dramatic shadow on half face" },
+        { "label_ar": "تحدي وقوة", "label_en": "Hero Challenge", "value": "heroic posture, arms crossed, powerful vibe" }
+      ]
+    },
+    {
+      "id": "backgroundStyle",
+      "title_ar": "نمط الخلفية",
+      "title_en": "Background Style",
+      "type": "select",
+      "options": [
+        { "label_ar": "انفجار ألوان وجسيمات ضوئية", "label_en": "Color Burst Sparks", "value": "glowing neon background with flying embers and light sparks" },
+        { "label_ar": "خلفية ضبابية معزولة (Bokeh)", "label_en": "Blurred Depth of Field", "value": "blurry dark background with heavy neon bokeh highlights" },
+        { "label_ar": "محيط تكنولوجي مستقبل", "label_en": "Futuristic Tech Setup", "value": "futuristic streaming setup with multiple glowing RGB monitors" },
+        { "label_ar": "انقسام قبل وبعد (Split Screen)", "label_en": "Split Contrast Background", "value": "half glowing blue half fiery orange high contrast background" }
+      ]
+    },
+    {
+      "id": "colorTheme",
+      "title_ar": "طابع الألوان المثير للانتباه",
+      "title_en": "Attention Color Scheme",
+      "type": "select",
+      "options": [
+        { "label_ar": "أصفر وأزرق نيون (High Click-Through)", "label_en": "Vibrant Yellow & Blue", "value": "electric yellow highlights against rich deep blue theme" },
+        { "label_ar": "أحمر ونار درامي", "label_en": "Fiery Red & Gold", "value": "intense fiery red energy flames and metallic gold glow" },
+        { "label_ar": "بنفسجي وسايبر", "label_en": "Cyber Purple & Cyan", "value": "ultra vibrant magenta purple and cyan neon style" }
+      ]
+    },
+    {
+      "id": "lightingEffect",
+      "title_ar": "مؤثرات الإضاءة المحيطية",
+      "title_en": "Lighting & Effects",
+      "type": "select",
+      "options": [
+        { "label_ar": "توهج حواف حاد (Rim Glow)", "label_en": "Sharp Edge Rim Light", "value": "intense glowing rim light outlining the subject silhouette" },
+        { "label_ar": "إضاءة استوديو اليوتيوب الاحترافية", "label_en": "Pro YouTube Lighting", "value": "crisp key light with soft fill and vibrant backlight" },
+        { "label_ar": "برق ومشرارة كهربائية", "label_en": "Electric Lightning Sparks", "value": "subtle electric lightning tendrils around the subject" }
+      ]
+    },
+    {
+      "id": "aspectRatio",
+      "title_ar": "أبعاد الصورة",
+      "title_en": "Aspect Ratio",
+      "type": "select",
+      "options": [
+        { "label_ar": "مصغرة يوتيوب / شاشة (16:9)", "label_en": "YouTube Thumbnail (16:9)", "value": "16:9" },
+        { "label_ar": "ريلز وتيك توك (9:16)", "label_en": "Reels / TikTok (9:16)", "value": "9:16" },
+        { "label_ar": "منشور إنستغرام (1:1)", "label_en": "Instagram Feed (1:1)", "value": "1:1" }
+      ]
+    }
+  ]
+}

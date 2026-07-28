@@ -1,32 +1,106 @@
 {
+  "app": {
+    "name": "Promptless",
+    "tagline": "Smart Prompt Engineering System"
+  },
+  "splash": {
+    "title": "Promptless",
+    "subtitle": "Turn your idea into a professional Prompt in less than a minute.",
+    "cta": "Start Now"
+  },
+  "onboarding": {
+    "skip": "Skip",
+    "next": "Next",
+    "start": "Start",
+    "slides": [
+      {
+        "title": "Create professional Prompts easily",
+        "description": "A platform that helps anyone craft their best ideas into accurate, detailed prompts."
+      },
+      {
+        "title": "No prior experience required",
+        "description": "Without any previous Prompt Engineering knowledge, the smart dialogue guides you step by step."
+      },
+      {
+        "title": "Use with ChatGPT, Claude, Gemini & more",
+        "description": "Copy the generated Prompt and use it directly in your preferred AI platform."
+      }
+    ]
+  },
+  "auth": {
+    "title_login": "Welcome Back",
+    "title_signup": "Join Promptless",
+    "subtitle": "Choose sign-in method to continue",
+    "email": "Email Address",
+    "password": "Password",
+    "full_name": "Full Name",
+    "google": "Continue with Google",
+    "apple": "Continue with Apple",
+    "guest": "Continue as Guest",
+    "guest_note": "Note: You can create Prompts as guest, but saving requires signing in.",
+    "sign_in": "Sign In",
+    "sign_up": "Create Account",
+    "switch_signup": "Don't have an account? Sign up now",
+    "switch_login": "Already have an account? Sign in"
+  },
   "home": {
     "title": "Promptless",
-    "subtitle": "The AI Image Prompt Operating System",
+    "subtitle": "What do you want to accomplish today?",
+    "hero_placeholder": "I want to design a logo, explain a lesson, build an app, or summarize a PDF...",
+    "start_custom": "Guide Idea",
+    "quick_fields": "Quick Fields",
     "categories": {
+      "study": "Study",
+      "coding": "Coding",
+      "marketing": "Marketing",
+      "writing": "Writing & Content",
+      "images": "Images",
+      "video": "Videos",
       "cinematic": "Cinematic",
       "photography": "Photography",
       "characters": "Characters",
       "products": "Products",
-      "architecture": "Architecture"
+      "architecture": "Architecture",
+      "fashion": "Fashion & Luxury",
+      "social_thumb": "Social & Thumbnails",
+      "ai_influencer": "AI Influencer",
+      "poster_art": "Poster Art",
+      "arabic_heritage": "Arabic & Heritage",
+      "other": "Other"
     }
   },
   "input": {
     "label": "What is on your mind?",
-    "placeholder": "Describe your image idea in detail...",
+    "placeholder": "Describe your idea or request in detail here...",
+    "file_upload": "Attach File (PDF / Documents)",
+    "file_attached": "File attached successfully",
+    "remove_file": "Remove",
     "next": "Next",
     "generate": "Generate Prompt",
     "char_count": "chars"
   },
+  "review": {
+    "title": "Review Details",
+    "subtitle": "Review your inputs before generating the Prompt",
+    "field": "Field",
+    "task": "Task & Request",
+    "target_model": "Target AI Model",
+    "file_attached": "Attached File",
+    "details": "Additional Details",
+    "generate_cta": "Generate Professional Prompt"
+  },
   "preview": {
     "title": "Final Result",
-    "subtitle": "Your professional prompt is ready",
-    "copy": "Copy",
-    "save": "Save",
+    "subtitle": "Your professional prompt is ready to copy and use",
+    "copy": "Copy Prompt",
+    "save": "Save to Library",
     "share": "Share",
-    "edit": "Edit"
+    "edit": "Edit",
+    "guest_save_warning": "Saving Prompts requires signing in. Would you like to sign in now?"
   },
   "history": {
-    "title": "History",
+    "title": "My Library",
+    "subtitle": "Saved Prompts",
     "empty": "No saved prompts yet",
     "search": "Search in history...",
     "no_results": "No matching results found"
@@ -34,6 +108,8 @@
   "settings": {
     "title": "Settings",
     "language": "Language",
-    "darkMode": "Dark Mode"
+    "darkMode": "Dark Mode",
+    "lightMode": "Light Mode",
+    "theme": "Theme"
   }
 }

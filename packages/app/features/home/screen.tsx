@@ -199,7 +199,6 @@ export function HomeScreen() {
           </View>
         </View>
       </ScrollView>
-      
       {/* Minimal Bottom Bar */}
       <View 
         className="absolute left-0 right-0 z-40 px-8"
