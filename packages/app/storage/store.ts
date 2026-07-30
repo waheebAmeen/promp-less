@@ -1,6 +1,9 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import { unifiedStorage } from './unified-storage';
+import type { AiDraft } from '../services/ai';
+
+export type { AiDraft };
 
 export type PromptHistory = {
   id: string;
@@ -72,6 +75,9 @@ interface AppState {
   globalHistory: GlobalHistoryEntry[];
   qualityBoosters: string[];
 
+  // AI Magic Input
+  aiDraft: AiDraft | null;
+
   // User Actions
   setLanguage: (lang: 'ar' | 'en') => void;
   toggleDarkMode: () => void;
@@ -92,6 +98,10 @@ interface AppState {
   deleteWorkflow: (id: string) => void;
   setQualityBoosters: (boosters: string[]) => void;
   clearGlobalHistory: () => void;
+
+  // AI Actions
+  setAiDraft: (draft: AiDraft) => void;
+  clearAiDraft: () => void;
 }
 
 // Initial workflow data migrated from JSON files
@@ -1168,6 +1178,7 @@ export const useAppStore = create<AppState>()(
       workflows: INITIAL_WORKFLOWS,
       globalHistory: [],
       qualityBoosters: ["hyper-realistic", "8k resolution", "highly detailed", "masterpiece"],
+      aiDraft: null,
 
       setLanguage: (lang) => set({ language: lang }),
       toggleDarkMode: () => set((state) => ({ darkMode: !state.darkMode })),
@@ -1285,6 +1296,9 @@ export const useAppStore = create<AppState>()(
       setQualityBoosters: (boosters) => set({ qualityBoosters: boosters }),
       
       clearGlobalHistory: () => set({ globalHistory: [] }),
+
+      setAiDraft: (draft) => set({ aiDraft: draft }),
+      clearAiDraft: () => set({ aiDraft: null }),
     }),
     {
       name: 'promptless-db-storage-v2',

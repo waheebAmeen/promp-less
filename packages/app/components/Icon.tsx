@@ -1,7 +1,7 @@
 import React from 'react';
 
 interface IconProps {
-  name: 'images' | 'apps' | 'text' | 'video' | 'custom' | 'history' | 'settings' | 'back' | 'check' | 'delete' | 'copy' | 'save' | 'share' | 'search' | 'camera' | 'user' | 'clapperboard' | 'architecture';
+  name: 'images' | 'apps' | 'text' | 'video' | 'custom' | 'history' | 'settings' | 'back' | 'check' | 'delete' | 'copy' | 'save' | 'share' | 'search' | 'camera' | 'user' | 'clapperboard' | 'architecture' | 'mic';
   size?: number;
   color?: string;
   strokeWidth?: number;
@@ -129,6 +129,13 @@ export const Icon: React.FC<IconProps> = ({ name, size = 24, color = 'white', st
           <>
             <circle cx="11" cy="11" r="8" />
             <path d="M21 21l-4.35-4.35" />
+          </>
+        );
+      case 'mic':
+        return (
+          <>
+            <path d="M12 2a3 3 0 00-3 3v7a3 3 0 006 0V5a3 3 0 00-3-3z" />
+            <path d="M19 10v2a7 7 0 01-14 0v-2M12 19v4M8 23h8" />
           </>
         );
       default:

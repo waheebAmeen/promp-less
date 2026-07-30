@@ -1,0 +1,168 @@
+export const fashionPrompts = {
+  default: {
+    id: 'fashion_default',
+    title: 'أزياء وموضة (افتراضي)',
+    description: 'التدفق الأساسي لـ أزياء وموضة',
+    template: `High-fashion editorial photography of \${idea}, \${garmentStyle}, \${fabricTexture}, \${setting}, \${lighting}, \${modelPose}, Vogue aesthetic, sharp focus, 8k, detailed clothing texture --ar \${aspectRatio}`,
+    questions: [
+  {
+    id: "garmentStyle",
+    title_ar: "أسلوب الملابس (Garment Style)",
+    title_en: "Garment Style",
+    type: "select",
+    options: [
+      {
+        label_ar: "أزياء راقية (Haute Couture)",
+        label_en: "Haute Couture",
+        value: "avant-garde haute couture fashion gown"
+      },
+      {
+        label_ar: "ستريت وير فاخر (Luxury Streetwear)",
+        label_en: "Luxury Streetwear",
+        value: "oversized high-end luxury streetwear outfit"
+      },
+      {
+        label_ar: "تصميم أدنى (Minimalist Chic)",
+        label_en: "Minimalist Chic",
+        value: "sleek minimalist silk suit, tailored lines"
+      },
+      {
+        label_ar: "فخامة عربية معاصرة",
+        label_en: "Modern Arabian Luxury",
+        value: "royal embroidered silk abaya, modern Arabian elegance"
+      },
+      {
+        label_ar: "ستايل فينتج كلاسيك",
+        label_en: "Vintage Classic",
+        value: "1970s retro glam fashion ensemble"
+      }
+    ]
+  },
+  {
+    id: "fabricTexture",
+    title_ar: "خامة القماش والنسيج",
+    title_en: "Fabric & Texture",
+    type: "select",
+    options: [
+      {
+        label_ar: "حرير لامع",
+        label_en: "Flowing Silk",
+        value: "lustrous flowing silk and satin reflection"
+      },
+      {
+        label_ar: "مخمل ثقيل",
+        label_en: "Heavy Velvet",
+        value: "rich deep-toned heavy velvet texture"
+      },
+      {
+        label_ar: "جلد مصقول",
+        label_en: "Polished Leather",
+        value: "sleek polished leather with specular highlights"
+      },
+      {
+        label_ar: "تطريز ذهبي دقيق",
+        label_en: "Gold Embroidery",
+        value: "intricate hand-stitched gold metallic thread embroidery"
+      }
+    ]
+  },
+  {
+    id: "setting",
+    title_ar: "مكان التصوير (Editorial Setting)",
+    title_en: "Editorial Location",
+    type: "select",
+    options: [
+      {
+        label_ar: "استوديو باريس بياض كلي",
+        label_en: "Parisian Studio",
+        value: "inside a minimalist high-ceiling Parisian studio"
+      },
+      {
+        label_ar: "مدرج عرض أزياء (Runway)",
+        label_en: "Fashion Runway",
+        value: "walking down a foggy lit fashion runway"
+      },
+      {
+        label_ar: "معمار مدريد الكلاسيكي",
+        label_en: "Classic Architecture",
+        value: "against classical marble column architecture"
+      },
+      {
+        label_ar: "طبيعة صحراوية راقية",
+        label_en: "Luxury Desert",
+        value: "surrounded by golden desert sand dunes at sunset"
+      }
+    ]
+  },
+  {
+    id: "lighting",
+    title_ar: "إضاءة الأزياء",
+    title_en: "Fashion Lighting",
+    type: "select",
+    options: [
+      {
+        label_ar: "إضاءة غلاف مجلة (Softbox)",
+        label_en: "Magazine Cover Softbox",
+        value: "flattering high-key softbox cover lighting"
+      },
+      {
+        label_ar: "ظلال حادة درامية",
+        label_en: "Dramatic Hard Shadows",
+        value: "harsh sun direct shadow play, high contrast"
+      },
+      {
+        label_ar: "ضوء شمس العصر الدافئ",
+        label_en: "Warm Afternoon Sun",
+        value: "warm golden sunlight casting artistic shadows"
+      }
+    ]
+  },
+  {
+    id: "modelPose",
+    title_ar: "وقفة العارض/العارضة",
+    title_en: "Model Pose",
+    type: "select",
+    options: [
+      {
+        label_ar: "حركة ديناميكية (Dynamic Walk)",
+        label_en: "Dynamic Walk",
+        value: "striding forward dynamically, flowing outfit movement"
+      },
+      {
+        label_ar: "وقفة قوة واثقة (Power Pose)",
+        label_en: "Power Pose",
+        value: "confident stance, direct magnetic eye contact"
+      },
+      {
+        label_ar: "لقطة مقربة للوجه والملامح",
+        label_en: "Fashion Beauty Portrait",
+        value: "intimate beauty portrait focusing on makeup and jewelry detail"
+      }
+    ]
+  },
+  {
+    id: "aspectRatio",
+    title_ar: "أبعاد الصورة",
+    title_en: "Aspect Ratio",
+    type: "select",
+    options: [
+      {
+        label_ar: "غلاف مجلة طولي (4:5)",
+        label_en: "Magazine Portrait (4:5)",
+        value: "4:5"
+      },
+      {
+        label_ar: "طولي كامل (9:16)",
+        label_en: "Full Story (9:16)",
+        value: "9:16"
+      },
+      {
+        label_ar: "مربع (1:1)",
+        label_en: "Square (1:1)",
+        value: "1:1"
+      }
+    ]
+  }
+]
+  }
+};

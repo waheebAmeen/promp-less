@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTheme } from '../../design/useTheme';
 import { View, ScreenContainer, TouchableOpacity, DecorativeBackground } from '../../design/view';
 import { createParam } from 'solito';
 import { useRouter } from 'solito/router';
@@ -13,6 +14,7 @@ import { useAppStore } from '../../storage/store';
 const { useParam } = createParam<{ category: string; idea: string }>();
 
 export function QuestionnaireScreen() {
+  const theme = useTheme();
   const [category] = useParam('category');
   const [idea] = useParam('idea');
   const { i18n } = useTranslation();
@@ -32,8 +34,8 @@ export function QuestionnaireScreen() {
 
   if (!workflow) {
     return (
-      <View className="flex-1 bg-background justify-center items-center p-10">
-        <Typography variant="h2" className="text-white mb-4 text-center">Workflow Not Found</Typography>
+      <View className={`flex-1 ${theme.bg} justify-center items-center p-10`}>
+        <Typography variant="h2" className={`${theme.text} mb-4 text-center`}>Workflow Not Found</Typography>
         <Button title="Return Home" onPress={() => push('/')} className="px-10" />
       </View>
     );
@@ -49,13 +51,13 @@ export function QuestionnaireScreen() {
     <ScreenContainer>
       <DecorativeBackground />
 
-      <View className="border-b border-white/5 bg-background/50 backdrop-blur-md z-40">
+      <View className={`border-b ${theme.borderSubtle} ${theme.headerBg} backdrop-blur-md z-40`}>
         <View className="max-w-4xl mx-auto w-full px-6 py-4 flex-row items-center">
-          <TouchableOpacity onPress={() => back()} className="w-10 h-10 bg-surface/80 rounded-full items-center justify-center border border-slate-700/50 backdrop-blur-md">
+          <TouchableOpacity onPress={() => back()} className={`w-10 h-10 ${theme.surface}/80 rounded-full items-center justify-center border border-slate-700/50 backdrop-blur-md`}>
              <Icon name="back" size={20} color="#94a3b8" />
           </TouchableOpacity>
           <View className="flex-1 pr-10 items-center">
-            <Typography variant="h2" className="text-2xl font-bold text-white tracking-wide">
+            <Typography variant="h2" className={`text-2xl font-bold ${theme.text} tracking-wide`}>
                {i18n.language === 'ar' ? workflow.name_ar : workflow.name_en}
             </Typography>
           </View>

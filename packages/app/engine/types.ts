@@ -5,7 +5,9 @@ export type TargetModel =
   | 'dalle3' 
   | 'ideogram' 
   | 'recraft' 
-  | 'leonardo';
+  | 'leonardo'
+  | 'chatgpt'
+  | 'claude';
 
 export type QuestionType = 'select' | 'multiselect' | 'text' | 'textarea' | 'slider';
 

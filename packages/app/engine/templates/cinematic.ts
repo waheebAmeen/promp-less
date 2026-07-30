@@ -1,0 +1,203 @@
+export const cinematicPrompts = {
+  default: {
+    id: 'cinematic_default',
+    title: 'سينمائي (افتراضي)',
+    description: 'التدفق الأساسي لـ سينمائي',
+    template: `Cinematic shot of \${idea}, \${composition}, \${lighting}, \${colorGrading}, \${atmosphere}, filmed on \${camera}, \${lens}, highly detailed, cinematic atmosphere, 8k resolution, photorealistic --ar \${aspectRatio}`,
+    questions: [
+  {
+    id: "composition",
+    title_ar: "تكوين المشهد (Composition)",
+    title_en: "Scene Composition",
+    type: "select",
+    options: [
+      {
+        label_ar: "لقطة واسعة",
+        label_en: "Wide Shot",
+        value: "wide angle cinematic shot"
+      },
+      {
+        label_ar: "لقطة مقربة (Portrait)",
+        label_en: "Close-up",
+        value: "extreme close-up portrait"
+      },
+      {
+        label_ar: "منظور عين الطائر",
+        label_en: "Bird's Eye View",
+        value: "aerial drone photography, bird's eye view"
+      },
+      {
+        label_ar: "قاعدة الأثلاث",
+        label_en: "Rule of Thirds",
+        value: "rule of thirds composition"
+      },
+      {
+        label_ar: "لقطة متوسطة",
+        label_en: "Medium Shot",
+        value: "medium shot, cinematic framing"
+      }
+    ]
+  },
+  {
+    id: "lighting",
+    title_ar: "نوع الإضاءة",
+    title_en: "Lighting Style",
+    type: "select",
+    options: [
+      {
+        label_ar: "إضاءة درامية (Chiaroscuro)",
+        label_en: "Dramatic (Chiaroscuro)",
+        value: "dramatic chiaroscuro lighting, heavy shadows"
+      },
+      {
+        label_ar: "إضاءة ناعمة (Soft Light)",
+        label_en: "Soft Lighting",
+        value: "soft diffused cinematic lighting"
+      },
+      {
+        label_ar: "إضاءة نيون (Neon)",
+        label_en: "Neon Glow",
+        value: "vibrant neon lighting, cyber aesthetic"
+      },
+      {
+        label_ar: "إضاءة طبيعية (Golden Hour)",
+        label_en: "Golden Hour",
+        value: "warm golden hour sunlight"
+      },
+      {
+        label_ar: "إضاءة خلفية (Rim Light)",
+        label_en: "Rim Lighting",
+        value: "sharp rim lighting, silhouette contrast"
+      }
+    ]
+  },
+  {
+    id: "colorGrading",
+    title_ar: "تلوين المشهد (Color Grading)",
+    title_en: "Color Grading",
+    type: "select",
+    options: [
+      {
+        label_ar: "ألوان سينمائية (Teal & Orange)",
+        label_en: "Teal & Orange",
+        value: "teal and orange color grading"
+      },
+      {
+        label_ar: "أبيض وأسود فاخر",
+        label_en: "Luxury B&W",
+        value: "high-contrast cinematic black and white"
+      },
+      {
+        label_ar: "ألوان باهتة (Vintage)",
+        label_en: "Vintage Film",
+        value: "faded vintage film colors, kodachrome"
+      },
+      {
+        label_ar: "ألوان زاهية",
+        label_en: "Vibrant",
+        value: "highly saturated vivid colors"
+      },
+      {
+        label_ar: "ألوان باردة",
+        label_en: "Cold Tones",
+        value: "moody blue and cold cinematic tones"
+      }
+    ]
+  },
+  {
+    id: "atmosphere",
+    title_ar: "الأجواء (Atmosphere)",
+    title_en: "Atmosphere",
+    type: "select",
+    options: [
+      {
+        label_ar: "ضبابي",
+        label_en: "Foggy/Misty",
+        value: "dense fog, misty atmosphere"
+      },
+      {
+        label_ar: "جزيئات غبار في الضوء",
+        label_en: "Dust Motes",
+        value: "dust motes dancing in light beams"
+      },
+      {
+        label_ar: "دخان سينمائي",
+        label_en: "Cinematic Smoke",
+        value: "volumetric smoke and haze"
+      },
+      {
+        label_ar: "ممطر",
+        label_en: "Rainy",
+        value: "heavy rain, wet surfaces, cinematic droplets"
+      },
+      {
+        label_ar: "صافي ونقي",
+        label_en: "Crystal Clear",
+        value: "sharp focus, crystal clear air"
+      }
+    ]
+  },
+  {
+    id: "camera",
+    title_ar: "نوع الكاميرا",
+    title_en: "Camera Model",
+    type: "select",
+    options: [
+      {
+        label_ar: "Arri Alexa",
+        label_en: "Arri Alexa",
+        value: "shot on Arri Alexa LF"
+      },
+      {
+        label_ar: "Red Digital Cinema",
+        label_en: "Red Digital Cinema",
+        value: "shot on RED V-Raptor"
+      },
+      {
+        label_ar: "Panavision",
+        label_en: "Panavision",
+        value: "Panavision anamorphic lenses"
+      },
+      {
+        label_ar: "IMAX 70mm",
+        label_en: "IMAX 70mm",
+        value: "IMAX 70mm film format"
+      },
+      {
+        label_ar: "كاميرا كلاسيكية 35mm",
+        label_en: "35mm Film",
+        value: "vintage 35mm movie camera"
+      }
+    ]
+  },
+  {
+    id: "aspectRatio",
+    title_ar: "أبعاد الصورة",
+    title_en: "Aspect Ratio",
+    type: "select",
+    options: [
+      {
+        label_ar: "سينمائي عريض (21:9)",
+        label_en: "Ultra-Wide (21:9)",
+        value: "21:9"
+      },
+      {
+        label_ar: "شاشة عريضة (16:9)",
+        label_en: "Widescreen (16:9)",
+        value: "16:9"
+      },
+      {
+        label_ar: "ستاندرد (4:3)",
+        label_en: "Standard (4:3)",
+        value: "4:3"
+      },
+      {
+        label_ar: "طولي (9:16)",
+        label_en: "Vertical (9:16)",
+        value: "9:16"
+      }
+    ]
+  }
+]
+  }
+};

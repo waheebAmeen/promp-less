@@ -1,0 +1,168 @@
+export const productsPrompts = {
+  default: {
+    id: 'products_default',
+    title: 'منتجات (افتراضي)',
+    description: 'التدفق الأساسي لـ منتجات',
+    template: `Commercial product photography of \${idea}, \${style}, \${background}, \${lighting}, \${shotType}, \${rendering}, high-end advertising, sharp focus, 8k, professional color grading --ar \${aspectRatio}`,
+    questions: [
+  {
+    id: "style",
+    title_ar: "نمط الإعلان",
+    title_en: "Advertising Style",
+    type: "select",
+    options: [
+      {
+        label_ar: "بسيط (Minimalist)",
+        label_en: "Minimalist",
+        value: "clean minimalist product photography, Apple style"
+      },
+      {
+        label_ar: "فاخر (Luxury)",
+        label_en: "Luxury",
+        value: "luxury high-end commercial style, elegant"
+      },
+      {
+        label_ar: "ديناميكي (Action)",
+        label_en: "Dynamic/Action",
+        value: "dynamic action shot, splashes or movement"
+      },
+      {
+        label_ar: "طبيعي (Organic)",
+        label_en: "Organic/Natural",
+        value: "organic natural product staging, eco-friendly vibe"
+      }
+    ]
+  },
+  {
+    id: "background",
+    title_ar: "الخلفية",
+    title_en: "Background",
+    type: "select",
+    options: [
+      {
+        label_ar: "لون سادة (Studio)",
+        label_en: "Solid Studio",
+        value: "solid neutral studio background, professional"
+      },
+      {
+        label_ar: "رخام فاخر",
+        label_en: "Luxury Marble",
+        value: "placed on a luxury marble surface"
+      },
+      {
+        label_ar: "طبيعة مدنية",
+        label_en: "Urban/City",
+        value: "in a modern urban city environment"
+      },
+      {
+        label_ar: "منصة عرض (Podium)",
+        label_en: "Podium",
+        value: "standing on a geometric floating podium"
+      }
+    ]
+  },
+  {
+    id: "lighting",
+    title_ar: "نوع الإضاءة",
+    title_en: "Lighting Type",
+    type: "select",
+    options: [
+      {
+        label_ar: "إضاءة ناعمة (Soft)",
+        label_en: "Soft Lighting",
+        value: "soft diffused studio lighting, no harsh shadows"
+      },
+      {
+        label_ar: "إضاءة درامية (Hard)",
+        label_en: "Dramatic Lighting",
+        value: "high-contrast dramatic lighting, sharp highlights"
+      },
+      {
+        label_ar: "إضاءة ملونة (Neon)",
+        label_en: "Neon/RGB",
+        value: "vibrant RGB neon lighting, futuristic"
+      },
+      {
+        label_ar: "إضاءة خلفية",
+        label_en: "Backlit",
+        value: "elegant backlighting, glowing edges"
+      }
+    ]
+  },
+  {
+    id: "shotType",
+    title_ar: "نوع اللقطة",
+    title_en: "Shot Type",
+    type: "select",
+    options: [
+      {
+        label_ar: "عين الطائر (Top Down)",
+        label_en: "Top Down",
+        value: "flat lay top down perspective"
+      },
+      {
+        label_ar: "لقطة مقربة (Macro)",
+        label_en: "Macro Close-up",
+        value: "extreme close-up on product details and texture"
+      },
+      {
+        label_ar: "لقطة عينية",
+        label_en: "Eye Level",
+        value: "eye level hero shot"
+      },
+      {
+        label_ar: "زاوية منخفضة",
+        label_en: "Low Angle",
+        value: "low angle, making the product look heroic"
+      }
+    ]
+  },
+  {
+    id: "rendering",
+    title_ar: "جودة الرندر",
+    title_en: "Render Engine",
+    type: "select",
+    options: [
+      {
+        label_ar: "Octane Render",
+        label_en: "Octane Render",
+        value: "rendered in Octane, photorealistic, 8k"
+      },
+      {
+        label_ar: "Ray Tracing",
+        label_en: "Ray Tracing",
+        value: "hyper realistic ray tracing, realistic reflections"
+      },
+      {
+        label_ar: "واقعي فوتوغرافي",
+        label_en: "Photorealistic",
+        value: "professional studio photography, high resolution"
+      }
+    ]
+  },
+  {
+    id: "aspectRatio",
+    title_ar: "أبعاد الصورة",
+    title_en: "Aspect Ratio",
+    type: "select",
+    options: [
+      {
+        label_ar: "مربع (1:1)",
+        label_en: "Square (1:1)",
+        value: "1:1"
+      },
+      {
+        label_ar: "بورتريه (4:5)",
+        label_en: "Portrait (4:5)",
+        value: "4:5"
+      },
+      {
+        label_ar: "عرضي (16:9)",
+        label_en: "Widescreen (16:9)",
+        value: "16:9"
+      }
+    ]
+  }
+]
+  }
+};

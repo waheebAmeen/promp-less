@@ -1,0 +1,178 @@
+export const architecturePrompts = {
+  default: {
+    id: 'architecture_default',
+    title: 'معمار (افتراضي)',
+    description: 'التدفق الأساسي لـ معمار',
+    template: `Architectural photography of \${idea}, \${style}, \${environment}, \${lighting}, \${view}, \${material}, high resolution, sharp focus, 8k, realistic textures --ar \${aspectRatio}`,
+    questions: [
+  {
+    id: "style",
+    title_ar: "النمط المعماري",
+    title_en: "Architectural Style",
+    type: "select",
+    options: [
+      {
+        label_ar: "مودرن (Modern)",
+        label_en: "Modern",
+        value: "modern minimalist architecture, clean lines"
+      },
+      {
+        label_ar: "مستقبلي (Futuristic)",
+        label_en: "Futuristic",
+        value: "futuristic organic architecture, Zaha Hadid style"
+      },
+      {
+        label_ar: "إسلامي حديث",
+        label_en: "Modern Islamic",
+        value: "modern Islamic architecture, intricate geometric patterns"
+      },
+      {
+        label_ar: "وحشي (Brutalist)",
+        label_en: "Brutalist",
+        value: "brutalist architecture, raw concrete, massive forms"
+      },
+      {
+        label_ar: "كلاسيكي",
+        label_en: "Classic",
+        value: "classic timeless architecture, elegant details"
+      }
+    ]
+  },
+  {
+    id: "environment",
+    title_ar: "البيئة المحيطة",
+    title_en: "Environment",
+    type: "select",
+    options: [
+      {
+        label_ar: "وسط المدينة (Urban)",
+        label_en: "Urban City",
+        value: "located in a bustling modern urban city center"
+      },
+      {
+        label_ar: "واحة صحراوية",
+        label_en: "Desert Oasis",
+        value: "located in a serene luxury desert oasis"
+      },
+      {
+        label_ar: "غابة خضراء",
+        label_en: "Forest",
+        value: "nestled in a lush green forest environment"
+      },
+      {
+        label_ar: "على الشاطئ",
+        label_en: "Beachfront",
+        value: "overlooking a calm crystal clear ocean beach"
+      }
+    ]
+  },
+  {
+    id: "lighting",
+    title_ar: "وقت اللقطة / الإضاءة",
+    title_en: "Time / Lighting",
+    type: "select",
+    options: [
+      {
+        label_ar: "وقت الغروب (Golden Hour)",
+        label_en: "Golden Hour",
+        value: "warm golden hour sunset lighting, long shadows"
+      },
+      {
+        label_ar: "وقت الليل (Night)",
+        label_en: "Night/Illuminated",
+        value: "at night, beautifully illuminated with artificial lights"
+      },
+      {
+        label_ar: "وقت الظهيرة (High Sun)",
+        label_en: "High Noon",
+        value: "bright high noon sunlight, clear sky"
+      },
+      {
+        label_ar: "وقت الغسق (Blue Hour)",
+        label_en: "Blue Hour",
+        value: "cool blue hour twilight lighting"
+      }
+    ]
+  },
+  {
+    id: "view",
+    title_ar: "زاوية العرض",
+    title_en: "View Angle",
+    type: "select",
+    options: [
+      {
+        label_ar: "منظور خارجي (Exterior)",
+        label_en: "Exterior View",
+        value: "exterior hero shot, wide angle"
+      },
+      {
+        label_ar: "منظور داخلي (Interior)",
+        label_en: "Interior View",
+        value: "luxurious interior design shot, spacious"
+      },
+      {
+        label_ar: "لقطة علوية (Drone)",
+        label_en: "Drone View",
+        value: "aerial drone photography, looking down"
+      },
+      {
+        label_ar: "لقطة زاوية (Corner)",
+        label_en: "Corner View",
+        value: "dynamic corner perspective"
+      }
+    ]
+  },
+  {
+    id: "material",
+    title_ar: "المواد الغالبة",
+    title_en: "Primary Materials",
+    type: "select",
+    options: [
+      {
+        label_ar: "زجاج وفولاذ",
+        label_en: "Glass & Steel",
+        value: "dominated by floor-to-ceiling glass and polished steel"
+      },
+      {
+        label_ar: "خرسانة ناعمة",
+        label_en: "Smooth Concrete",
+        value: "raw smooth concrete textures"
+      },
+      {
+        label_ar: "خشب وحجر طبيعي",
+        label_en: "Wood & Stone",
+        value: "warm wood accents and natural stone walls"
+      },
+      {
+        label_ar: "رخام فاخر",
+        label_en: "Luxury Marble",
+        value: "polished white luxury marble"
+      }
+    ]
+  },
+  {
+    id: "aspectRatio",
+    title_ar: "أبعاد الصورة",
+    title_en: "Aspect Ratio",
+    type: "select",
+    options: [
+      {
+        label_ar: "سينمائي (21:9)",
+        label_en: "Cinematic (21:9)",
+        value: "21:9"
+      },
+      {
+        label_ar: "عرضي (16:9)",
+        label_en: "Widescreen (16:9)",
+        value: "16:9"
+      },
+      {
+        label_ar: "ستاندرد (4:3)",
+        label_en: "Standard (4:3)",
+        value: "4:3"
+      }
+    ]
+  }
+]
+  }
+};

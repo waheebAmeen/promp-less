@@ -146,7 +146,7 @@ export function AuthScreen() {
                   }}
                   className="h-14 rounded-2xl w-full"
                   style={{ backgroundColor: 'transparent', borderColor: theme.borderSubtle, borderWidth: 1 }}
-                  textStyle={{ color: theme.text }}
+                  titleStyle={{ color: theme.text }}
                 />
                 <Typography className="text-center text-xs mt-3" style={{ color: theme.textMuted }}>
                   {t('auth.guest_note', { defaultValue: 'Note: You can create Prompts as guest, but saving requires signing in.' })}

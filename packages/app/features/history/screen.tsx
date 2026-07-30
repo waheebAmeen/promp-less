@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTheme } from '../../design/useTheme';
 import { View, ScreenContainer, FlatList, TouchableOpacity, DecorativeBackground } from '../../design/view';
 import { Platform } from 'react-native';
 import { Typography } from '../../components/Typography';
@@ -10,6 +11,7 @@ import { useAppStore, PromptHistory } from '../../storage/store';
 import { useRouter } from 'solito/router';
 
 export function HistoryScreen() {
+  const theme = useTheme();
   const { t } = useTranslation();
   const { history, removePrompt } = useAppStore();
   const { back } = useRouter();
@@ -24,12 +26,12 @@ export function HistoryScreen() {
     <ScreenContainer>
       <DecorativeBackground />
 
-      <View className="border-b border-white/5 bg-background/50 backdrop-blur-md z-40">
+      <View className={`border-b ${theme.borderSubtle} ${theme.headerBg} backdrop-blur-md z-40`}>
         <View className="max-w-4xl mx-auto w-full px-6 py-4 flex-row justify-between items-center">
-          <Typography variant="h1" className="text-2xl font-bold text-white tracking-wide">
+          <Typography variant="h1" className={`text-2xl font-bold ${theme.text} tracking-wide`}>
             {t('history.title')}
           </Typography>
-          <TouchableOpacity onPress={() => back()} className="w-10 h-10 bg-surface rounded-full items-center justify-center border border-white/10 backdrop-blur-md">
+          <TouchableOpacity onPress={() => back()} className={`w-10 h-10 ${theme.surface} rounded-full items-center justify-center border ${theme.border} backdrop-blur-md`}>
             <Icon name="back" size={20} color="#94a3b8" />
           </TouchableOpacity>
         </View>
@@ -41,13 +43,13 @@ export function HistoryScreen() {
             placeholder={t('history.search', { defaultValue: 'البحث في السجل...' })}
             value={searchQuery}
             onChangeText={setSearchQuery}
-            className="bg-surface/60 backdrop-blur-md border-white/10 h-14 px-6 rounded-2xl"
+            className={`${theme.surface}/60 backdrop-blur-md ${theme.border} h-14 px-6 rounded-2xl`}
           />
         </View>
         
         {filteredHistory.length === 0 ? (
           <View className="flex-1 justify-center items-center p-8">
-            <Typography className="text-slate-500 text-center text-lg font-medium">
+            <Typography className={`${theme.textMuted} text-center text-lg font-medium`}>
               {history.length === 0 ? t('history.empty') : t('history.no_results', { defaultValue: 'لا توجد نتائج مطابقة' })}
             </Typography>
           </View>
@@ -60,8 +62,8 @@ export function HistoryScreen() {
             key={Platform.OS === 'web' ? 'web-list' : 'mobile-list'}
             renderItem={({ item }: { item: any }) => (
               <View className="w-full md:w-1/2 p-2">
-                <Card className="bg-surface-light/40 border border-white/5 shadow-glass p-6 rounded-3xl h-full">
-                  <View className="flex-row justify-between items-center mb-5 border-b border-white/5 pb-3">
+                <Card className={`${theme.cardBg} border ${theme.borderSubtle} shadow-glass p-6 rounded-3xl h-full`}>
+                  <View className={`flex-row justify-between items-center mb-5 border-b ${theme.borderSubtle} pb-3`}>
                     <View className="bg-primary/10 px-3 py-1 rounded-full border border-primary/20">
                       <Typography variant="caption" className="uppercase text-primary-glow font-bold text-[10px]">
                         {t(`home.categories.${item.category}`)}
@@ -71,7 +73,7 @@ export function HistoryScreen() {
                       <Icon name="delete" size={14} color="#f87171" />
                     </TouchableOpacity>
                   </View>
-                  <Typography className="text-slate-200 text-base leading-relaxed" numberOfLines={5}>
+                  <Typography className={`${theme.text} text-base leading-relaxed`} numberOfLines={5}>
                     {item.prompt}
                   </Typography>
                 </Card>

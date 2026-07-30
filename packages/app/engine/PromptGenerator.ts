@@ -1,5 +1,16 @@
 import { TargetModel } from './types';
 
+export const generateQuestions = (query: string): string[] => {
+  // Example: Generate 5 questions based on the query
+  return [
+    `What is the main idea behind "${query}"?`,
+    `How would you describe "${query}" in detail?`,
+    `What are the key elements of "${query}"?`,
+    `Can you provide examples related to "${query}"?`,
+    `What are the potential applications of "${query}"?`
+  ];
+};
+
 export const formatPromptForModel = (basePrompt: string, targetModel: TargetModel = 'midjourney'): string => {
   let formatted = basePrompt;
 
@@ -78,6 +89,14 @@ export const formatPromptForModel = (basePrompt: string, targetModel: TargetMode
         formatted = `${formatted}, ${aspectRatio} framing`;
       }
       formatted = `${formatted}, Leonardo PhotoReal style, cinematic lighting, 8k render, octane detail`;
+      break;
+
+    case 'chatgpt':
+    case 'claude':
+      // Text generation models
+      formatted = formatted.replace(/--ar\s+[0-9]+:[0-9]+/gi, '');
+      formatted = formatted.replace(/--[a-z0-9-]+\s+\S+/gi, '');
+      formatted = `${formatted}\n\nPlease format your response using Markdown with clear headings and bullet points where appropriate.`;
       break;
   }
 

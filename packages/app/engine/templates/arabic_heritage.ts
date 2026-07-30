@@ -1,0 +1,130 @@
+export const arabic_heritagePrompts = {
+  default: {
+    id: 'arabic_heritage_default',
+    title: 'تراث وعرب (افتراضي)',
+    description: 'التدفق الأساسي لـ تراث وعرب',
+    template: `Cinematic artwork of \${idea}, \${arabianTheme}, \${architecturalStyle}, \${lightingAtmosphere}, \${timeOfDay}, \${calligraphyDetails}, epic Arabian storytelling visual, masterpiece, highly detailed, 8k resolution --ar \${aspectRatio}`,
+    questions: [
+  {
+    id: "arabianTheme",
+    title_ar: "طابع الفكرة العربية والتراثية",
+    title_en: "Arabian Narrative Theme",
+    type: "select",
+    options: [
+      {
+        label_ar: "فروسية وأصالة خيل عربية",
+        label_en: "Equestrian & Purebred Horses",
+        value: "majestic Arabian purebred horse rider in desert dunes, flowing traditional bisht"
+      },
+      {
+        label_ar: "ألف ليلة وليلة وفنتازيا شرقية",
+        label_en: "Arabian Nights Fantasy",
+        value: "mythical Arabian fantasy scene, glowing magical lanterns and starlight"
+      },
+      {
+        label_ar: "مستقبل نيوم والمعمار العربي المعاصر",
+        label_en: "Neo-Arabian Futurism",
+        value: "futuristic neo-Arabian megacity, sleek golden architectural towers"
+      },
+      {
+        label_ar: "مجلس عربي ملكي وتكريم",
+        label_en: "Royal Heritage Majlis",
+        value: "opulent Arabian royal majlis, hand-woven carpets and brass coffee pots"
+      }
+    ]
+  },
+  {
+    id: "architecturalStyle",
+    title_ar: "النمط المعماري والتصميم",
+    title_en: "Architectural Elements",
+    type: "select",
+    options: [
+      {
+        label_ar: "نقوش إسلامية وزخارف هندسية",
+        label_en: "Islamic Geometric Patterns",
+        value: "intricate Islamic geometric arches and mosaic tilework"
+      },
+      {
+        label_ar: "طين نجد وتراث العلا والتاريخ",
+        label_en: "Traditional Clay & Oasis",
+        value: "ancient sun-baked mudbrick architecture, lush date palm oasis"
+      },
+      {
+        label_ar: "زجاج حديث منقوش بذهب",
+        label_en: "Modern Gold Lattice Glass",
+        value: "hyper-modern glass skyscraper with gold mashrabiya lattice facade"
+      }
+    ]
+  },
+  {
+    id: "lightingAtmosphere",
+    title_ar: "إضاءة وأجواء المشهد",
+    title_en: "Lighting & Atmosphere",
+    type: "select",
+    options: [
+      {
+        label_ar: "غروب صحراوي ذهبي وسحر الكثبان",
+        label_en: "Golden Desert Sunset",
+        value: "dramatic golden hour sunset over endless desert dunes, warm orange glow"
+      },
+      {
+        label_ar: "ليل صحراوي مجري ونجوم متلألئة",
+        label_en: "Starlit Desert Night",
+        value: "clear desert night sky filled with Milky Way galaxy stars, moonlit sand"
+      },
+      {
+        label_ar: "إضاءة الفجر والضباب الخفيف",
+        label_en: "Dawn Misty Light",
+        value: "peaceful early morning dawn light with soft desert haze"
+      }
+    ]
+  },
+  {
+    id: "calligraphyDetails",
+    title_ar: "لمسات الفن والخط العربي",
+    title_en: "Calligraphy & Art Detail",
+    type: "select",
+    options: [
+      {
+        label_ar: "خط كوفي معاصر ذهبي",
+        label_en: "Golden Kufic Calligraphy",
+        value: "subtle floating 3D golden Arabic Kufic calligraphic motifs"
+      },
+      {
+        label_ar: "تزويق بالذهب واللازورد",
+        label_en: "Gold & Lapis Lazuli Accents",
+        value: "royal lapis lazuli blue and gold leaf decorative accents"
+      },
+      {
+        label_ar: "واقعية سينمائية بدون كتابة",
+        label_en: "Pure Cinematic Visual",
+        value: "pure cinematic visual depth without text overlays"
+      }
+    ]
+  },
+  {
+    id: "aspectRatio",
+    title_ar: "أبعاد الصورة",
+    title_en: "Aspect Ratio",
+    type: "select",
+    options: [
+      {
+        label_ar: "سينمائي عريض جداً (21:9)",
+        label_en: "Ultra-Wide Cinematic (21:9)",
+        value: "21:9"
+      },
+      {
+        label_ar: "شاشة عريضة (16:9)",
+        label_en: "Widescreen (16:9)",
+        value: "16:9"
+      },
+      {
+        label_ar: "بورتريه طولي (9:16)",
+        label_en: "Vertical Story (9:16)",
+        value: "9:16"
+      }
+    ]
+  }
+]
+  }
+};

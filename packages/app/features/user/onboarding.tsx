@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTheme } from '../../design/useTheme';
 import { View, ScreenContainer, TouchableOpacity, DecorativeBackground } from '../../design/view';
 import { Typography } from '../../components/Typography';
 import { Button } from '../../components/Button';
@@ -7,6 +8,7 @@ import { useTranslation } from 'react-i18next';
 import { useAppStore } from '../../storage/store';
 
 export function OnboardingScreen({ onComplete }: { onComplete: () => void }) {
+  const theme = useTheme();
   const { t, i18n } = useTranslation();
   const isRtl = i18n.language === 'ar';
   const { darkMode, toggleDarkMode, setLanguage, language } = useAppStore();
@@ -56,16 +58,16 @@ export function OnboardingScreen({ onComplete }: { onComplete: () => void }) {
       <View className="flex-row justify-between items-center px-6 pt-6 z-20">
         <TouchableOpacity 
           onPress={() => setLanguage(language === 'ar' ? 'en' : 'ar')}
-          className={`px-3 py-1.5 rounded-full border ${darkMode ? 'bg-surface/60 border-white/10' : 'bg-white border-slate-200'}`}
+          className={`px-3 py-1.5 rounded-full border ${darkMode ? '${theme.surface}/60 ${theme.border}' : 'bg-white border-slate-200'}`}
         >
-          <Typography className={`text-xs font-bold ${darkMode ? 'text-slate-300' : 'text-slate-700'}`}>
+          <Typography className={`text-xs font-bold ${theme.textSecondary}`}>
             {language === 'ar' ? 'English' : 'العربية'}
           </Typography>
         </TouchableOpacity>
 
         <TouchableOpacity 
           onPress={toggleDarkMode}
-          className={`w-10 h-10 rounded-full items-center justify-center border ${darkMode ? 'bg-surface/60 border-white/10' : 'bg-white border-slate-200'}`}
+          className={`w-10 h-10 rounded-full items-center justify-center border ${darkMode ? '${theme.surface}/60 ${theme.border}' : 'bg-white border-slate-200'}`}
         >
           <Icon name={darkMode ? 'settings' : 'apps'} size={18} color={darkMode ? '#f59e0b' : '#3b82f6'} />
         </TouchableOpacity>
@@ -78,11 +80,11 @@ export function OnboardingScreen({ onComplete }: { onComplete: () => void }) {
              <Typography className="text-5xl font-black text-primary-glow">P</Typography>
           </View>
 
-          <Typography variant="h1" className={`text-4xl md:text-5xl font-black mb-4 text-center tracking-tight ${darkMode ? 'text-white' : 'text-slate-900'}`}>
+          <Typography variant="h1" className={`text-4xl md:text-5xl font-black mb-4 text-center tracking-tight ${darkMode ? '${theme.text}' : 'text-slate-900'}`}>
             Promptless
           </Typography>
 
-          <Typography className={`text-lg md:text-xl font-medium text-center mb-12 leading-relaxed max-w-md ${darkMode ? 'text-slate-300' : 'text-slate-600'}`}>
+          <Typography className={`text-lg md:text-xl font-medium text-center mb-12 leading-relaxed max-w-md ${theme.textMuted}`}>
             {isRtl ? "حوّل فكرتك إلى Prompt احترافي في أقل من دقيقة." : "Turn your idea into a professional Prompt in less than a minute."}
           </Typography>
 
@@ -107,7 +109,7 @@ export function OnboardingScreen({ onComplete }: { onComplete: () => void }) {
                ))}
              </View>
              <TouchableOpacity onPress={onComplete} className="px-3 py-1">
-                <Typography className={`font-bold text-sm ${darkMode ? 'text-slate-400' : 'text-slate-500'}`}>
+                <Typography className={`font-bold text-sm ${darkMode ? '${theme.textMuted}' : '${theme.textMuted}'}`}>
                   {isRtl ? "تخطي" : "Skip"}
                 </Typography>
              </TouchableOpacity>
@@ -115,16 +117,16 @@ export function OnboardingScreen({ onComplete }: { onComplete: () => void }) {
 
           {/* Current Slide Content */}
           <View className="flex-1 justify-center items-center text-center px-2">
-             <View className={`w-20 h-20 rounded-3xl items-center justify-center mb-8 border ${darkMode ? 'bg-surface/80 border-white/10' : 'bg-white border-slate-200 shadow-sm'}`}>
-                <Typography className="text-2xl font-black text-primary">{slides[currentSlide].stepNum}</Typography>
+             <View className={`w-20 h-20 rounded-3xl items-center justify-center mb-8 border ${darkMode ? '${theme.surface}/80 ${theme.border}' : 'bg-white border-slate-200 shadow-sm'}`}>
+                <Typography className="text-2xl font-black text-primary">{slides[currentSlide]?.stepNum}</Typography>
              </View>
 
-             <Typography variant="h1" className={`text-2xl md:text-3xl font-black mb-4 text-center leading-snug ${darkMode ? 'text-white' : 'text-slate-900'}`}>
-               {slides[currentSlide].title}
+             <Typography variant="h1" className={`text-2xl md:text-3xl font-black mb-4 text-center leading-snug ${darkMode ? '${theme.text}' : 'text-slate-900'}`}>
+               {slides[currentSlide]?.title}
              </Typography>
 
-             <Typography className={`text-base font-medium text-center leading-relaxed max-w-sm ${darkMode ? 'text-slate-400' : 'text-slate-600'}`}>
-               {slides[currentSlide].desc}
+             <Typography className={`text-base font-medium text-center leading-relaxed max-w-sm ${darkMode ? '${theme.textMuted}' : '${theme.textMuted}'}`}>
+               {slides[currentSlide]?.desc}
              </Typography>
           </View>
 

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTheme } from '../../design/useTheme';
 import { View, ScrollView, ScreenContainer, TouchableOpacity, DecorativeBackground, Switch } from '../../design/view';
 import { Typography } from '../../components/Typography';
 import { Icon } from '../../components/Icon';
@@ -14,6 +15,7 @@ import { Platform, Alert } from 'react-native';
 type Tab = 'overview' | 'users' | 'workflows' | 'settings';
 
 export function AdminScreen() {
+  const theme = useTheme();
   const { t, i18n } = useTranslation();
   const isRtl = i18n.language === 'ar';
   const { push, back } = useRouter();
@@ -61,9 +63,9 @@ export function AdminScreen() {
           { label: 'Banned Users', value: users.filter(u => u.status === 'banned').length, icon: 'delete', color: 'text-accent-rose' },
         ].map((stat, i) => (
           <View key={i} className="w-1/2 md:w-1/4 p-2">
-            <Card className="bg-surface-light/30 border-white/5 items-center py-6">
+            <Card className={`${theme.cardBg} ${theme.borderSubtle} items-center py-6`}>
                <Typography variant="h1" className={`${stat.color} text-3xl mb-1`}>{stat.value}</Typography>
-               <Typography variant="caption" className="text-slate-500 font-bold uppercase text-[10px] tracking-widest">{stat.label}</Typography>
+               <Typography variant="caption" className={`${theme.textMuted} font-bold uppercase text-[10px] tracking-widest`}>{stat.label}</Typography>
             </Card>
           </View>
         ))}
@@ -72,28 +74,28 @@ export function AdminScreen() {
       {/* Recent Activity */}
       <View>
         <View className="flex-row justify-between items-end mb-6 px-2">
-          <Typography variant="h2" className="text-xl font-black text-white">Recent Activity</Typography>
+          <Typography variant="h2" className={`text-xl font-black ${theme.text}`}>Recent Activity</Typography>
           <TouchableOpacity onPress={clearGlobalHistory}>
              <Typography variant="caption" className="text-accent-rose font-bold">Clear Logs</Typography>
           </TouchableOpacity>
         </View>
-        <Card className="bg-surface/40 border-white/5 p-0 overflow-hidden">
+        <Card className={`${theme.cardBg} ${theme.borderSubtle} p-0 overflow-hidden`}>
           {globalHistory.slice(0, 10).map((log, i) => (
-            <View key={log.id} className={`p-4 flex-row items-center gap-4 ${i !== 0 ? 'border-t border-white/5' : ''}`}>
-               <View className="w-10 h-10 rounded-full bg-white/5 items-center justify-center border border-white/5">
-                  <Typography className="text-[10px] font-black uppercase text-slate-500">{log.workflowId.substring(0, 3)}</Typography>
+            <View key={log.id} className={`p-4 flex-row items-center gap-4 ${i !== 0 ? 'border-t ${theme.borderSubtle}' : ''}`}>
+               <View className={`w-10 h-10 rounded-full bg-white/5 items-center justify-center border ${theme.borderSubtle}`}>
+                  <Typography className={`text-[10px] font-black uppercase ${theme.textMuted}`}>{log.workflowId.substring(0, 3)}</Typography>
                </View>
                <View className="flex-1">
-                  <Typography className="text-slate-200 text-sm font-medium" numberOfLines={1}>
+                  <Typography className={`${theme.text} text-sm font-medium`} numberOfLines={1}>
                     <Typography className="text-primary-glow font-bold">{log.userName}</Typography> created a prompt
                   </Typography>
-                  <Typography variant="caption" className="text-slate-500 text-[10px]">{new Date(log.createdAt).toLocaleString()}</Typography>
+                  <Typography variant="caption" className={`${theme.textMuted} text-[10px]`}>{new Date(log.createdAt).toLocaleString()}</Typography>
                </View>
             </View>
           ))}
           {globalHistory.length === 0 && (
             <View className="p-10 items-center">
-               <Typography className="text-slate-600 italic">No activity logs yet</Typography>
+               <Typography className={`${theme.textMuted} italic`}>No activity logs yet</Typography>
             </View>
           )}
         </Card>
@@ -104,21 +106,21 @@ export function AdminScreen() {
   const renderUsers = () => (
     <View>
       <View className="mb-6 px-2">
-         <Typography variant="h2" className="text-xl font-black text-white">User Management</Typography>
-         <Typography variant="caption" className="text-slate-500">Manage permissions and account status</Typography>
+         <Typography variant="h2" className={`text-xl font-black ${theme.text}`}>User Management</Typography>
+         <Typography variant="caption" className={`${theme.textMuted}`}>Manage permissions and account status</Typography>
       </View>
       
       <View className="gap-4">
         {users.map(u => (
-          <Card key={u.id} className="bg-surface-light/30 border-white/5 p-5">
+          <Card key={u.id} className={`${theme.cardBg} ${theme.borderSubtle} p-5`}>
             <View className="flex-row justify-between items-start">
                <View className="flex-row gap-4 items-center">
-                  <View className={`w-12 h-12 rounded-full items-center justify-center ${u.role === 'admin' ? 'bg-primary/20 border border-primary/30' : 'bg-white/5 border border-white/10'}`}>
+                  <View className={`w-12 h-12 rounded-full items-center justify-center ${u.role === 'admin' ? 'bg-primary/20 border border-primary/30' : 'bg-white/5 border ${theme.border}'}`}>
                      <Typography className="text-xl">{u.role === 'admin' ? '🛡️' : '👤'}</Typography>
                   </View>
                   <View>
-                     <Typography className="text-white font-bold text-lg">{u.name}</Typography>
-                     <Typography variant="caption" className="text-slate-500">{u.email}</Typography>
+                     <Typography className={`${theme.text} font-bold text-lg`}>{u.name}</Typography>
+                     <Typography variant="caption" className={`${theme.textMuted}`}>{u.email}</Typography>
                   </View>
                </View>
                <View className={`px-3 py-1 rounded-full ${u.status === 'active' ? 'bg-emerald-500/10 border border-emerald-500/20' : 'bg-red-500/10 border border-red-500/20'}`}>
@@ -126,7 +128,7 @@ export function AdminScreen() {
                </View>
             </View>
             
-            <View className="flex-row gap-3 mt-6 pt-5 border-t border-white/5">
+            <View className={`flex-row gap-3 mt-6 pt-5 border-t ${theme.borderSubtle}`}>
                <TouchableOpacity 
                 onPress={() => updateUser(u.id, { status: u.status === 'active' ? 'banned' : 'active' })}
                 className={`flex-1 h-10 rounded-xl items-center justify-center ${u.status === 'active' ? 'bg-red-500/10' : 'bg-emerald-500/10'}`}
@@ -139,7 +141,7 @@ export function AdminScreen() {
                 onPress={() => updateUser(u.id, { role: u.role === 'admin' ? 'user' : 'admin' })}
                 className="flex-1 h-10 bg-white/5 rounded-xl items-center justify-center"
                >
-                  <Typography className="text-slate-400 font-bold text-xs">
+                  <Typography className={`${theme.textMuted} font-bold text-xs`}>
                     {u.role === 'admin' ? 'Revoke Admin' : 'Make Admin'}
                   </Typography>
                </TouchableOpacity>
@@ -194,60 +196,60 @@ export function AdminScreen() {
     return (
        <View className="gap-8 pb-20">
           <View className="flex-row justify-between items-center px-2">
-             <Typography variant="h2" className="text-xl font-black text-white">Edit Workflow</Typography>
+             <Typography variant="h2" className={`text-xl font-black ${theme.text}`}>Edit Workflow</Typography>
              <TouchableOpacity onPress={() => setEditingWorkflowId(null)} className="px-4 py-2 bg-white/5 rounded-full">
-                <Typography className="text-slate-400 font-bold text-xs">Close Editor</Typography>
+                <Typography className={`${theme.textMuted} font-bold text-xs`}>Close Editor</Typography>
              </TouchableOpacity>
           </View>
 
-          <Card className="bg-surface-light/30 border-white/5 p-6 gap-6">
+          <Card className={`${theme.cardBg} ${theme.borderSubtle} p-6 gap-6`}>
              <View>
-                <Typography variant="caption" className="text-slate-500 mb-2 uppercase font-black text-[10px]">Workflow Name (EN / AR)</Typography>
+                <Typography variant="caption" className={`${theme.textMuted} mb-2 uppercase font-black text-[10px]`}>Workflow Name (EN / AR)</Typography>
                 <View className="flex-row gap-2">
                    <Input 
                     value={editingWorkflow.name_en} 
                     onChangeText={(t) => handleUpdateField('name_en', t)}
-                    className="flex-1 bg-black/20 border-white/5" 
+                    className={`flex-1 ${theme.inputBg} ${theme.borderSubtle}`} 
                    />
                    <Input 
                     value={editingWorkflow.name_ar} 
                     onChangeText={(t) => handleUpdateField('name_ar', t)}
-                    className="flex-1 bg-black/20 border-white/5" 
+                    className={`flex-1 ${theme.inputBg} ${theme.borderSubtle}`} 
                    />
                 </View>
              </View>
              <View>
-                <Typography variant="caption" className="text-slate-500 mb-2 uppercase font-black text-[10px]">Prompt Template</Typography>
+                <Typography variant="caption" className={`${theme.textMuted} mb-2 uppercase font-black text-[10px]`}>Prompt Template</Typography>
                 <Input 
                   multiline 
                   numberOfLines={3} 
                   value={editingWorkflow.template}
                   onChangeText={(t) => handleUpdateField('template', t)}
-                  className="bg-black/20 border-white/5 h-24 font-mono text-xs text-primary-glow" 
+                  className={`${theme.inputBg} ${theme.borderSubtle} h-24 font-mono text-xs text-primary-glow`} 
                 />
              </View>
           </Card>
 
           <View className="flex-row justify-between items-center px-2">
-             <Typography variant="h2" className="text-lg font-black text-white">Question Blocks</Typography>
+             <Typography variant="h2" className={`text-lg font-black ${theme.text}`}>Question Blocks</Typography>
              <TouchableOpacity onPress={handleAddQuestion} className="bg-primary/20 px-4 py-2 rounded-full border border-primary/30">
                 <Typography className="text-primary-glow font-bold text-xs">+ Add Question</Typography>
              </TouchableOpacity>
           </View>
 
           {editingWorkflow.questions.map((q, qIndex) => (
-             <Card key={q.id} className="bg-surface/40 border-white/10 p-6">
+             <Card key={q.id} className={`${theme.cardBg} ${theme.border} p-6`}>
                 <View className="flex-row justify-between items-start mb-6">
                    <View className="flex-1 mr-4">
                       <Input 
                         value={q.title_en} 
                         onChangeText={(t) => handleUpdateQuestion(q.id, { title_en: t })}
-                        className="bg-black/20 border-white/5 mb-2 font-bold" 
+                        className={`${theme.inputBg} ${theme.borderSubtle} mb-2 font-bold`} 
                       />
                       <Input 
                         value={q.title_ar} 
                         onChangeText={(t) => handleUpdateQuestion(q.id, { title_ar: t })}
-                        className="bg-black/20 border-white/5" 
+                        className={`${theme.inputBg} ${theme.borderSubtle}`} 
                       />
                    </View>
                    <TouchableOpacity onPress={() => handleRemoveQuestion(q.id)} className="w-10 h-10 bg-red-500/10 rounded-full items-center justify-center border border-red-500/20">
@@ -255,7 +257,7 @@ export function AdminScreen() {
                    </TouchableOpacity>
                 </View>
 
-                <Typography variant="caption" className="text-slate-500 mb-4 uppercase font-black text-[10px]">Answer Options</Typography>
+                <Typography variant="caption" className={`${theme.textMuted} mb-4 uppercase font-black text-[10px]`}>Answer Options</Typography>
                 <View className="gap-2 mb-4">
                    {q.options?.map((opt, oIndex) => (
                       <View key={oIndex} className="flex-row gap-2">
@@ -267,7 +269,7 @@ export function AdminScreen() {
                             newOpts[oIndex] = { ...opt, label_en: t };
                             handleUpdateQuestion(q.id, { options: newOpts });
                           }}
-                          className="flex-1 bg-black/20 border-white/5 text-xs h-10" 
+                          className={`flex-1 ${theme.inputBg} ${theme.borderSubtle} text-xs h-10`} 
                          />
                          <Input 
                           placeholder="Value"
@@ -277,7 +279,7 @@ export function AdminScreen() {
                             newOpts[oIndex] = { ...opt, value: t };
                             handleUpdateQuestion(q.id, { options: newOpts });
                           }}
-                          className="flex-1 bg-black/20 border-white/5 text-xs h-10 text-primary-glow" 
+                          className={`flex-1 ${theme.inputBg} ${theme.borderSubtle} text-xs h-10 text-primary-glow`} 
                          />
                          <TouchableOpacity 
                           onPress={() => {
@@ -290,8 +292,8 @@ export function AdminScreen() {
                       </View>
                    ))}
                 </View>
-                <TouchableOpacity onPress={() => handleAddOption(q.id)} className="py-2 items-center bg-white/5 rounded-xl border border-white/5">
-                   <Typography className="text-slate-500 font-bold text-[10px]">+ Add Option</Typography>
+                <TouchableOpacity onPress={() => handleAddOption(q.id)} className={`py-2 items-center bg-white/5 rounded-xl border ${theme.borderSubtle}`}>
+                   <Typography className={`${theme.textMuted} font-bold text-[10px]`}>+ Add Option</Typography>
                 </TouchableOpacity>
              </Card>
           ))}
@@ -303,8 +305,8 @@ export function AdminScreen() {
     <View>
       <View className="flex-row justify-between items-center mb-6 px-2">
          <View>
-            <Typography variant="h2" className="text-xl font-black text-white">Workflow Engine</Typography>
-            <Typography variant="caption" className="text-slate-500">Dynamic category and template builder</Typography>
+            <Typography variant="h2" className={`text-xl font-black ${theme.text}`}>Workflow Engine</Typography>
+            <Typography variant="caption" className={`${theme.textMuted}`}>Dynamic category and template builder</Typography>
          </View>
          <TouchableOpacity 
           onPress={() => {
@@ -331,15 +333,15 @@ export function AdminScreen() {
 
       <View className="gap-4">
         {workflows.map(w => (
-          <Card key={w.id} className={`bg-surface-light/30 border-white/5 p-0 overflow-hidden ${!w.isActive ? 'opacity-50' : ''}`}>
+          <Card key={w.id} className={`${theme.cardBg} ${theme.borderSubtle} p-0 overflow-hidden ${!w.isActive ? 'opacity-50' : ''}`}>
              <View className="p-5 flex-row items-center justify-between">
                 <View className="flex-row items-center gap-4">
                    <View className={`w-12 h-12 rounded-2xl items-center justify-center ${w.color} border ${w.borderColor}`}>
                       <Icon name={w.icon as any} size={24} color={w.iconColor} />
                    </View>
                    <View className="flex-1">
-                      <Typography className="text-white font-bold text-lg" numberOfLines={1}>{w.name_en} / {w.name_ar}</Typography>
-                      <Typography variant="caption" className="text-slate-500">{w.questions.length} Questions</Typography>
+                      <Typography className={`${theme.text} font-bold text-lg`} numberOfLines={1}>{w.name_en} / {w.name_ar}</Typography>
+                      <Typography variant="caption" className={`${theme.textMuted}`}>{w.questions.length} Questions</Typography>
                    </View>
                 </View>
                 <View className="flex-row items-center gap-3">
@@ -362,12 +364,12 @@ export function AdminScreen() {
                   />
                 </View>
              </View>
-             <View className="bg-black/20 p-4 border-t border-white/5">
-                <Typography variant="caption" className="text-slate-400 text-[10px] uppercase font-black mb-1">Template String</Typography>
+             <View className={`${theme.inputBg} p-4 border-t ${theme.borderSubtle}`}>
+                <Typography variant="caption" className={`${theme.textMuted} text-[10px] uppercase font-black mb-1`}>Template String</Typography>
                 <Typography className="text-primary-glow/80 text-xs font-mono" numberOfLines={2}>{w.template}</Typography>
              </View>
              <TouchableOpacity onPress={() => setEditingWorkflowId(w.id)} className="py-3 items-center bg-white/5">
-                <Typography className="text-slate-400 font-bold text-xs">Edit Workflow Structure</Typography>
+                <Typography className={`${theme.textMuted} font-bold text-xs`}>Edit Workflow Structure</Typography>
              </TouchableOpacity>
           </Card>
         ))}
@@ -378,12 +380,12 @@ export function AdminScreen() {
   const renderSettings = () => (
     <View>
       <View className="mb-8 px-2">
-         <Typography variant="h2" className="text-xl font-black text-white">Global OS Settings</Typography>
-         <Typography variant="caption" className="text-slate-500">Configure platform-wide behavior</Typography>
+         <Typography variant="h2" className={`text-xl font-black ${theme.text}`}>Global OS Settings</Typography>
+         <Typography variant="caption" className={`${theme.textMuted}`}>Configure platform-wide behavior</Typography>
       </View>
 
-      <Card className="bg-surface-light/30 border-white/5 p-6 mb-8">
-         <Typography className="text-white font-bold mb-4">Prompt Quality Boosters</Typography>
+      <Card className={`${theme.cardBg} ${theme.borderSubtle} p-6 mb-8`}>
+         <Typography className={`${theme.text} font-bold mb-4`}>Prompt Quality Boosters</Typography>
          <View className="flex-row flex-wrap gap-2 mb-6">
             {qualityBoosters.map((b, i) => (
               <View key={i} className="flex-row items-center gap-2 bg-primary/10 border border-primary/20 px-4 py-2 rounded-full">
@@ -395,10 +397,10 @@ export function AdminScreen() {
             ))}
          </View>
          <View className="flex-row gap-2">
-            <View className="flex-1 bg-black/20 rounded-2xl border border-white/10 px-4 justify-center overflow-hidden">
+            <View className={`flex-1 ${theme.inputBg} rounded-2xl border ${theme.border} px-4 justify-center overflow-hidden`}>
                <Input 
                 placeholder="Add new booster..." 
-                className="bg-transparent border-0 h-12 text-white" 
+                className={`bg-transparent border-0 h-12 ${theme.text}`} 
                 value={newBooster}
                 onChangeText={setNewBooster}
                />
@@ -410,12 +412,12 @@ export function AdminScreen() {
       <Card className="bg-accent-rose/5 border-accent-rose/20 p-6">
          <Typography className="text-accent-rose font-bold mb-2">Maintenance Controls</Typography>
          <View className="gap-4">
-            <TouchableOpacity className="flex-row items-center justify-between p-4 bg-white/5 rounded-2xl border border-white/5">
-               <Typography className="text-slate-300 font-bold">System Maintenance Mode</Typography>
+            <TouchableOpacity className={`flex-row items-center justify-between p-4 bg-white/5 rounded-2xl border ${theme.borderSubtle}`}>
+               <Typography className={`${theme.textMuted} font-bold`}>System Maintenance Mode</Typography>
                <View className="w-10 h-5 rounded-full bg-slate-700 px-1 justify-center"><View className="w-3 h-3 rounded-full bg-white" /></View>
             </TouchableOpacity>
-            <TouchableOpacity className="flex-row items-center justify-between p-4 bg-white/5 rounded-2xl border border-white/5">
-               <Typography className="text-slate-300 font-bold">Block All Guest Access</Typography>
+            <TouchableOpacity className={`flex-row items-center justify-between p-4 bg-white/5 rounded-2xl border ${theme.borderSubtle}`}>
+               <Typography className={`${theme.textMuted} font-bold`}>Block All Guest Access</Typography>
                <View className="w-10 h-5 rounded-full bg-slate-700 px-1 justify-center"><View className="w-3 h-3 rounded-full bg-white" /></View>
             </TouchableOpacity>
          </View>
@@ -428,14 +430,14 @@ export function AdminScreen() {
       <DecorativeBackground />
 
       {/* Admin Header */}
-      <View className="border-b border-white/5 bg-background/50 backdrop-blur-md z-40">
+      <View className={`border-b ${theme.borderSubtle} ${theme.headerBg} backdrop-blur-md z-40`}>
         <View className="max-w-6xl mx-auto w-full px-6 py-4 flex-row items-center justify-between">
           <View className="flex-row items-center gap-4">
-             <TouchableOpacity onPress={() => back()} className="w-10 h-10 bg-surface rounded-full items-center justify-center border border-white/10">
+             <TouchableOpacity onPress={() => back()} className={`w-10 h-10 ${theme.surface} rounded-full items-center justify-center border ${theme.border}`}>
                 <Icon name="back" size={20} color="#94a3b8" />
              </TouchableOpacity>
              <View>
-                <Typography variant="h2" className="text-xl font-black text-white tracking-tight">Admin Control Center</Typography>
+                <Typography variant="h2" className={`text-xl font-black ${theme.text} tracking-tight`}>Admin Control Center</Typography>
                 <Typography className="text-primary-glow text-[10px] font-black uppercase tracking-widest">Promptless OS v1.0</Typography>
              </View>
           </View>
@@ -447,7 +449,7 @@ export function AdminScreen() {
 
       {/* Tabs Navigation */}
       {!editingWorkflowId && (
-        <View className="bg-surface/40 border-b border-white/5">
+        <View className={`${theme.cardBg} border-b ${theme.borderSubtle}`}>
           <ScrollView horizontal showsHorizontalScrollIndicator={false} className="px-6 py-4">
               <View className="flex-row gap-4">
                 {[
@@ -459,10 +461,10 @@ export function AdminScreen() {
                   <TouchableOpacity 
                     key={tab.id}
                     onPress={() => setActiveTab(tab.id as Tab)}
-                    className={`flex-row items-center gap-2 px-5 py-2.5 rounded-2xl transition-all ${activeTab === tab.id ? 'bg-primary border border-primary-glow shadow-neon-blue' : 'bg-white/5 border border-white/5'}`}
+                    className={`flex-row items-center gap-2 px-5 py-2.5 rounded-2xl transition-all ${activeTab === tab.id ? 'bg-primary border border-primary-glow shadow-neon-blue' : 'bg-white/5 border ${theme.borderSubtle}'}`}
                   >
                       <Icon name={tab.icon as any} size={16} color={activeTab === tab.id ? 'white' : '#64748b'} />
-                      <Typography className={`font-bold text-sm ${activeTab === tab.id ? 'text-white' : 'text-slate-400'}`}>{tab.label}</Typography>
+                      <Typography className={`font-bold text-sm ${activeTab === tab.id ? '${theme.text}' : '${theme.textMuted}'}`}>{tab.label}</Typography>
                   </TouchableOpacity>
                 ))}
               </View>
