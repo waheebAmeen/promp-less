@@ -126,7 +126,7 @@ export function PreviewScreen() {
               <View className="px-6 pt-4 pb-2 flex-row items-center gap-2">
                 <View className="w-2 h-2 rounded-full bg-emerald-400" />
                 <Typography className="text-emerald-400 text-[10px] font-black uppercase tracking-widest">
-                  {isRtl ? 'تم التحسين بالذكاء الاصطناعي ✨' : 'AI Enhanced ✨'}
+                  {isRtl ? 'تم التحسين بالذكاء الاصطناعي ' : 'AI Enhanced '}
                 </Typography>
               </View>
             )}
@@ -184,7 +184,7 @@ export function PreviewScreen() {
               ) : (
                 <>
                   <Typography className="text-base">
-                    {isEnhanced ? '✅' : '✨'}
+                    {isEnhanced ? '✅' : ''}
                   </Typography>
                   <Typography className={`font-bold text-sm ${isEnhanced ? 'text-emerald-400' : 'text-violet-400'}`}>
                     {isEnhanced

@@ -34,8 +34,25 @@ export function HomeScreen() {
   const [complexity, setComplexity] = useState<'simple' | 'complex'>('simple');
   const [aiError, setAiError] = useState<string | null>(null);
 
-  const filteredWorkflows = workflows.filter(w => w.isActive);
+  // ترتيب الأقسام المخصص (قم بتعديل الترتيب هنا حسب رغبتك)
+  const categoryOrder = ['study', 'coding', 'writing', 'marketing'];
 
+ 
+  const filteredWorkflows = workflows
+    .filter(w => w.isActive)
+    .sort((a, b) => {
+      // إذا كان العنصر الأول هو other، اجعله في النهاية
+      if (a.id === 'other') return 1;
+      // إذا كان العنصر الثاني هو other، اجعل الأول قبله
+      if (b.id === 'other') return -1;
+ // إذا كان العنصر الأول هو other، اجعله في النهاية
+      if (a.id === 'video') return 1;
+      // إذا كان العنصر الثاني هو other، اجعل الأول قبله
+      if (b.id === 'video') return -1;
+      const indexA = categoryOrder.indexOf(a.id);
+      const indexB = categoryOrder.indexOf(b.id);
+      return (indexA === -1 ? 99 : indexA) - (indexB === -1 ? 99 : indexB);
+    });
   // Redirect to login if not authenticated
   useEffect(() => {
     if (!isAuthenticated) {
@@ -185,10 +202,10 @@ export function HomeScreen() {
           <View className="mb-8">
             <Typography className="text-primary-glow font-black uppercase text-[10px] tracking-[0.3em] mb-4">Promptless AI OS</Typography>
             <Typography variant="h1" className={`${theme.text} mb-4 text-4xl md:text-6xl font-black leading-tight tracking-tighter`}>
-               نظام المدير الإبداعي 
+                نظام المدير الإبداعي 
             </Typography>
             <Typography variant="caption" className={`text-lg font-medium max-w-xl leading-relaxed ${theme.textMuted}`}>
-               قم ببناء مطالبات بصرية متطورة باستخدام تدفقات عمل التوجية الفني الاحترافي 
+                قم ببناء مطالبات بصرية متطورة باستخدام تدفقات عمل التوجية الفني الاحترافي 
             </Typography>
           </View>
 
@@ -252,9 +269,9 @@ export function HomeScreen() {
                       }`}
                     >
                       {isListening ? (
-                        <View className="w-2.5 h-2.5 bg-red-500 rounded-sm" /> // Stop square
+                        <View className="w-2.5 h-2.5 bg-red-500 rounded-sm" />
                       ) : (
-                        <Icon name="mic" size={14} color={theme.colors.icon} /> // Mic icon
+                        <Icon name="mic" size={14} color={theme.colors.icon} />
                       )}
                     </TouchableOpacity>
                   )}
@@ -278,10 +295,9 @@ export function HomeScreen() {
               </View>
             </View>
 
-            {/* Complexity Mode Selector — appears when user has typed */}
+            {/* Complexity Mode Selector */}
             {magicIdea.trim().length > 0 && (
               <View className="mt-3 flex-row gap-2">
-                {/* Simple button */}
                 <TouchableOpacity
                   onPress={() => setComplexity('simple')}
                   className={`flex-1 py-3 rounded-2xl border-2 items-center ${
@@ -312,7 +328,6 @@ export function HomeScreen() {
                   </Typography>
                 </TouchableOpacity>
 
-                {/* Detailed button */}
                 <TouchableOpacity
                   onPress={() => setComplexity('complex')}
                   className={`flex-1 py-3 rounded-2xl border-2 items-center ${
@@ -362,27 +377,6 @@ export function HomeScreen() {
 
           {/* Categories Grid */}
           <View className="flex-row flex-wrap justify-start">
-            {/* Study & Education Fixed Card */}
-            <View className="w-1/2 md:w-1/3 lg:w-1/5 p-1.5 md:p-2">
-              <TouchableOpacity
-                activeOpacity={0.7}
-                className={`w-full overflow-hidden rounded-3xl border \${theme.cardBorder} \${theme.cardBg} \${theme.cardShadow}`}
-                onPress={() => push(`/category/study`)}
-              >
-                <View className="p-5">
-                  <View className={`w-12 h-12 rounded-2xl items-center justify-center mb-5 bg-blue-500/10 border border-blue-500/20`}>
-                    <Icon name="text" size={24} color="#3b82f6" strokeWidth={2.5} />
-                  </View>
-                  <Typography variant="h2" className={`text-lg font-bold mb-1 \${theme.text}`}>
-                    {isRtl ? 'الدراسة والتعليم' : 'Education'}
-                  </Typography>
-                  <Typography variant="caption" className={`text-xs font-medium \${theme.textMuted}`}>
-                    {isRtl ? 'تلقينات نصية' : 'Text Prompts'}
-                  </Typography>
-                </View>
-              </TouchableOpacity>
-            </View>
-
             {filteredWorkflows.map((cat) => (
               <View key={cat.id} className="w-1/2 md:w-1/3 lg:w-1/5 p-1.5 md:p-2">
                 <TouchableOpacity

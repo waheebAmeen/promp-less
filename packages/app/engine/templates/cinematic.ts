@@ -1,203 +1,361 @@
 export const cinematicPrompts = {
-  default: {
-    id: 'cinematic_default',
-    title: 'سينمائي (افتراضي)',
-    description: 'التدفق الأساسي لـ سينمائي',
-    template: `Cinematic shot of \${idea}, \${composition}, \${lighting}, \${colorGrading}, \${atmosphere}, filmed on \${camera}, \${lens}, highly detailed, cinematic atmosphere, 8k resolution, photorealistic --ar \${aspectRatio}`,
+  // 1. التفرع الأول: ملحمة خيالية / فانتسي
+  epic_fantasy: {
+    id: 'cinematic_epic_fantasy',
+    title: 'ملحمي وخيالي (Epic Fantasy)',
+    description: 'مناظر واسعة وعوالم خيالية ساحرة بجودة سينمائية فائقة',
+    template: `Epic cinematic fantasy shot of \${idea}, \${composition}, \${lighting}, \${colorGrading}, magical atmosphere, filmed on \${camera}, hyper-detailed, 8k --ar \${aspectRatio}`,
     questions: [
-  {
-    id: "composition",
-    title_ar: "تكوين المشهد (Composition)",
-    title_en: "Scene Composition",
-    type: "select",
-    options: [
       {
-        label_ar: "لقطة واسعة",
-        label_en: "Wide Shot",
-        value: "wide angle cinematic shot"
+        id: "composition",
+        title_ar: "تكوين المشهد الخيالي",
+        title_en: "Fantasy Composition",
+        type: "select",
+        options: [
+          { label_ar: "لقطة واسعة لقلعة عملاقة", label_en: "Massive Castle Wide Shot", value: "grand wide angle view of an ancient mystical fortress" },
+          { label_ar: "غابة سحرية مظلمة", label_en: "Dark Magic Forest", value: "deep enchanted forest with glowing flora" }
+        ]
       },
       {
-        label_ar: "لقطة مقربة (Portrait)",
-        label_en: "Close-up",
-        value: "extreme close-up portrait"
+        id: "lighting",
+        title_ar: "نوع الإضاءة السحرية",
+        title_en: "Magical Lighting",
+        type: "select",
+        options: [
+          { label_ar: "توهج سحري أزرق وبنفسجي", label_en: "Mystical Blue Glow", value: "glowing magical blue and purple particle lighting" },
+          { label_ar: "شمس غروب درامية خلفية", label_en: "Dramatic Sunset Backlight", value: "fiery sunset casting long dramatic shadows" }
+        ]
       },
       {
-        label_ar: "منظور عين الطائر",
-        label_en: "Bird's Eye View",
-        value: "aerial drone photography, bird's eye view"
+        id: "colorGrading",
+        title_ar: "التلوين السينمائي",
+        title_en: "Color Grading",
+        type: "select",
+        options: [
+          { label_ar: "ألوان سينمائية غنية ودافئة", label_en: "Warm Epic Tones", value: "rich golden and deep teal cinematic fantasy grading" },
+          { label_ar: "ألوان باردة ومظلمة", label_en: "Dark Moody Tones", value: "desaturated cold mysterious fantasy tones" }
+        ]
       },
       {
-        label_ar: "قاعدة الأثلاث",
-        label_en: "Rule of Thirds",
-        value: "rule of thirds composition"
+        id: "camera",
+        title_ar: "نوع الكاميرا",
+        title_en: "Camera",
+        type: "select",
+        options: [
+          { label_ar: "Arri Alexa LF", label_en: "Arri Alexa LF", value: "shot on Arri Alexa LF" },
+          { label_ar: "IMAX 70mm", label_en: "IMAX 70mm", value: "IMAX 70mm film format" }
+        ]
       },
       {
-        label_ar: "لقطة متوسطة",
-        label_en: "Medium Shot",
-        value: "medium shot, cinematic framing"
+        id: "aspectRatio",
+        title_ar: "أبعاد الصورة",
+        title_en: "Aspect Ratio",
+        type: "select",
+        options: [
+          { label_ar: "سينمائي واسع (21:9)", label_en: "Ultra-Wide (21:9)", value: "21:9" },
+          { label_ar: "مربع (1:1)", label_en: "Square (1:1)", value: "1:1" }
+        ]
       }
     ]
   },
-  {
-    id: "lighting",
-    title_ar: "نوع الإضاءة",
-    title_en: "Lighting Style",
-    type: "select",
-    options: [
+
+  // 2. التفرع الثاني: سايبربانك ومستقبلي
+  cyberpunk: {
+    id: 'cinematic_cyberpunk',
+    title: 'سايبربانك ومستقبلي (Cyberpunk)',
+    description: 'مدن مستقبلية ممطرة، إضاءات نيون ساطعة، وأجواء تكنولوجية',
+    template: `Cyberpunk futuristic cinematic shot of \${idea}, \${composition}, \${lighting}, \${colorGrading}, wet streets, reflections, filmed on \${camera}, 8k --ar \${aspectRatio}`,
+    questions: [
       {
-        label_ar: "إضاءة درامية (Chiaroscuro)",
-        label_en: "Dramatic (Chiaroscuro)",
-        value: "dramatic chiaroscuro lighting, heavy shadows"
+        id: "composition",
+        title_ar: "التكوين الحضري",
+        title_en: "Urban Composition",
+        type: "select",
+        options: [
+          { label_ar: "شارع ضيق مزدحم بالنيون", label_en: "Crowded Neon Street", value: "dense futuristic city street filled with holographic billboards" },
+          { label_ar: "منظور علوي لناطحات سحاب", label_en: "Skyscraper High Angle", value: "dramatic high angle looking down a mega-city canyon" }
+        ]
       },
       {
-        label_ar: "إضاءة ناعمة (Soft Light)",
-        label_en: "Soft Lighting",
-        value: "soft diffused cinematic lighting"
+        id: "lighting",
+        title_ar: "إضاءة النيون",
+        title_en: "Neon Lighting",
+        type: "select",
+        options: [
+          { label_ar: "أضواء نيون وردية وزرقاء", label_en: "Pink and Blue Neon", value: "vibrant pink and cyan neon glow reflecting on wet pavement" },
+          { label_ar: "إضاءة ليزر صناعية حادة", label_en: "Sharp Laser Lights", value: "harsh industrial laser lighting and volumetric haze" }
+        ]
       },
       {
-        label_ar: "إضاءة نيون (Neon)",
-        label_en: "Neon Glow",
-        value: "vibrant neon lighting, cyber aesthetic"
+        id: "colorGrading",
+        title_ar: "التلوين",
+        title_en: "Color Grading",
+        type: "select",
+        options: [
+          { label_ar: "تباين عالي نيون ساخن", label_en: "High Contrast Neon", value: "high contrast neon cyberpunk color grading" },
+          { label_ar: "أزرق داكن ومعدني", label_en: "Dark Metallic Blue", value: "dark moody cyber blue and metallic tones" }
+        ]
       },
       {
-        label_ar: "إضاءة طبيعية (Golden Hour)",
-        label_en: "Golden Hour",
-        value: "warm golden hour sunlight"
+        id: "camera",
+        title_ar: "نوع الكاميرا",
+        title_en: "Camera",
+        type: "select",
+        options: [
+          { label_ar: "RED V-Raptor 8K", label_en: "RED V-Raptor 8K", value: "shot on RED V-Raptor 8K" },
+          { label_ar: "Panavision Anamorphic", label_en: "Panavision", value: "Panavision anamorphic lenses" }
+        ]
       },
       {
-        label_ar: "إضاءة خلفية (Rim Light)",
-        label_en: "Rim Lighting",
-        value: "sharp rim lighting, silhouette contrast"
+        id: "aspectRatio",
+        title_ar: "أبعاد الصورة",
+        title_en: "Aspect Ratio",
+        type: "select",
+        options: [
+          { label_ar: "سينمائي عريض (21:9)", label_en: "Ultra-Wide (21:9)", value: "21:9" },
+          { label_ar: "شاشة عريضة (16:9)", label_en: "Widescreen (16:9)", value: "16:9" }
+        ]
       }
     ]
   },
-  {
-    id: "colorGrading",
-    title_ar: "تلوين المشهد (Color Grading)",
-    title_en: "Color Grading",
-    type: "select",
-    options: [
+
+  // 3. التفرع الثالث: درامي واقعي (Drama)
+  dramatic_realism: {
+    id: 'cinematic_dramatic',
+    title: 'درامي واقعي (Dramatic Realism)',
+    description: 'لقطات شخصيات قوية، تعبيرات عميقة، وإضاءة استوديو سينمائية',
+    template: `Dramatic cinematic portrait shot of \${idea}, \${composition}, \${lighting}, \${colorGrading}, micro-details, highly emotional, filmed on \${camera}, 8k --ar \${aspectRatio}`,
+    questions: [
       {
-        label_ar: "ألوان سينمائية (Teal & Orange)",
-        label_en: "Teal & Orange",
-        value: "teal and orange color grading"
+        id: "composition",
+        title_ar: "التكوين واللقطة",
+        title_en: "Composition",
+        type: "select",
+        options: [
+          { label_ar: "لقطة مقربة للوجه (Close-up)", label_en: "Close-up Portrait", value: "extreme close-up portrait focusing on intense facial expressions" },
+          { label_ar: "لقطة متوسطة تعبيرية", label_en: "Medium Shot", value: "medium cinematic framing showing body language" }
+        ]
       },
       {
-        label_ar: "أبيض وأسود فاخر",
-        label_en: "Luxury B&W",
-        value: "high-contrast cinematic black and white"
+        id: "lighting",
+        title_ar: "الإضاءة الدرامية",
+        title_en: "Lighting",
+        type: "select",
+        options: [
+          { label_ar: "إضاءة ريمبراندت الظلال", label_en: "Rembrandt Lighting", value: "classic Rembrandt lighting with deep shadows on one side" },
+          { label_ar: "إضاءة ناعمة جانبية", label_en: "Soft Side Light", value: "soft diffused window light illumination" }
+        ]
       },
       {
-        label_ar: "ألوان باهتة (Vintage)",
-        label_en: "Vintage Film",
-        value: "faded vintage film colors, kodachrome"
+        id: "colorGrading",
+        title_ar: "التلوين السينمائي",
+        title_en: "Color Grading",
+        type: "select",
+        options: [
+          { label_ar: "ألوان طبيعية دافئة", label_en: "Natural Warm Tones", value: "natural skin tones with warm cinematic grading" },
+          { label_ar: "أبيض وأسود فاخر", label_en: "Luxury B&W", value: "high-contrast cinematic black and white" }
+        ]
       },
       {
-        label_ar: "ألوان زاهية",
-        label_en: "Vibrant",
-        value: "highly saturated vivid colors"
+        id: "camera",
+        title_ar: "نوع الكاميرا",
+        title_en: "Camera",
+        type: "select",
+        options: [
+          { label_ar: "Arri Alexa 65", label_en: "Arri Alexa 65", value: "shot on Arri Alexa 65" },
+          { label_ar: "عدسة 85mm بريم", label_en: "85mm Prime Lens", value: "85mm prime lens with creamy bokeh" }
+        ]
       },
       {
-        label_ar: "ألوان باردة",
-        label_en: "Cold Tones",
-        value: "moody blue and cold cinematic tones"
+        id: "aspectRatio",
+        title_ar: "أبعاد الصورة",
+        title_en: "Aspect Ratio",
+        type: "select",
+        options: [
+          { label_ar: "شاشة عريضة (16:9)", label_en: "Widescreen (16:9)", value: "16:9" },
+          { label_ar: "عمودي للهواتف (9:16)", label_en: "Vertical (9:16)", value: "9:16" }
+        ]
       }
     ]
   },
-  {
-    id: "atmosphere",
-    title_ar: "الأجواء (Atmosphere)",
-    title_en: "Atmosphere",
-    type: "select",
-    options: [
+
+  // 4. التفرع الرابع: رعب وغموض (Horror & Mystery)
+  horror_mystery: {
+    id: 'cinematic_horror',
+    title: 'رعب وغموض (Horror & Mystery)',
+    description: 'أجواء مظلمة، ضباب كثيف، وإضاءة خافتة مثيرة للتوتر',
+    template: `Dark cinematic horror thriller shot of \${idea}, \${composition}, \${lighting}, \${colorGrading}, eerie fog, suspenseful atmosphere, filmed on \${camera}, 8k --ar \${aspectRatio}`,
+    questions: [
       {
-        label_ar: "ضبابي",
-        label_en: "Foggy/Misty",
-        value: "dense fog, misty atmosphere"
+        id: "composition",
+        title_ar: "تكوين المشهد",
+        title_en: "Composition",
+        type: "select",
+        options: [
+          { label_ar: "ممر مظلم مرعب", label_en: "Creepy Dark Corridor", value: "narrow dark corridor disappearing into deep shadows" },
+          { label_ar: "غابة مظلمة وضبابية", label_en: "Foggy Dark Woods", value: "eerie forest filled with thick creepy fog" }
+        ]
       },
       {
-        label_ar: "جزيئات غبار في الضوء",
-        label_en: "Dust Motes",
-        value: "dust motes dancing in light beams"
+        id: "lighting",
+        title_ar: "الإضاءة المرعبة",
+        title_en: "Horror Lighting",
+        type: "select",
+        options: [
+          { label_ar: "ضوء مصباح يدوي ضعيف ومرتعش", label_en: "Flickering Flashlight", value: "dim flickering flashlight beam cutting through total darkness" },
+          { label_ar: "ضوء قمر أزرق باهت", label_en: "Pale Moonlight", value: "cold pale moonlight casting long distorted shadows" }
+        ]
       },
       {
-        label_ar: "دخان سينمائي",
-        label_en: "Cinematic Smoke",
-        value: "volumetric smoke and haze"
+        id: "colorGrading",
+        title_ar: "التلوين والجو",
+        title_en: "Color Grading",
+        type: "select",
+        options: [
+          { label_ar: "ألوان باهتة ومخيفة (Desaturated)", label_en: "Desaturated Creepy Tones", value: "desaturated sickly green and grey horror color grading" },
+          { label_ar: "أسود داكن مع تباين قاسي", label_en: "Pitch Black Contrast", value: "high-contrast pitch black noir horror tones" }
+        ]
       },
       {
-        label_ar: "ممطر",
-        label_en: "Rainy",
-        value: "heavy rain, wet surfaces, cinematic droplets"
+        id: "camera",
+        title_ar: "نوع الكاميرا",
+        title_en: "Camera",
+        type: "select",
+        options: [
+          { label_ar: "RED Monstro VV", label_en: "RED Monstro", value: "shot on RED Monstro VV" },
+          { label_ar: "عدسة واسعة مشوهة 18mm", label_en: "18mm Distorted Wide", value: "18mm wide lens with subtle edge distortion" }
+        ]
       },
       {
-        label_ar: "صافي ونقي",
-        label_en: "Crystal Clear",
-        value: "sharp focus, crystal clear air"
+        id: "aspectRatio",
+        title_ar: "أبعاد الصورة",
+        title_en: "Aspect Ratio",
+        type: "select",
+        options: [
+          { label_ar: "سينمائي عريض (21:9)", label_en: "Ultra-Wide (21:9)", value: "21:9" },
+          { label_ar: "قياسي (16:9)", label_en: "Widescreen (16:9)", value: "16:9" }
+        ]
       }
     ]
   },
-  {
-    id: "camera",
-    title_ar: "نوع الكاميرا",
-    title_en: "Camera Model",
-    type: "select",
-    options: [
+
+  // 5. التفرع الخامس: وثائقي طبيعي (Documentary)
+  documentary: {
+    id: 'cinematic_documentary',
+    title: 'وثائقي طبيعي (Documentary)',
+    description: 'واقعي، إضاءة شمس طبيعية، وتفاصيل نقية مطابقة لـ National Geographic',
+    template: `National Geographic style cinematic documentary shot of \${idea}, \${composition}, \${lighting}, \${colorGrading}, hyper-realistic nature, pristine details, filmed on \${camera}, 8k --ar \${aspectRatio}`,
+    questions: [
       {
-        label_ar: "Arri Alexa",
-        label_en: "Arri Alexa",
-        value: "shot on Arri Alexa LF"
+        id: "composition",
+        title_ar: "التكوين الوثائقي",
+        title_en: "Composition",
+        type: "select",
+        options: [
+          { label_ar: "لقطة طبيعية واسعة مفتوحة", label_en: "Wide Nature Landscape", value: "epic wide-angle landscape shot capturing vast wilderness" },
+          { label_ar: "لقطة مقربة تفصيلية (Macro)", label_en: "Macro Detail Shot", value: "extreme macro wildlife or environmental detail shot" }
+        ]
       },
       {
-        label_ar: "Red Digital Cinema",
-        label_en: "Red Digital Cinema",
-        value: "shot on RED V-Raptor"
+        id: "lighting",
+        title_ar: "ضوء الشمس الطبيعي",
+        title_en: "Natural Sunlight",
+        type: "select",
+        options: [
+          { label_ar: "ساعة ذهبية دافئة (Golden Hour)", label_en: "Golden Hour", value: "warm golden hour natural sunlight filtering through atmosphere" },
+          { label_ar: "ضوء النهار الساطع والقياسي", label_en: "Bright Daylight", value: "crisp bright natural daylight with clear visibility" }
+        ]
       },
       {
-        label_ar: "Panavision",
-        label_en: "Panavision",
-        value: "Panavision anamorphic lenses"
+        id: "colorGrading",
+        title_ar: "التلوين الطبيعي",
+        title_en: "Natural Colors",
+        type: "select",
+        options: [
+          { label_ar: "ألوان الطبيعة الحقيقية والزاهية", label_en: "Vibrant Natural Palette", value: "true-to-life vibrant natural earth tones and lush greens" },
+          { label_ar: "ألوان سينمائية هادئة وواقعية", label_en: "Subtle Realistic Tones", value: "subtle cinematic documentary color grading" }
+        ]
       },
       {
-        label_ar: "IMAX 70mm",
-        label_en: "IMAX 70mm",
-        value: "IMAX 70mm film format"
+        id: "camera",
+        title_ar: "نوع الكاميرا",
+        title_en: "Camera",
+        type: "select",
+        options: [
+          { label_ar: "Sony FX9 / Cinema Camera", label_en: "Sony FX9", value: "shot on Sony FX9 professional cinema camera" },
+          { label_ar: "عدسة تقريب طبيعية 200mm", label_en: "200mm Telephoto", value: "200mm telephoto wildlife lens" }
+        ]
       },
       {
-        label_ar: "كاميرا كلاسيكية 35mm",
-        label_en: "35mm Film",
-        value: "vintage 35mm movie camera"
+        id: "aspectRatio",
+        title_ar: "أبعاد الصورة",
+        title_en: "Aspect Ratio",
+        type: "select",
+        options: [
+          { label_ar: "شاشة عريضة (16:9)", label_en: "Widescreen (16:9)", value: "16:9" },
+          { label_ar: "سينمائي واسع (21:9)", label_en: "Ultra-Wide (21:9)", value: "21:9" }
+        ]
       }
     ]
   },
-  {
-    id: "aspectRatio",
-    title_ar: "أبعاد الصورة",
-    title_en: "Aspect Ratio",
-    type: "select",
-    options: [
+
+  // 6. التفرع السادس: خيال علمي فضاء (Sci-Fi Space)
+  sci_fi_space: {
+    id: 'cinematic_scifi',
+    title: 'خيال علمي وفضاء (Sci-Fi Space)',
+    description: 'مركبات فضائية ضخمة، كواكب بعيدة، وأضواء ليزرية تكنولوجية',
+    template: `Hard sci-fi space cinematic mastershot of \${idea}, \${composition}, \${lighting}, \${colorGrading}, futuristic technology, cosmic atmosphere, filmed on \${camera}, 8k --ar \${aspectRatio}`,
+    questions: [
       {
-        label_ar: "سينمائي عريض (21:9)",
-        label_en: "Ultra-Wide (21:9)",
-        value: "21:9"
+        id: "composition",
+        title_ar: "التكوين الفضائي",
+        title_en: "Space Composition",
+        type: "select",
+        options: [
+          { label_ar: "سفينة فضائية عملاقة في الفضاء", label_en: "Giant Spaceship", value: "massive interstellar spaceship floating against deep starfield" },
+          { label_ar: "قاعدة فضائية على كوكب آخر", label_en: "Alien Planet Base", value: "futuristic science outpost on a desolate alien planet surface" }
+        ]
       },
       {
-        label_ar: "شاشة عريضة (16:9)",
-        label_en: "Widescreen (16:9)",
-        value: "16:9"
+        id: "lighting",
+        title_ar: "إضاءة الكون والفضاء",
+        title_en: "Cosmic Lighting",
+        type: "select",
+        options: [
+          { label_ar: "ضوء نجم بعيد ساطع وحاد", label_en: "Harsh Star Light", value: "harsh direct stellar illumination and deep space shadows" },
+          { label_ar: "توهج لوحات التحكم والمحركات", label_en: "Engine & Panel Glow", value: "vibrant blue engine thruster glow and holographic console lights" }
+        ]
       },
       {
-        label_ar: "ستاندرد (4:3)",
-        label_en: "Standard (4:3)",
-        value: "4:3"
+        id: "colorGrading",
+        title_ar: "التلوين الفضائي",
+        title_en: "Sci-Fi Color Grading",
+        type: "select",
+        options: [
+          { label_ar: "أزرق فضائي داكن ونجومي", label_en: "Deep Cosmic Blue", value: "deep cosmic blue and star-dusted dark space tones" },
+          { label_ar: "فضي معدني مع توهج برتقالي", label_en: "Metallic Silver & Orange", value: "brushed metallic silver with fiery atmospheric contrast" }
+        ]
       },
       {
-        label_ar: "طولي (9:16)",
-        label_en: "Vertical (9:16)",
-        value: "9:16"
+        id: "camera",
+        title_ar: "نوع الكاميرا",
+        title_en: "Camera",
+        type: "select",
+        options: [
+          { label_ar: "IMAX Space Rig", label_en: "IMAX Space Rig", value: "shot on IMAX space-grade cinema rig" },
+          { label_ar: "RED V-Raptor 8K", label_en: "RED V-Raptor", value: "shot on RED V-Raptor 8K" }
+        ]
+      },
+      {
+        id: "aspectRatio",
+        title_ar: "أبعاد الصورة",
+        title_en: "Aspect Ratio",
+        type: "select",
+        options: [
+          { label_ar: "سينمائي واسع جداً (21:9)", label_en: "Ultra-Wide Anamorphic (21:9)", value: "21:9" },
+          { label_ar: "شاشة عريضة قياسية (16:9)", label_en: "Widescreen (16:9)", value: "16:9" }
+        ]
       }
     ]
-  }
-]
   }
 };

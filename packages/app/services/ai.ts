@@ -5,7 +5,7 @@ const GROQ_API_KEY = '';
 
 /** Controls how many questions to ask and how deep to go */
 export type ComplexityMode = 'simple' | 'complex';
-const GROQ_API_URL = '';
+const GROQ_API_URL = 'https://api.groq.com/openai/v1/chat/completions';
 
 /**
  * Fallback chain — tried in order on 429 / 400 / 402.

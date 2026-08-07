@@ -1,208 +1,226 @@
 export const marketingPrompts = {
-  seoSpecialist: {
-    id: 'seo_specialist',
-    title: 'خبير تحسين محركات البحث (SEO Specialist)',
-    description: 'يساعدك في استراتيجيات تحسين محركات البحث (SEO) والكلمات المفتاحية لموقعك.',
-    template: `I want you to act as an SEO specialist. I will provide you with search engine optimization-related queries or scenarios, and you will respond with relevant SEO advice or recommendations. Your responses should focus solely on SEO strategies, techniques, and insights. Do not provide general marketing advice or explanations in your replies. Help me optimize \${topic} for \${targetAudience}. Our main goal is \${goal}. Focus on these areas: \${focusAreas}.`,
+  // 1. قالب استراتيجية منصات التواصل الاجتماعي
+  social_media_strategy: {
+    id: 'marketing_social_strategy',
+    title: 'مخطط استراتيجية السوشيال ميديا',
+    description: 'خطة محتوى احترافية ومجدولة لمنصات التواصل الاجتماعي',
+    template: `Act as an elite Digital Marketing Strategist. Create a highly engaging social media content strategy for a \${businessType}. The primary objective of this campaign is \${campaignGoal}. The target audience is \${targetAudience}. The tone of voice should be \${toneOfVoice}. Please focus on \${platformFocus}. Provide a structured 7-day content calendar, including content pillars, post formats (e.g., reels, carousels), and specific hooks to grab attention.`,
     questions: [
       {
-        id: 'topic',
-        label: 'ما هو الموضوع أو الموقع الذي تريد تحسينه؟',
-        type: 'text',
-        placeholder: 'مثال: موقع تجارة إلكترونية، مقال عن الصحة',
-        allowCustom: true
-      },
-      {
-        id: 'targetAudience',
-        label: 'من هو الجمهور المستهدف؟',
-        type: 'text',
-        placeholder: 'مثال: الشباب في السعودية، المهتمين بالتقنية',
-        allowCustom: true
-      },
-      {
-        id: 'goal',
-        label: 'ما هو الهدف الرئيسي من الـ SEO؟',
-        type: 'single_choice',
+        id: "businessType",
+        title_ar: "نوع النشاط التجاري",
+        title_en: "Business Type",
+        type: "select",
         options: [
-          'زيادة الزيارات العضوية (Organic Traffic)',
-          'تحسين تصنيف كلمات مفتاحية معينة',
-          'زيادة المبيعات والتحويلات (Conversions)',
-          'بناء روابط خلفية (Backlinks)'
-        ],
-        allowCustom: true
+          { label_ar: "متجر إلكتروني (منتجات ملموسة)", label_en: "E-commerce Store", value: "modern e-commerce brand selling physical products" },
+          { label_ar: "خدمات رقمية أو تطبيق", label_en: "Tech/SaaS Startup", value: "tech startup offering innovative digital services" },
+          { label_ar: "علامة تجارية شخصية (صناع المحتوى)", label_en: "Personal Brand", value: "personal brand for a thought leader and content creator" },
+          { label_ar: "خدمات محلية (مطعم، مقهى، صالون)", label_en: "Local Business", value: "local business focusing on community foot traffic" }
+        ]
       },
       {
-        id: 'focusAreas',
-        label: 'ما هي الجوانب التي تريد التركيز عليها؟',
-        type: 'multiple_choice',
+        id: "campaignGoal",
+        title_ar: "الهدف من الخطة",
+        title_en: "Campaign Goal",
+        type: "select",
         options: [
-          'SEO داخلي (On-page SEO)',
-          'SEO تقني (Technical SEO)',
-          'SEO خارجي (Off-page SEO)',
-          'بحث الكلمات المفتاحية (Keyword Research)',
-          'تحسين المحتوى'
-        ],
-        allowCustom: true
-      }
-    ]
-  },
-  
-  brandingStrategist: {
-    id: 'branding_strategist',
-    title: 'خبير بناء العلامة التجارية (Branding Strategist)',
-    description: 'يساعدك في بناء هوية بصرية واستراتيجية لعلامتك التجارية.',
-    template: `You are a creative branding strategist, specializing in helping small businesses establish a strong and memorable brand identity. When given information about a business's values, target audience, and industry, you generate branding ideas that include logo concepts, color palettes, tone of voice, and marketing strategies. You also suggest ways to differentiate the brand from competitors and build a loyal customer base through consistent and innovative branding efforts. My business is in the \${industry} industry. Our values are: \${values}. Our target audience is \${audience}. Can you help us with: \${requirements}?`,
-    questions: [
-      {
-        id: 'industry',
-        label: 'ما هو مجال عملك (الصناعة)؟',
-        type: 'text',
-        placeholder: 'مثال: مقهى مختص، شركة برمجيات، متجر أزياء',
-        allowCustom: true
+          { label_ar: "زيادة الوعي والانتشار", label_en: "Brand Awareness", value: "maximizing brand awareness, virality, and organic reach" },
+          { label_ar: "زيادة المبيعات والعملاء", label_en: "Sales & Leads", value: "driving direct sales, generating leads, and high conversion rates" },
+          { label_ar: "تثقيف الجمهور وبناء الثقة", label_en: "Education & Trust", value: "educating the audience and establishing industry authority" }
+        ]
       },
       {
-        id: 'values',
-        label: 'ما هي القيم الأساسية لعلامتك التجارية؟',
-        type: 'multiple_choice',
+        id: "targetAudience",
+        title_ar: "الجمهور المستهدف",
+        title_en: "Target Audience",
+        type: "select",
         options: [
-          'الابتكار والتطور',
-          'الجودة العالية والفخامة',
-          'البساطة وسهولة الاستخدام',
-          'الاستدامة وصديقة للبيئة',
-          'السرعة والكفاءة'
-        ],
-        allowCustom: true
+          { label_ar: "الشباب وجيل Z (18-24)", label_en: "Gen Z & Youth", value: "Gen Z and young adults who are highly engaged with fast-paced trends" },
+          { label_ar: "المحترفون والموظفون (B2B)", label_en: "Professionals (B2B)", value: "B2B professionals, decision-makers, and corporate employees" },
+          { label_ar: "الآباء والأمهات", label_en: "Parents & Families", value: "parents looking for reliable, safe, and family-oriented solutions" }
+        ]
       },
       {
-        id: 'audience',
-        label: 'من هو جمهورك المستهدف؟',
-        type: 'text',
-        placeholder: 'مثال: المحترفين، الأمهات الجدد، الطلاب',
-        allowCustom: true
-      },
-      {
-        id: 'requirements',
-        label: 'ما هي العناصر التي تحتاج المساعدة فيها؟',
-        type: 'multiple_choice',
+        id: "toneOfVoice",
+        title_ar: "نبرة الصوت (Tone of Voice)",
+        title_en: "Tone of Voice",
+        type: "select",
         options: [
-          'أفكار للشعار (Logo Concepts)',
-          'لوحة الألوان (Color Palette)',
-          'نبرة الصوت (Tone of Voice)',
-          'استراتيجية التسويق (Marketing Strategy)',
-          'أفكار للتميز عن المنافسين'
-        ],
-        allowCustom: true
+          { label_ar: "عفوية، مرحة وتريند", label_en: "Casual & Trendy", value: "witty, casual, relatable, and highly engaging with internet culture" },
+          { label_ar: "احترافية ورسمية", label_en: "Professional", value: "professional, authoritative, clear, and trustworthy" },
+          { label_ar: "عاطفية وملهمة", label_en: "Emotional & Inspiring", value: "inspirational, empathetic, story-driven, and emotionally engaging" }
+        ]
+      },
+      {
+        id: "platformFocus",
+        title_ar: "المنصات المستهدفة",
+        title_en: "Target Platforms",
+        type: "select",
+        options: [
+          { label_ar: "تيك توك وإنستغرام ريلز (فيديو قصير)", label_en: "TikTok & Reels", value: "TikTok and Instagram Reels, prioritizing short-form viral videos" },
+          { label_ar: "إنستغرام (بوستات، كاروسيل، ستوري)", label_en: "Instagram Full", value: "Instagram grid, carousels, and stories for visual storytelling" },
+          { label_ar: "لينكد إن وإكس (تويتر)", label_en: "LinkedIn & X", value: "LinkedIn and X (Twitter), focusing on text-based thought leadership" }
+        ]
       }
     ]
   },
 
-  emailMarketing: {
-    id: 'email_marketing',
-    title: 'متخصص التسويق عبر الإيميل (Email Marketing)',
-    description: 'يساعدك في كتابة وتجهيز حملات التسويق عبر البريد الإلكتروني.',
-    template: `Act as an email marketing specialist who is advising a company on their email marketing flow. Develop a step-by-step guide and write the email copy for creating an effective email marketing campaign for \${product}. The goal of the campaign is \${goal}. The target audience is \${audience}. Make the tone of the emails \${tone}. Include \${emailCount} emails in the sequence.`,
+  // 2. قالب كاتب مقالات متوافقة مع الـ SEO
+  seo_article_writer: {
+    id: 'marketing_seo_writer',
+    title: 'كاتب مقالات SEO محترف',
+    description: 'توليد مقال متوافق مع محركات البحث يتصدر النتائج',
+    template: `Act as an expert SEO Copywriter and Content Marketer. Write a comprehensive, SEO-optimized blog post about "\${articleTopic}". The primary target keyword is "\${primaryKeyword}". The article length should be \${articleLength}. The tone should be \${writingStyle}. Format the article properly using H1, H2, and H3 tags. Ensure the content is structured for readability with short paragraphs and bullet points. Include an engaging introduction that hooks the reader, and a compelling conclusion with a call-to-action.`,
     questions: [
       {
-        id: 'product',
-        label: 'ما هو المنتج أو الخدمة التي تسوق لها؟',
-        type: 'text',
-        placeholder: 'مثال: دورة تدريبية عبر الإنترنت، منتج تجميل',
-        allowCustom: true
-      },
-      {
-        id: 'goal',
-        label: 'ما هو الهدف من حملة الإيميل؟',
-        type: 'single_choice',
+        id: "articleTopic",
+        title_ar: "موضوع المقال العام",
+        title_en: "Article Topic",
+        type: "select",
         options: [
-          'الترحيب بالمشتركين الجدد (Welcome Series)',
-          'استعادة السلات المتروكة (Abandoned Cart)',
-          'إطلاق منتج جديد (Product Launch)',
-          'تثقيف العملاء وزيادة الولاء (Nurturing)',
-          'زيادة المبيعات المباشرة'
-        ],
-        allowCustom: true
+          { label_ar: "دليل شامل (كيف تقوم بـ...)", label_en: "How-To Guide", value: "a comprehensive step-by-step how-to guide" },
+          { label_ar: "مقارنة ومراجعة منتجات", label_en: "Product Review", value: "an in-depth comparison and review of products/services" },
+          { label_ar: "نصائح وأفضل الممارسات", label_en: "Tips & Best Practices", value: "actionable tips, tricks, and industry best practices" }
+        ]
       },
       {
-        id: 'audience',
-        label: 'من هو الجمهور المستهدف؟',
-        type: 'text',
-        placeholder: 'مثال: المشتركين السابقين، عملاء محتملين',
-        allowCustom: true
-      },
-      {
-        id: 'tone',
-        label: 'ما هي نبرة الصوت المطلوبة؟',
-        type: 'single_choice',
+        id: "primaryKeyword",
+        title_ar: "كثافة الكلمة المفتاحية",
+        title_en: "Keyword Strategy",
+        type: "select",
         options: [
-          'احترافية ورسمية',
-          'ودية وغير رسمية',
-          'متحمسة ومقنعة',
-          'قصصية (Storytelling)'
-        ],
-        allowCustom: true
+          { label_ar: "كلمة مفتاحية رئيسية (بحث عالي)", label_en: "Broad Keyword", value: "a high-volume broad industry keyword" },
+          { label_ar: "كلمة مفتاحية طويلة (Long-tail)", label_en: "Long-tail Keyword", value: "a highly specific long-tail keyword with high purchase intent" }
+        ]
       },
       {
-        id: 'emailCount',
-        label: 'كم عدد الإيميلات في هذه السلسلة؟',
-        type: 'single_choice',
+        id: "articleLength",
+        title_ar: "طول المقال",
+        title_en: "Article Length",
+        type: "select",
         options: [
-          'إيميل واحد فقط',
-          'سلسلة من 3 إيميلات',
-          'سلسلة من 5 إيميلات',
-          'سلسلة من 7 إيميلات'
-        ],
-        allowCustom: true
+          { label_ar: "مقال قصير (500-800 كلمة)", label_en: "Short (500-800 words)", value: "around 500 to 800 words, concise and to the point" },
+          { label_ar: "مقال متوسط (1000-1500 كلمة)", label_en: "Medium (1000-1500 words)", value: "around 1000 to 1500 words, covering the topic thoroughly" },
+          { label_ar: "مقال طويل/دليل شامل (+2000 كلمة)", label_en: "Long-form (2000+ words)", value: "a long-form pillar post of 2000+ words, highly detailed" }
+        ]
+      },
+      {
+        id: "writingStyle",
+        title_ar: "أسلوب الكتابة",
+        title_en: "Writing Style",
+        type: "select",
+        options: [
+          { label_ar: "معلوماتي وموثوق", label_en: "Informative & Authoritative", value: "authoritative, data-driven, and highly informative" },
+          { label_ar: "محادثة وودي", label_en: "Conversational & Friendly", value: "conversational, friendly, and easy to understand for beginners" }
+        ]
       }
     ]
   },
 
-  digitalMarketing: {
-    id: 'digital_marketing',
-    title: 'مخطط حملات تسويقية (Digital Campaign Strategist)',
-    description: 'يصمم لك خطة تسويق رقمية شاملة لحملتك الإعلانية.',
-    template: `Act as a Digital Marketing Strategist. Your role is to create a comprehensive online marketing strategy for \${business}. The strategy should target \${audience}. The main objective of this campaign is \${objective}. The strategy should include the following platforms: \${platforms}. Please outline the campaign phases, key messaging, recommended budget allocation, and the key performance indicators (KPIs) to track success.`,
+  // 3. قالب كاتب الإعلانات الممولة
+  ad_copywriter: {
+    id: 'marketing_ad_copy',
+    title: 'خبير الإعلانات الممولة (Ad Copy)',
+    description: 'كتابة نصوص إعلانية ذات معدل تحويل عالي (Conversion)',
+    template: `Act as a world-class Direct Response Copywriter. Write high-converting ad copy for \${adPlatform}. The product/service is a \${productType}. The ad needs to address the audience's main pain point: \${painPoint}, and present our offer as the ultimate solution. Use the \${copywritingFramework} framework. Include a strong headline, engaging primary text, and a clear Call-To-Action (CTA) focused on \${callToAction}. Add appropriate emojis to increase engagement.`,
     questions: [
       {
-        id: 'business',
-        label: 'ما هو اسم وطبيعة عملك؟',
-        type: 'text',
-        placeholder: 'مثال: متجر لبيع الملابس الرياضية',
-        allowCustom: true
-      },
-      {
-        id: 'audience',
-        label: 'من هو الجمهور المستهدف؟',
-        type: 'text',
-        placeholder: 'مثال: الرياضيين والمهتمين باللياقة البدنية',
-        allowCustom: true
-      },
-      {
-        id: 'objective',
-        label: 'ما هو الهدف الرئيسي من الحملة؟',
-        type: 'single_choice',
+        id: "adPlatform",
+        title_ar: "منصة الإعلان",
+        title_en: "Ad Platform",
+        type: "select",
         options: [
-          'زيادة الوعي بالعلامة التجارية (Brand Awareness)',
-          'جلب عملاء محتملين (Lead Generation)',
-          'زيادة المبيعات (Sales/Conversions)',
-          'زيادة التفاعل والمتابعين',
-          'تحميل تطبيق الجوال'
-        ],
-        allowCustom: true
+          { label_ar: "إعلانات فيسبوك وإنستغرام", label_en: "Facebook/Instagram Ads", value: "Facebook and Instagram Ads" },
+          { label_ar: "إعلانات جوجل (بحث)", label_en: "Google Search Ads", value: "Google Search Ads (strictly text-based with character limits in mind)" },
+          { label_ar: "إعلانات تيك توك", label_en: "TikTok Ads", value: "TikTok Ads (fast-paced, high energy script format)" }
+        ]
       },
       {
-        id: 'platforms',
-        label: 'ما هي المنصات التي ترغب في التركيز عليها؟',
-        type: 'multiple_choice',
+        id: "productType",
+        title_ar: "نوع المنتج المعروض",
+        title_en: "Product Type",
+        type: "select",
         options: [
-          'إنستغرام (Instagram)',
-          'تيك توك (TikTok)',
-          'إعلانات جوجل (Google Ads)',
-          'إعلانات سناب شات (Snapchat Ads)',
-          'تويتر / إكس (X / Twitter)',
-          'لينكد إن (LinkedIn)'
-        ],
-        allowCustom: true
+          { label_ar: "منتج مادي (أزياء، إلكترونيات...)", label_en: "Physical Product", value: "trending physical consumer product" },
+          { label_ar: "خدمة أو استشارة", label_en: "Service/Consultation", value: "premium professional service or consultation" },
+          { label_ar: "كورس أو منتج رقمي", label_en: "Digital Product/Course", value: "digital course, ebook, or software product" }
+        ]
+      },
+      {
+        id: "painPoint",
+        title_ar: "المشكلة التي يحلها المنتج (Pain Point)",
+        title_en: "Audience Pain Point",
+        type: "select",
+        options: [
+          { label_ar: "توفير الوقت والجهد", label_en: "Saves Time/Effort", value: "wasting too much time and needing a faster, easier solution" },
+          { label_ar: "توفير المال / زيادة الدخل", label_en: "Money Focused", value: "losing money or wanting to increase their income/savings" },
+          { label_ar: "الراحة النفسية والثقة", label_en: "Peace of Mind", value: "feeling stressed, insecure, and needing peace of mind or confidence" }
+        ]
+      },
+      {
+        id: "copywritingFramework",
+        title_ar: "هيكلية الإعلان (Framework)",
+        title_en: "Copywriting Framework",
+        type: "select",
+        options: [
+          { label_ar: "AIDA (انتباه، اهتمام، رغبة، فعل)", label_en: "AIDA", value: "AIDA (Attention, Interest, Desire, Action)" },
+          { label_ar: "PAS (مشكلة، تضخيم، حل)", label_en: "PAS", value: "PAS (Problem, Agitation, Solution)" },
+          { label_ar: "قصة ونجاح (Storytelling)", label_en: "Storytelling", value: "Storytelling (Before and After transformation)" }
+        ]
+      },
+      {
+        id: "callToAction",
+        title_ar: "الإجراء المطلوب (CTA)",
+        title_en: "Call To Action",
+        type: "select",
+        options: [
+          { label_ar: "الشراء الآن (مع خصم)", label_en: "Buy Now (Discount)", value: "immediate purchase with a limited-time discount code" },
+          { label_ar: "تسجيل / اشتراك مجاني", label_en: "Sign Up / Free Trial", value: "signing up for a free trial or lead magnet" },
+          { label_ar: "معرفة المزيد / تواصل معنا", label_en: "Learn More", value: "clicking to learn more details on the landing page" }
+        ]
       }
+    ]
+  },
+  emailMarketingCampaign: {
+    id: 'email_campaign_builder',
+    title: 'خبير التسويق عبر البريد الإلكتروني (Email Marketing Expert)',
+    description: 'إنشاء سلسلة رسائل بريد إلكتروني تفاعلية لتحويل العملاء المحتملين إلى مشترين.',
+    template: 'Act as an expert Email Marketer and Copywriter. I need a ${sequenceType} email sequence for my ${businessType}. The main goal is to ${goal}. The target audience is ${audience}. Write ${emailCount} emails in a ${tone} tone. For each email, provide an attention-grabbing subject line, preview text, body content, and a clear Call To Action (CTA).',
+    questions: [
+      { id: 'sequenceType', label: 'ما هو نوع سلسلة الإيميلات؟', type: 'single_choice', options: ['سلسلة ترحيبية (Welcome)', 'عربة متروكة (Abandoned Cart)', 'إطلاق منتج', 'نشرة أسبوعية (Newsletter)'], allowCustom: true },
+      { id: 'businessType', label: 'ما هو نوع نشاطك التجاري؟', type: 'text', placeholder: 'مثال: متجر إلكتروني، منصة دورات', allowCustom: true },
+      { id: 'goal', label: 'ما هو الهدف الرئيسي من السلسلة؟', type: 'text', placeholder: 'مثال: زيادة المبيعات، بناء الثقة، دعوة لحدث', allowCustom: true },
+      { id: 'audience', label: 'من هو الجمهور المستهدف؟', type: 'text', placeholder: 'مثال: العملاء الجدد، المشتركون الحاليون', allowCustom: true },
+      { id: 'emailCount', label: 'كم عدد الإيميلات المطلوبة؟', type: 'single_choice', options: ['3 رسائل', '5 رسائل', '7 رسائل'], allowCustom: true },
+      { id: 'tone', label: 'ما هي نبرة الصوت للإيميلات؟', type: 'single_choice', options: ['ودود وشخصي (Friendly)', 'احترافي ورسمي (Professional)', 'مستعجل ومحفز (Urgency/FOMO)'], allowCustom: true }
+    ]
+  },
+
+  productLaunchExpert: {
+    id: 'product_launch_expert',
+    title: 'مخطط إطلاق المنتجات (Product Launch Strategist)',
+    description: 'وضع خطة تسويقية متكاملة لإطلاق منتج أو خدمة جديدة في السوق بنجاح.',
+    template: 'Act as a Product Marketing Manager. I am launching a new ${productType} targeted at ${audience}. Our primary unique selling proposition (USP) is ${usp}. The launch timeline is ${timeline}. Please create a comprehensive launch strategy including pre-launch teaser ideas, launch day activities, and post-launch follow-up. Suggest marketing channels focusing on ${channels}.',
+    questions: [
+      { id: 'productType', label: 'ما هو المنتج أو الخدمة الجديدة؟', type: 'text', placeholder: 'مثال: تطبيق توصيل جديد، عطر فاخر', allowCustom: true },
+      { id: 'audience', label: 'من هي الفئة المستهدفة للمنتج؟', type: 'text', placeholder: 'مثال: رواد الأعمال، طلاب الجامعات', allowCustom: true },
+      { id: 'usp', label: 'ما هي الميزة التنافسية (USP) للمنتج؟', type: 'text', placeholder: 'مثال: الأسرع في السوق، سعر منافس، جودة عالية', allowCustom: true },
+      { id: 'timeline', label: 'ما هي المدة الزمنية لخطة الإطلاق؟', type: 'single_choice', options: ['أسبوعين', 'شهر واحد', '3 أشهر'], allowCustom: true },
+      { id: 'channels', label: 'ما هي القنوات التسويقية المفضلة؟', type: 'multiple_choice', options: ['السوشيال ميديا', 'الإعلانات الممولة', 'التسويق بالعمولة / المؤثرين', 'العلاقات العامة (PR)'], allowCustom: true }
+    ]
+  },
+
+  brandStrategist: {
+    id: 'brand_strategist',
+    title: 'خبير بناء العلامة التجارية (Brand Strategist)',
+    description: 'يساعدك في تحديد شخصية علامتك التجارية، قيمها الأساسية، وميزتها التنافسية (Brand Positioning).',
+    template: 'Act as a Brand Strategist. I need help defining the brand identity and positioning for my ${businessType} in the ${industry} industry. Our core values are ${coreValues}. Our main competitors are ${competitors}. Please provide a comprehensive Brand Positioning Statement, a Brand Persona description, Tone of Voice guidelines, and 3 content pillars that reflect our identity. The overall vibe should be ${vibe}.',
+    questions: [
+      { id: 'businessType', label: 'ما هو اسم وطبيعة المشروع؟', type: 'text', placeholder: 'مثال: مقهى مختص، شركة برمجيات', allowCustom: true },
+      { id: 'industry', label: 'ما هو القطاع أو الصناعة؟', type: 'text', placeholder: 'مثال: الأغذية والمشروبات، التكنولوجيا', allowCustom: true },
+      { id: 'coreValues', label: 'ما هي القيم الأساسية للعلامة؟', type: 'text', placeholder: 'مثال: الابتكار، الاستدامة، الشفافية', allowCustom: true },
+      { id: 'competitors', label: 'من هم أبرز المنافسين؟', type: 'text', placeholder: 'اذكر أسماء أو أنواع المنافسين', allowCustom: true },
+      { id: 'vibe', label: 'ما هو الانطباع العام (Vibe) المطلوب؟', type: 'single_choice', options: ['فخم وحصري (Luxury/Exclusive)', 'شعبي واقتصادي (Mass Market)', 'شبابي ومبتكر (Trendy/Innovative)', 'كلاسيكي وموثوق (Classic/Trusted)'], allowCustom: true }
     ]
   }
 };
