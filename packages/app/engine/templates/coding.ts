@@ -7,8 +7,8 @@ export const codingPrompts = {
     questions: [
       { id: 'techStack', label: 'ما هي التقنيات المفضلة؟', type: 'text', placeholder: 'مثال: React, Node.js, PostgreSQL', allowCustom: true },
       { id: 'features', label: 'ما هي الميزات المطلوبة؟', type: 'text', placeholder: 'مثال: تسجيل دخول، لوحة تحكم، إشعارات', allowCustom: true },
-      { id: 'experience', label: 'ما هو مستوى الخبرة؟', type: 'single_choice', options: ['مبتدئ','متوسط','متقدم'], allowCustom: true },
-      { id: 'focus', label: 'ما هو التركيز الرئيسي؟', type: 'single_choice', options: ['الأداء','الأمان','قابلية التوسع','سهولة الصيانة'], allowCustom: true }
+      { id: 'experience', label: 'ما هو مستوى الخبرة؟', type: 'single_choice', options: ['مبتدئ', 'متوسط', 'متقدم'], allowCustom: true },
+      { id: 'focus', label: 'ما هو التركيز الرئيسي؟', type: 'single_choice', options: ['الأداء', 'الأمان', 'قابلية التوسع', 'سهولة الصيانة'], allowCustom: true }
     ]
   },
 
@@ -20,7 +20,7 @@ export const codingPrompts = {
     questions: [
       { id: 'language', label: 'ما هي لغة البرمجة؟', type: 'text', placeholder: 'مثال: JavaScript, Python, Java', allowCustom: true },
       { id: 'code', label: 'الكود المراد مراجعته:', type: 'text', placeholder: 'ألصق الكود هنا...', allowCustom: true },
-      { id: 'focusAreas', label: 'ما هي مجالات التركيز؟', type: 'multiple_choice', options: ['جودة الكود','الأمان','الأداء','قابلية القراءة','الاختبارات'], allowCustom: true }
+      { id: 'focusAreas', label: 'ما هي مجالات التركيز؟', type: 'multiple_choice', options: ['جودة الكود', 'الأمان', 'الأداء', 'قابلية القراءة', 'الاختبارات'], allowCustom: true }
     ]
   },
 
@@ -55,9 +55,9 @@ export const codingPrompts = {
     description: 'يساعدك في إعداد CI/CD، Docker، Kubernetes، وإدارة البنية التحتية.',
     template: 'I want you to act as a DevOps engineer. I need help setting up ${infrastructure} for ${project}. Please provide configuration files, deployment scripts, and best practices for ${focus}.',
     questions: [
-      { id: 'infrastructure', label: 'ما هي البنية التحتية؟', type: 'single_choice', options: ['Docker','Kubernetes','CI/CD Pipeline','Cloud Infrastructure','Monitoring'], allowCustom: true },
+      { id: 'infrastructure', label: 'ما هي البنية التحتية؟', type: 'single_choice', options: ['Docker', 'Kubernetes', 'CI/CD Pipeline', 'Cloud Infrastructure', 'Monitoring'], allowCustom: true },
       { id: 'project', label: 'وصف المشروع:', type: 'text', placeholder: 'مثال: تطبيق ويب باستخدام Node.js', allowCustom: true },
-      { id: 'focus', label: 'ما هو التركيز؟', type: 'single_choice', options: ['الأتمتة','المراقبة','الأمان','التوسع','الاستقرار'], allowCustom: true }
+      { id: 'focus', label: 'ما هو التركيز؟', type: 'single_choice', options: ['الأتمتة', 'المراقبة', 'الأمان', 'التوسع', 'الاستقرار'], allowCustom: true }
     ]
   }
   ,securitySpecialist: {

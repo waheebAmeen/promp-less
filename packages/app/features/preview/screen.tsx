@@ -11,7 +11,7 @@ import { createParam } from 'solito';
 import { useRouter } from 'solito/router';
 import { TargetModel } from '../../engine/types';
 import { formatPromptForModel } from '../../engine/PromptGenerator';
-import { enhancePrompt } from '../../services/ai';
+import { enhancePrompt, translatePrompt } from '../../services/ai';
 
 const { useParam } = createParam<{ generatedPrompt: string; category: string }>();
 
@@ -23,21 +23,41 @@ export function PreviewScreen() {
   const [category] = useParam('category');
   const { t, i18n } = useTranslation();
   const isRtl = i18n.language === 'ar';
-  const { addPrompt } = useAppStore();
+  const { addPrompt, updatePrompt } = useAppStore();
   const { push, back } = useRouter();
 
   const [displayPrompt, setDisplayPrompt] = useState<string>(initialPrompt || '');
+  const [targetLang, setTargetLang] = useState<'ar' | 'en'>(isRtl ? 'ar' : 'en');
+  const [isTranslating, setIsTranslating] = useState(false);
 
   // Enhance state
   const [isEnhancing, setIsEnhancing] = useState(false);
   const [enhanceError, setEnhanceError] = useState<string | null>(null);
   const [isEnhanced, setIsEnhanced] = useState(false);
+  const [savedPromptId, setSavedPromptId] = useState<string | null>(null);
 
+  // Auto-save the prompt when it first loads
   useEffect(() => {
-    if (initialPrompt) {
+    if (initialPrompt && category && !savedPromptId) {
       setDisplayPrompt(initialPrompt);
+      const newId = Date.now().toString();
+      addPrompt({
+        id: newId,
+        category,
+        prompt: initialPrompt,
+        createdAt: new Date().toISOString(),
+        isFavorite: false,
+      });
+      setSavedPromptId(newId);
     }
-  }, [initialPrompt]);
+  }, [initialPrompt, category]);
+
+  // Auto-update the saved prompt when displayPrompt changes
+  useEffect(() => {
+    if (savedPromptId && displayPrompt) {
+      updatePrompt(savedPromptId, displayPrompt);
+    }
+  }, [displayPrompt, savedPromptId, updatePrompt]);
 
   const handleShare = async () => {
     if (Platform.OS === 'web') {
@@ -51,20 +71,24 @@ export function PreviewScreen() {
   };
 
   const handleSave = () => {
-    if (!displayPrompt || !category) return;
-    addPrompt({
-      id: Date.now().toString(),
-      category,
-      prompt: displayPrompt,
-      createdAt: new Date().toISOString(),
-      isFavorite: false,
-    });
-    if (Platform.OS === 'web') {
-      window.alert('Success! Prompt saved to history!');
-    } else {
-      Alert.alert('Success', 'Prompt saved to history!');
-    }
     push('/');
+  };
+
+  
+  const handleTranslate = async (lang: 'ar' | 'en') => {
+    if (!displayPrompt || isTranslating || targetLang === lang) return;
+    setIsTranslating(true);
+    setEnhanceError(null);
+    try {
+      const translated = await translatePrompt(displayPrompt, lang);
+      setDisplayPrompt(translated);
+      setTargetLang(lang);
+    } catch (err: any) {
+      console.error('[Preview] translate error:', err?.message);
+      setEnhanceError(isRtl ? `❌ فشل التحويل: ${err?.message}` : `❌ Translation failed: ${err?.message}`);
+    } finally {
+      setIsTranslating(false);
+    }
   };
 
   const handleEnhance = async () => {
@@ -158,6 +182,32 @@ export function PreviewScreen() {
                 <Icon name="copy" size={16} color="#3b82f6" />
                 <Typography className="text-xs font-bold text-primary-glow">Copy</Typography>
                </TouchableOpacity>
+            </View>
+          </View>
+
+          
+          {/* Language Toggle & Hint */}
+          <View className="mb-6 items-center">
+            <Typography className={`text-xs ${theme.textMuted} mb-3 font-medium px-4 text-center`}>
+              {isRtl ? '💡 تلميح: يُفضل استخدام اللغة الإنجليزية مع نماذج الذكاء الاصطناعي للحصول على نتائج أفضل.' : '💡 Hint: It is recommended to use English with AI models for better results.'}
+            </Typography>
+            <View className={`flex-row p-1 rounded-2xl border ${theme.borderSubtle} ${theme.surface}/50`}>
+              <TouchableOpacity
+                onPress={() => handleTranslate('en')}
+                disabled={isTranslating}
+                className={`px-6 py-2 rounded-xl ${targetLang === 'en' ? 'bg-primary shadow-neon-blue' : ''}`}
+              >
+                {isTranslating && targetLang !== 'en' ? <ActivityIndicator size="small" color="#fff" /> : 
+                <Typography className={`font-bold text-sm ${targetLang === 'en' ? 'text-white' : theme.textSecondary}`}>English</Typography>}
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => handleTranslate('ar')}
+                disabled={isTranslating}
+                className={`px-6 py-2 rounded-xl ${targetLang === 'ar' ? 'bg-primary shadow-neon-blue' : ''}`}
+              >
+                {isTranslating && targetLang !== 'ar' ? <ActivityIndicator size="small" color="#fff" /> : 
+                <Typography className={`font-bold text-sm ${targetLang === 'ar' ? 'text-white' : theme.textSecondary}`}>العربية</Typography>}
+              </TouchableOpacity>
             </View>
           </View>
 

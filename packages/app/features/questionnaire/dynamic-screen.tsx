@@ -51,7 +51,8 @@ type ScreenState =
   | 'loading_question'   // Fetching next question from AI
   | 'question'           // Showing a question to user
   | 'synthesizing'       // Generating the final professional prompt
-  | 'error';             // Something went wrong
+  | 'error'
+  | 'select_model';             // Something went wrong
 
 // ─────────────────────────────────────────────────────────────────────────────
 export function DynamicQuestionnaireScreen() {
@@ -74,6 +75,7 @@ export function DynamicQuestionnaireScreen() {
   const [history, setHistory] = useState<QAEntry[]>([]);
   const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
   const [customText, setCustomText] = useState('');
+  const [targetModel, setTargetModel] = useState<string>('');
   const [errorMsg, setErrorMsg] = useState('');
 
   // Fade-in animation for each new question
@@ -114,7 +116,8 @@ export function DynamicQuestionnaireScreen() {
 
     // Enforce max questions
     if (currentHistory.length >= MAX_QUESTIONS) {
-      await runSynthesis(currentHistory);
+      setScreenState('select_model');
+      fadeIn();
       return;
     }
 
@@ -126,7 +129,8 @@ export function DynamicQuestionnaireScreen() {
       const result = await getNextQuestion(idea, currentHistory, mode);
 
       if (result.done) {
-        await runSynthesis(currentHistory);
+        setScreenState('select_model');
+        fadeIn();
         return;
       }
 
@@ -140,13 +144,13 @@ export function DynamicQuestionnaireScreen() {
   };
 
   // ─── Synthesize the professional prompt ───────────────────────────────────────
-  const runSynthesis = async (finalHistory: QAEntry[]) => {
+  const runSynthesis = async (finalHistory: QAEntry[], selectedModel: any) => {
     if (isListening) stopListening();
     
     setScreenState('synthesizing');
     try {
       const lang = isRtl ? 'ar' : 'en';
-      const professionalPrompt = await synthesizeProfessionalPrompt(idea, finalHistory, lang);
+      const professionalPrompt = await synthesizeProfessionalPrompt(idea, finalHistory, lang, selectedModel);
 
       push({
         pathname: '/preview',
@@ -195,7 +199,8 @@ export function DynamicQuestionnaireScreen() {
 
   // ─── Skip remaining questions ─────────────────────────────────────────────────
   const handleSkipToGenerate = () => {
-    runSynthesis(history);
+    setScreenState('select_model');
+    fadeIn();
   };
 
   // ─── Progress calculation ─────────────────────────────────────────────────────
@@ -275,6 +280,87 @@ export function DynamicQuestionnaireScreen() {
                 />
               ))}
             </View>
+          </View>
+        </View>
+      </ScreenContainer>
+    );
+  }
+
+  
+  // ── Select Model ─────────────────────────────────────────────────────────────
+  if (screenState === 'select_model') {
+    const modelOptions = [
+      { label_ar: 'ChatGPT (نصوص)', label_en: 'ChatGPT (Text)', value: 'chatgpt' },
+      { label_ar: 'Claude (نصوص)', label_en: 'Claude (Text)', value: 'claude' },
+      { label_ar: 'Gemini (نصوص)', label_en: 'Gemini (Text)', value: 'gemini' },
+      { label_ar: 'Mistral (نصوص)', label_en: 'Mistral (Text)', value: 'mistral' },
+      { label_ar: 'Midjourney (صور)', label_en: 'Midjourney (Images)', value: 'midjourney' },
+      { label_ar: 'Flux (صور)', label_en: 'Flux (Images)', value: 'flux' },
+      { label_ar: 'SDXL (صور)', label_en: 'SDXL (Images)', value: 'sdxl' },
+      { label_ar: 'DALL-E 3 (صور)', label_en: 'DALL-E 3 (Images)', value: 'dalle3' },
+    ];
+    return (
+      <ScreenContainer>
+        <DecorativeBackground />
+        <View className={`border-b ${theme.borderSubtle} ${theme.headerBg} backdrop-blur-md z-40`}>
+          <View className="max-w-4xl mx-auto w-full px-6 py-4 flex-row items-center">
+            <TouchableOpacity onPress={() => setScreenState('question')} className={`w-10 h-10 ${theme.surface}/80 rounded-full items-center justify-center border border-slate-700/50`}>
+              <Icon name="back" size={20} color="#94a3b8" />
+            </TouchableOpacity>
+            <View className="flex-1 px-4 items-center">
+              <Typography className="text-primary-glow font-black text-[10px] uppercase tracking-[0.25em] mb-0.5">
+                {isRtl ? 'المدير الإبداعي الذكي' : 'AI Creative Director'}
+              </Typography>
+            </View>
+          </View>
+        </View>
+
+        <ScrollView className="flex-1 px-4 md:px-6 py-4" contentContainerStyle={{ paddingBottom: 20 }}>
+          <View className="max-w-4xl mx-auto w-full">
+            <Animated.View style={{ opacity: fadeAnim }}>
+              <View className={`${theme.cardBg} rounded-3xl p-6 md:p-8 border ${theme.border} shadow-premium`}>
+                <View className="mb-6">
+                  <Typography variant="h2" className={`text-xl md:text-2xl ${theme.text} font-black tracking-tight leading-tight`}>
+                    {isRtl ? 'النموذج المستهدف (إلزامي)' : 'Target Model (Required)'}
+                  </Typography>
+                </View>
+
+                <View className="gap-3">
+                  {modelOptions.map((option) => {
+                    const isSelected = targetModel === option.value;
+                    return (
+                      <TouchableOpacity
+                        key={option.value}
+                        onPress={() => setTargetModel(option.value)}
+                        className={`py-4 px-5 rounded-2xl border-2 ${isSelected ? 'border-primary bg-primary/15' : `${theme.borderSubtle} ${theme.surface}/50`}`}
+                      >
+                        <View className="flex-row items-center justify-between">
+                          <Typography className={`text-base flex-1 ${isSelected ? `${theme.text} font-bold` : `${theme.textSecondary} font-medium`}`}>
+                            {isRtl ? option.label_ar : option.label_en}
+                          </Typography>
+                          {isSelected && (
+                            <View className="w-5 h-5 bg-primary items-center justify-center ml-3 shrink-0 rounded-full">
+                              <View className="w-2 h-2 bg-white rounded-full" />
+                            </View>
+                          )}
+                        </View>
+                      </TouchableOpacity>
+                    );
+                  })}
+                </View>
+              </View>
+            </Animated.View>
+          </View>
+        </ScrollView>
+
+        <View className={`${theme.bg}/90 backdrop-blur-3xl border-t ${theme.borderSubtle}`} style={{ paddingTop: 24, paddingLeft: 24, paddingRight: 24, paddingBottom: Math.max(insets.bottom, 24) }}>
+          <View className="max-w-4xl mx-auto w-full flex-row gap-3">
+             <Button
+                title={isRtl ? 'توليد الأمر النهائي' : 'Generate Result'}
+                onPress={() => runSynthesis(history, targetModel)}
+                disabled={!targetModel}
+                className={`flex-1 h-14 md:h-16 rounded-2xl md:rounded-3xl ${!targetModel ? 'opacity-30' : 'bg-primary shadow-neon-blue'}`}
+             />
           </View>
         </View>
       </ScreenContainer>

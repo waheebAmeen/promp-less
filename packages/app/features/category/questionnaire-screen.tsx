@@ -18,6 +18,7 @@ export function CategoryQuestionnaireScreen() {
   const [templateId] = useParam('templateId');
   const [id] = useParam('id');
   const { push, back } = useRouter();
+  const { preferences } = useAppStore();
 
   // Find the template
   const templatesData = categoryTemplates[id || ''] || {};
@@ -28,13 +29,14 @@ export function CategoryQuestionnaireScreen() {
     // We pass the generic targetModel based on the category or keep it empty for ChatGPT processing if it's text.
     // For images we want to use the default target model (e.g. Midjourney) but here we can just pass 'midjourney' or let it be default.
     // Assuming prompt generator handles the formatting properly.
-    const textCategories = ['study', 'marketing', 'writing', 'other', 'coding'];
+    
     const generatedPrompt = generatePrompt(
       workflow.template,
       '',
       answers,
       [],
-      textCategories.includes(id || '') ? 'chatgpt' : 'midjourney'
+      answers.targetModel || (textCategories.includes(id || '') ? 'chatgpt' : ((preferences?.defaultEngine as any) || 'midjourney')),
+      preferences
     );
     push({
       pathname: '/preview',
@@ -51,6 +53,7 @@ export function CategoryQuestionnaireScreen() {
     );
   }
 
+  const textCategories = ['study', 'marketing', 'writing', 'other', 'coding'];
   const mappedQuestions = workflow.questions.map((q: any) => ({
     id: q.id,
     title_ar: q.label || q.title_ar || q.id,
@@ -75,11 +78,39 @@ export function CategoryQuestionnaireScreen() {
   }));
 
 
+  
+  const targetModelQuestion = {
+    id: 'targetModel',
+    title_ar: 'النموذج المستهدف (إلزامي)',
+    title_en: 'Target Model (Required)',
+    type: 'select',
+    options: textCategories.includes(id || '')
+      ? [
+          { label_ar: 'ChatGPT', label_en: 'ChatGPT', value: 'chatgpt' },
+          { label_ar: 'Claude', label_en: 'Claude', value: 'claude' },
+          { label_ar: 'Gemini', label_en: 'Gemini', value: 'gemini' },
+          { label_ar: 'Mistral', label_en: 'Mistral', value: 'mistral' },
+        ]
+      : [
+          { label_ar: 'Midjourney (للصور)', label_en: 'Midjourney (Images)', value: 'midjourney' },
+          { label_ar: 'Flux (للصور)', label_en: 'Flux (Images)', value: 'flux' },
+          { label_ar: 'SDXL (للصور)', label_en: 'SDXL (Images)', value: 'sdxl' },
+          { label_ar: 'DALL-E 3', label_en: 'DALL-E 3', value: 'dalle3' },
+          { label_ar: 'ChatGPT', label_en: 'ChatGPT', value: 'chatgpt' },
+          { label_ar: 'Claude', label_en: 'Claude', value: 'claude' },
+          { label_ar: 'Gemini', label_en: 'Gemini', value: 'gemini' },
+          { label_ar: 'Mistral', label_en: 'Mistral', value: 'mistral' },
+        ],
+    placeholder_ar: '',
+    placeholder_en: '',
+  };
+
   const questionnaireData = {
     category: workflow.id,
     template: workflow.template,
-    questions: mappedQuestions,
+    questions: [...mappedQuestions, targetModelQuestion],
   };
+
 
   return (
     <ScreenContainer>

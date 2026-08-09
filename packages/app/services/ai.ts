@@ -1,22 +1,18 @@
 import { Workflow } from '../storage/store';
 
-// ─── Groq Configuration ───────────────────────────────────────────────────────
-const GROQ_API_KEY = '';
+// ─── Cohere Configuration ─────────────────────────────────────────────────────
+const COHERE_API_KEY = process.env.EXPO_PUBLIC_COHERE_API_KEY || '';
+const COHERE_API_URL = 'https://api.cohere.com/v2/chat';
 
-/** Controls how many questions to ask and how deep to go */
+/* Controls how many questions to ask and how deep to go */
 export type ComplexityMode = 'simple' | 'complex';
-const GROQ_API_URL = 'https://api.groq.com/openai/v1/chat/completions';
+
 
 /**
- * Fallback chain — tried in order on 429 / 400 / 402.
- * All models confirmed active as of 2025-07.
+ * Primary model — Cohere Command A Plus.
  */
-const FALLBACK_MODELS = [
-  'llama-3.3-70b-versatile', // Best quality — primary
-  'llama-3.1-8b-instant',    // Fastest — first fallback
-] as const;
+const PRIMARY_MODEL = 'command-a-plus-05-2026';
 
-const FALLBACK_STATUS_CODES = new Set([429, 400, 402]);
 
 // ─── Public types ─────────────────────────────────────────────────────────────
 
@@ -48,71 +44,71 @@ export type NextQuestionResult =
 
 async function callGroqJson(
   messages: { role: string; content: string }[],
-  maxTokens = 800,
+  maxTokens = 3000,  // thinking model needs extra budget for internal reasoning
 ): Promise<any> {
-  let lastError: Error | null = null;
+  try {
+    const response = await fetch(COHERE_API_URL, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${COHERE_API_KEY}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        model: PRIMARY_MODEL,
+        messages,
+        max_tokens: maxTokens,
+        temperature: 0.4,
+        response_format: { type: 'json_object' },
+      }),
+    });
 
-  for (const model of FALLBACK_MODELS) {
-    try {
-      const response = await fetch(GROQ_API_URL, {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${GROQ_API_KEY}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          model,
-          messages,
-          max_tokens: maxTokens,
-          temperature: 0.4,
-          response_format: { type: 'json_object' },
-        }),
-      });
-
-      if (response.ok) {
-        const body = await response.json();
-        console.log(`[AI] Success with model: ${model}`);
-        return body;
-      }
-
-      const status = response.status;
-      const errorText = await response.text().catch(() => '');
-      console.warn(`[AI][${model}] HTTP ${status}: ${errorText.slice(0, 120)}`);
-
-      if (status === 401 || status === 403) throw new Error('401');
-      if (status === 503) throw new Error('loading');
-      if (status >= 500) throw new Error(`http_${status}`);
-      if (FALLBACK_STATUS_CODES.has(status)) {
-        lastError = new Error(`http_${status}`);
-        continue;
-      }
-      throw new Error(`http_${status}`);
-    } catch (err: any) {
-      if (['401', 'loading'].some((k) => err.message?.startsWith(k))) throw err;
-      if (err.message?.startsWith('http_')) {
-        lastError = err;
-        continue;
-      }
-      // Network-level error
-      throw new Error(`network_error: ${err.message}`);
+    if (response.ok) {
+      const body = await response.json();
+      console.log(`[AI] Success with model: ${PRIMARY_MODEL}`);
+      return body;
     }
-  }
 
-  throw lastError ?? new Error('All models failed');
+    const status = response.status;
+    const errorText = await response.text().catch(() => '');
+    console.warn(`[AI][${PRIMARY_MODEL}] HTTP ${status}: ${errorText.slice(0, 120)}`);
+
+    if (status === 401 || status === 403) throw new Error('401');
+    if (status === 503) throw new Error('loading');
+    throw new Error(`http_${status}`);
+  } catch (err: any) {
+    if (['401', 'loading'].some((k) => err.message?.startsWith(k))) throw err;
+    if (err.message?.startsWith('http_')) throw err;
+    throw new Error(`network_error: ${err.message}`);
+  }
 }
 
-/** Safely extract text from Groq response choices */
+/** Safely extract text from Cohere v2 chat response */
 function extractContent(body: any): string {
-  return body?.choices?.[0]?.message?.content ?? '';
+  // Cohere v2: body.message.content is an array of content blocks
+  const content = body?.message?.content;
+  if (Array.isArray(content)) {
+    return content.find((c: any) => c.type === 'text')?.text ?? '';
+  }
+  // Fallback for plain string content
+  return typeof content === 'string' ? content : '';
 }
 
 /** Strip markdown fences and parse JSON */
 function safeParseJson(raw: string): any {
-  const cleaned = raw
-    .replace(/^```(?:json)?\s*/i, '')
-    .replace(/\s*```$/i, '')
-    .trim();
-  return JSON.parse(cleaned);
+  try {
+    const cleaned = raw
+      .replace(/^```(?:json)?\s*/i, '')
+      .replace(/\s*```$/i, '')
+      .trim();
+    return JSON.parse(cleaned);
+  } catch (e) {
+    // Fallback: extract the first JSON object using Regex
+    const match = raw.match(/\{[\s\S]*\}/);
+    if (match) {
+      return JSON.parse(match[0]);
+    }
+    throw e;
+  }
 }
 
 // ─── 1. getNextQuestion ───────────────────────────────────────────────────────
@@ -187,7 +183,10 @@ ${modeInstruction}
 
 3. الهدف ليس جمع أكبر عدد من الإجابات.
 الهدف هو فهم المستخدم بأقل عدد ممكن من الأسئلة مع الحصول على أفضل نتيجة.
-إذا لم تجد زاوية جديدة ومهمة للسؤال، قم بإنهاء الحوار فوراً.
+
+⚠️ قاعدة إلزامية: يجب عليك طرح ما لا يقل عن 3 أسئلة قبل أن تستطيع قول "done": true.
+لا يجوز إنهاء الحوار قبل السؤال الثالث مطلقاً، حتى لو بدت الفكرة واضحة.
+لديك حالياً ${history.length} سؤال في السجل — ${history.length < 3 ? `يجب طرح ${3 - history.length} سؤال/أسئلة إضافية على الأقل.` : 'يمكنك الإنهاء إذا رأيت ذلك مناسباً.'}
 
 4. اجعل تجربة المستخدم سهلة:
 - استخدم الخيارات الجاهزة دائماً عندما يكون ذلك ممكناً.
@@ -255,7 +254,7 @@ ${historyText}
   const body = await callGroqJson([
     { role: 'system', content: systemPrompt },
     { role: 'user', content: userMessage },
-  ], 400);
+  ], 3000);
 
   const raw = extractContent(body);
   console.log('[AI:getNextQuestion] raw:', raw);
@@ -295,10 +294,13 @@ ${historyText}
  * - Fills in missing details using best practices
  * - Structures the output with role, goal, context, constraints, steps, quality criteria
  */
+import { TargetModel } from '../engine/types';
+
 export async function synthesizeProfessionalPrompt(
   idea: string,
   history: QAEntry[],
   language: 'ar' | 'en' = 'ar',
+  targetModel: TargetModel = 'midjourney'
 ): Promise<string> {
   const historyText = history
     .map((h, i) => `Q${i + 1}: ${h.question}\nA${i + 1}: ${h.answer}`)
@@ -316,6 +318,9 @@ export async function synthesizeProfessionalPrompt(
 2. إعادة تنظيم المعلومات بطريقة احترافية.
 3. إضافة السياق الضروري وإزالة أي غموض.
 4. جعل التعليمات أكثر دقة ووضوحاً واستخدام أفضل ممارسات كتابة الـ Prompts.
+
+
+- قم بتجهيز وبناء الـ Prompt ليكون متوافقاً تماماً مع نموذج (Target Model): ${targetModel}. تأكد من استخدام أفضل الممارسات لهذا النموذج تحديداً.
 
 يجب أن يحتوي الـ prompt النهائي المُحسّن تلقائياً على:
 - وضوح الهدف (تعريف الدور السياقي للذكاء الاصطناعي).
@@ -340,6 +345,9 @@ You must:
 2. Reorganize the information professionally.
 3. Add necessary context and remove ambiguity.
 4. Make instructions highly precise, using prompt engineering best practices.
+
+
+- Format and optimize the prompt specifically for the target model: ${targetModel}. Make sure to use best practices for this model.
 
 The automatically enhanced final prompt must include:
 - Clear objective (contextual AI role definition).
@@ -366,7 +374,7 @@ Synthesize a professional prompt now.`;
       { role: 'system', content: systemPrompt },
       { role: 'user', content: userMessage },
     ],
-    1500,
+    3000,
   );
 
   const raw = extractContent(body);
@@ -377,12 +385,18 @@ Synthesize a professional prompt now.`;
     parsed = safeParseJson(raw);
   } catch {
     // Fallback: use raw text if it's non-empty and not JSON
-    if (raw.trim().length > 50) return raw.trim();
+    if (raw.trim().length > 50 && !raw.trim().startsWith('{')) return raw.trim();
     throw new Error('invalid_json');
   }
 
-  const prompt = parsed?.prompt;
+  const prompt = parsed?.prompt || parsed?.enhanced || parsed?.result || parsed?.text;
   if (typeof prompt !== 'string' || prompt.trim().length < 20) {
+    if (parsed && typeof parsed === 'object') {
+      const firstStr = Object.values(parsed).find(v => typeof v === 'string');
+      if (firstStr && (firstStr as string).trim().length > 20) {
+        return (firstStr as string).trim();
+      }
+    }
     throw new Error('invalid_structure');
   }
 
@@ -405,7 +419,7 @@ Output ONLY a JSON object: { "questions": [ { "id": "camelCase", "question": "..
   const body = await callGroqJson([
     { role: 'system', content: systemMessage },
     { role: 'user', content: `Generate questions for: "${userIdea}"` },
-  ], 1200);
+  ], 3000);
 
   const raw = extractContent(body);
   if (!raw.trim()) throw new Error('no_json');
@@ -547,7 +561,7 @@ Return JSON only:
         content: `${language === 'ar' ? 'قم بتحسين هذا الـ prompt' : 'Improve this prompt'}:\n\n"${currentPrompt}"`,
       },
     ],
-    1200,
+    4000,
   );
 
   const raw = extractContent(body);
@@ -557,15 +571,80 @@ Return JSON only:
   try {
     parsed = safeParseJson(raw);
   } catch {
-    if (raw.trim().length > 20) return raw.trim();
+    if (raw.trim().length > 20 && !raw.trim().startsWith('{')) return raw.trim();
     throw new Error('invalid_json');
   }
 
-  const enhanced = parsed?.enhanced;
+  let enhanced = parsed?.enhanced || parsed?.prompt || parsed?.result || parsed?.text;
+  
   if (typeof enhanced !== 'string' || enhanced.trim().length < 10) {
+    // If it's a valid JSON but missing the expected key, try to find any string value
+    if (parsed && typeof parsed === 'object') {
+       const firstStringVal = Object.values(parsed).find(v => typeof v === 'string');
+       if (firstStringVal && (firstStringVal as string).trim().length >= 10) {
+         return (firstStringVal as string).trim();
+       }
+    }
+    
+    // If we still don't have it, don't return raw JSON string to the UI!
+    if (raw.trim().startsWith('{')) {
+       throw new Error('invalid_structure');
+    }
+    
+    // If it was just text
+    if (raw.trim().length > 20) return raw.trim();
     throw new Error('invalid_structure');
   }
 
   return enhanced.trim();
 }
 
+
+// ─── 5. translatePrompt ───────────────────────────────────────────────────────
+export async function translatePrompt(
+  prompt: string,
+  targetLanguage: 'ar' | 'en'
+): Promise<string> {
+  const systemPrompt = targetLanguage === 'ar'
+    ? `أنت مترجم محترف. مهمتك هي ترجمة الـ Prompt التالي إلى اللغة العربية بدقة عالية مع الحفاظ على المصطلحات التقنية.
+
+أخرج JSON فقط:
+{
+  "translated": "النص المترجم هنا"
+}`
+    : `You are a professional translator. Translate the following Prompt into English accurately while preserving technical terms.
+
+Return JSON only:
+{
+  "translated": "Translated text here"
+}`;
+
+  const body = await callGroqJson([
+    { role: 'system', content: systemPrompt },
+    { role: 'user', content: prompt }
+  ], 2000);
+
+  const raw = extractContent(body);
+  let parsed: any;
+  try {
+    parsed = safeParseJson(raw);
+  } catch {
+    if (raw.trim().length > 2 && !raw.trim().startsWith('{')) return raw.trim();
+    throw new Error('invalid_json');
+  }
+
+  const translated = parsed?.translated || parsed?.prompt || parsed?.result || parsed?.text;
+  if (typeof translated !== 'string' || translated.trim().length < 2) {
+    if (parsed && typeof parsed === 'object') {
+       const firstStringVal = Object.values(parsed).find(v => typeof v === 'string');
+       if (firstStringVal && (firstStringVal as string).trim().length >= 2) {
+         return (firstStringVal as string).trim();
+       }
+    }
+    if (raw.trim().startsWith('{')) throw new Error('invalid_structure');
+    if (raw.trim().length > 2) return raw.trim();
+    throw new Error('invalid_structure');
+  }
+
+  return translated.trim();
+}

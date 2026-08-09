@@ -79,20 +79,20 @@ export function AuthScreen() {
             <View className="gap-5">
               {!isLogin && (
                 <View>
-                  <View className="rounded-2xl border p-1 backdrop-blur-md" style={{ backgroundColor: theme.surface + '99', borderColor: theme.borderSubtle }}>
+                  <View className={`rounded-2xl border p-1 backdrop-blur-md ${theme.isDark ? 'bg-[#1E1E2D]/80 border-white/10' : 'bg-white/80 border-slate-200'}`}>
                     <Input
                       placeholder={t('auth.full_name', { defaultValue: 'Full Name' })}
                       value={name}
                       onChangeText={setName}
                       className="bg-transparent border-0 px-5 h-14"
-                      style={{ color: theme.text }}
+                      style={{ color: theme.isDark ? '#f8fafc' : '#0f172a' }}
                     />
                   </View>
                 </View>
               )}
 
               <View>
-                <View className="rounded-2xl border p-1 backdrop-blur-md" style={{ backgroundColor: theme.surface + '99', borderColor: theme.borderSubtle }}>
+                <View className={`rounded-2xl border p-1 backdrop-blur-md ${theme.isDark ? 'bg-[#1E1E2D]/80 border-white/10' : 'bg-white/80 border-slate-200'}`}>
                   <Input
                     placeholder={t('auth.email', { defaultValue: 'Email Address' })}
                     value={email}
@@ -100,20 +100,20 @@ export function AuthScreen() {
                     autoCapitalize="none"
                     keyboardType="email-address"
                     className="bg-transparent border-0 px-5 h-14"
-                    style={{ color: theme.text }}
+                    style={{ color: theme.isDark ? '#f8fafc' : '#0f172a' }}
                   />
                 </View>
               </View>
 
               <View>
-                <View className="rounded-2xl border p-1 backdrop-blur-md" style={{ backgroundColor: theme.surface + '99', borderColor: theme.borderSubtle }}>
+                <View className={`rounded-2xl border p-1 backdrop-blur-md ${theme.isDark ? 'bg-[#1E1E2D]/80 border-white/10' : 'bg-white/80 border-slate-200'}`}>
                   <Input
                     placeholder={t('auth.password', { defaultValue: 'Password' })}
                     value={password}
                     onChangeText={setPassword}
                     secureTextEntry
                     className="bg-transparent border-0 px-5 h-14"
-                    style={{ color: theme.text }}
+                    style={{ color: theme.isDark ? '#f8fafc' : '#0f172a' }}
                   />
                 </View>
               </View>
@@ -121,9 +121,30 @@ export function AuthScreen() {
               <Button 
                 title={isLogin ? t('auth.sign_in', { defaultValue: 'Sign In' }) : t('auth.sign_up', { defaultValue: 'Register' })}
                 onPress={handleSubmit}
-                className="mt-4 h-16 rounded-2xl"
+                className="mt-2 h-16 rounded-2xl"
                 style={{ backgroundColor: theme.colors.primary }}
               />
+
+              <View className="flex-row items-center my-6">
+                <View className={`flex-1 h-px ${theme.isDark ? 'bg-white/10' : 'bg-slate-200'}`} />
+                <Typography className="px-4 text-xs font-bold uppercase tracking-widest" style={{ color: theme.isDark ? '#94a3b8' : '#64748b' }}>
+                  {t('auth.or_continue', { defaultValue: 'OR' })}
+                </Typography>
+                <View className={`flex-1 h-px ${theme.isDark ? 'bg-white/10' : 'bg-slate-200'}`} />
+              </View>
+
+              <TouchableOpacity 
+                className={`flex-row items-center justify-center h-16 rounded-2xl border ${theme.isDark ? 'bg-[#1E1E2D]/80 border-white/10' : 'bg-white/80 border-slate-200'} backdrop-blur-md`}
+                onPress={() => { /* Google Sign In */ }}
+                activeOpacity={0.8}
+              >
+                <Icon name="google" size={24} />
+                <Typography className="font-bold text-lg ml-3" style={{ color: theme.isDark ? '#f8fafc' : '#0f172a' }}>
+                  Google
+                </Typography>
+              </TouchableOpacity>
+
+
 
               <TouchableOpacity 
                 onPress={() => { setIsLogin(!isLogin); setError(''); }}
@@ -134,24 +155,7 @@ export function AuthScreen() {
                  </Typography>
               </TouchableOpacity>
               
-              <View className="items-center mt-2">
-                <Button 
-                  title={t('auth.guest', { defaultValue: 'Continue as Guest' })}
-                  onPress={() => {
-                     try {
-                        loginAsGuest();
-                     } catch(e: any) {
-                        setError(e.message);
-                     }
-                  }}
-                  className="h-14 rounded-2xl w-full"
-                  style={{ backgroundColor: 'transparent', borderColor: theme.borderSubtle, borderWidth: 1 }}
-                  titleStyle={{ color: theme.text }}
-                />
-                <Typography className="text-center text-xs mt-3" style={{ color: theme.textMuted }}>
-                  {t('auth.guest_note', { defaultValue: 'Note: You can create Prompts as guest, but saving requires signing in.' })}
-                </Typography>
-              </View>
+
             </View>
 
             <View className="mt-12 items-center opacity-30">

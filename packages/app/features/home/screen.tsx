@@ -9,6 +9,9 @@ import { useAppStore } from '../../storage/store';
 import { useSafeArea } from '../../provider/safe-area/use-safe-area';
 import { useTheme } from '../../design/useTheme';
 import { useVoice } from '../../hooks/useVoice';
+import { motion } from "framer-motion";
+import { OnboardingScreen } from '../onboarding/OnboardingScreen';
+import { PreferencesDrawer } from '../settings/PreferencesDrawer';
 
 
 const SOCIAL_LINKS = [
@@ -23,8 +26,9 @@ export function HomeScreen() {
   const { t, i18n } = useTranslation();
   const isRtl = i18n.language === 'ar';
   const { push } = useRouter();
-  const { user, isAuthenticated, logout, workflows } = useAppStore();
+  const { user, isAuthenticated, logout, workflows, hasCompletedOnboarding } = useAppStore();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
   const insets = useSafeArea();
   const theme = useTheme();
   const { isListening, isSupported, startListening, stopListening } = useVoice();
@@ -61,6 +65,10 @@ export function HomeScreen() {
   }, [isAuthenticated]);
 
   if (!isAuthenticated) return null;
+
+  if (!hasCompletedOnboarding) {
+    return <OnboardingScreen />;
+  }
 
   const handleMagicSubmit = () => {
     const trimmed = magicIdea.trim();
@@ -99,12 +107,12 @@ export function HomeScreen() {
               <ScrollView className="flex-1 px-4 py-6">
                 {/* Navigation Section */}
                 <View className="mb-8">
-                  <Typography variant="caption" className="text-slate-500 mb-4 px-2 uppercase font-bold text-[10px] tracking-widest">Navigation</Typography>
+                  <Typography variant="caption" className="text-slate-500 mb-4 px-2 uppercase font-bold text-[10px] tracking-widest">{isRtl ? 'التنقل' : 'Navigation'}</Typography>
                   <View className="gap-1">
                     {[
-                      { id: 'home', label: 'Explore', icon: 'apps', route: '/' },
-                      { id: 'history', label: 'My Library', icon: 'history', route: '/history' },
-                      { id: 'settings', label: 'Settings', icon: 'settings', route: '/settings' },
+                      { id: 'home', label: isRtl ? 'استكشاف' : 'Explore', icon: 'apps', route: '/' },
+                      { id: 'history', label: isRtl ? 'مكتبتي' : 'My Library', icon: 'history', route: '/history' },
+                      { id: 'settings', label: isRtl ? 'الإعدادات' : 'Settings', icon: 'settings', route: '/settings' },
                     ].map(item => (
                       <TouchableOpacity 
                         key={item.id}
@@ -115,26 +123,33 @@ export function HomeScreen() {
                         <Typography className={`${theme.textSecondary} font-medium`}>{item.label}</Typography>
                       </TouchableOpacity>
                     ))}
+                    <TouchableOpacity 
+                      onPress={() => { setIsMenuOpen(false); setIsPreferencesOpen(true); }}
+                      className="flex-row items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5"
+                    >
+                      <Icon name="custom" size={18} color="#94a3b8" />
+                      <Typography className={`${theme.textSecondary} font-medium`}>{isRtl ? 'تفضيلات الذكاء الاصطناعي' : 'AI Preferences'}</Typography>
+                    </TouchableOpacity>
                   </View>
                 </View>
 
                 {/* Admin Section */}
                 {user?.role === 'admin' && (
                   <View className="mb-8">
-                    <Typography variant="caption" className="text-slate-500 mb-4 px-2 uppercase font-bold text-[10px] tracking-widest">Administration</Typography>
+                    <Typography variant="caption" className="text-slate-500 mb-4 px-2 uppercase font-bold text-[10px] tracking-widest">{isRtl ? 'الإدارة' : 'Administration'}</Typography>
                     <TouchableOpacity 
                       onPress={() => { setIsMenuOpen(false); push('/admin'); }}
                       className="flex-row items-center gap-3 px-4 py-3 rounded-xl bg-primary/10 border border-primary/20"
                     >
                        <Icon name="settings" size={18} color="#3b82f6" />
-                       <Typography className="text-primary-glow font-bold">Command Center</Typography>
+                       <Typography className="text-primary-glow font-bold">{isRtl ? 'مركز التحكم' : 'Command Center'}</Typography>
                     </TouchableOpacity>
                   </View>
                 )}
 
                 {/* Account Section */}
                 <View className="mb-8">
-                  <Typography variant="caption" className={`mb-4 px-2 uppercase font-bold text-[10px] tracking-widest ${theme.textMuted}`}>Account</Typography>
+                  <Typography variant="caption" className={`mb-4 px-2 uppercase font-bold text-[10px] tracking-widest ${theme.textMuted}`}>{isRtl ? 'الحساب' : 'Account'}</Typography>
                   <View className={`${theme.isDark ? 'bg-white/5' : 'bg-light-surface-container'} p-4 rounded-2xl border ${theme.borderSubtle} flex-row items-center gap-3`}>
                      <View className="w-10 h-10 rounded-full bg-primary/20 items-center justify-center border border-primary/30">
                         <Typography className="text-primary-glow font-bold">{user?.name?.[0] || 'U'}</Typography>
@@ -148,7 +163,7 @@ export function HomeScreen() {
 
                 {/* Social Section */}
                 <View>
-                  <Typography variant="caption" className="text-slate-500 mb-4 px-2 uppercase font-bold text-[10px] tracking-widest">Developer</Typography>
+                  <Typography variant="caption" className="text-slate-500 mb-4 px-2 uppercase font-bold text-[10px] tracking-widest">{isRtl ? 'المطور' : 'Developer'}</Typography>
                   <View className="flex-row flex-wrap gap-2 px-2">
                      {SOCIAL_LINKS.map(link => (
                        <TouchableOpacity key={link.name} onPress={() => Linking.openURL(link.url)} className={`w-8 h-8 rounded-lg ${theme.cardBg} items-center justify-center border ${theme.border}`}>
@@ -163,7 +178,7 @@ export function HomeScreen() {
               <View className={`p-4 border-t ${theme.borderSubtle}`}>
                  <TouchableOpacity onPress={logout} className="flex-row items-center gap-3 px-4 py-3 rounded-xl bg-red-500/10 border border-red-500/20">
                     <Icon name="delete" size={16} color="#f87171" />
-                    <Typography className="text-red-400 font-bold text-sm">Sign Out</Typography>
+                    <Typography className="text-red-400 font-bold text-sm">{isRtl ? 'تسجيل الخروج' : 'Sign Out'}</Typography>
                  </TouchableOpacity>
               </View>
            </TouchableOpacity>
@@ -199,18 +214,74 @@ export function HomeScreen() {
       >
         <View className="max-w-6xl mx-auto w-full px-6 pt-12">
           {/* Professional Hero Section */}
-          <View className="mb-8">
-            <Typography className="text-primary-glow font-black uppercase text-[10px] tracking-[0.3em] mb-4">Promptless AI OS</Typography>
-            <Typography variant="h1" className={`${theme.text} mb-4 text-4xl md:text-6xl font-black leading-tight tracking-tighter`}>
-                نظام المدير الإبداعي 
-            </Typography>
-            <Typography variant="caption" className={`text-lg font-medium max-w-xl leading-relaxed ${theme.textMuted}`}>
-                قم ببناء مطالبات بصرية متطورة باستخدام تدفقات عمل التوجية الفني الاحترافي 
-            </Typography>
-          </View>
+<motion.div
+  initial={{ opacity: 0, y: 30 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.7, ease: "easeOut" }}
+  className="mb-12"
+>
+
+
+  {/* Title */}
+  <motion.div
+    initial={{ opacity: 0, y: 20 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ delay: 0.25 }}
+  >
+    <Typography
+      variant="h1"
+      className={`${theme.text}
+      text-5xl
+      md:text-7xl
+      font-black
+      leading-[1.05]
+      tracking-tight
+      max-w-4xl`}
+    >
+      نظام المدير الإبداعي
+    </Typography>
+  </motion.div>
+
+  {/* Description */}
+  <motion.div
+    initial={{ opacity: 0, y: 20 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ delay: 0.4 }}
+    className="mt-8"
+  >
+    <Typography
+      variant="caption"
+      className={`
+        text-lg
+        md:text-xl
+        leading-9
+        max-w-2xl
+        font-medium
+        ${theme.textMuted}
+      `}
+    >
+      أنشئ مطالبات بصرية احترافية باستخدام تدفقات عمل ذكية،
+      وتوجيه فني متقدم، وأدوات تساعدك على إنتاج نتائج عالية الجودة
+      بسرعة ودقة.
+    </Typography>
+  </motion.div>
+</motion.div>
 
           {/* ✨ Magic AI Input */}
-          <View className="mb-12">
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.95, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            transition={{ delay: 0.5, duration: 0.5, type: "spring", stiffness: 100 }}
+            className="mb-12 relative"
+          >
+            {/* Breathing Aura Glow Behind Input */}
+            <motion.div
+              animate={{ opacity: [0.3, 0.6, 0.3], scale: [0.98, 1.02, 0.98] }}
+              transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
+              className="absolute inset-0 rounded-3xl bg-primary/20 blur-xl"
+              style={{ zIndex: -1 }}
+            />
+
             {/* Glowing Label */}
             <View className="flex-row items-center gap-2 mb-3">
               <View className="w-5 h-5 rounded-full bg-primary/20 border border-primary/40 items-center justify-center">
@@ -222,7 +293,7 @@ export function HomeScreen() {
             </View>
 
             {/* Input Container */}
-            <View className={`rounded-3xl border-2 overflow-hidden ${theme.border} ${theme.cardBg}`}>
+            <View className={`rounded-3xl border-2 overflow-hidden backdrop-blur-3xl ${theme.border} ${theme.cardBg}`}>
               <TextInput
                 value={magicIdea}
                 onChangeText={(text) => {
@@ -254,7 +325,7 @@ export function HomeScreen() {
               <View className={`flex-row flex-wrap items-center justify-between gap-3 px-4 py-3 border-t ${theme.borderSubtle} ${theme.isDark ? 'bg-white/3' : 'bg-black/3'}`}>
                 <View className="flex-row items-center gap-3">
                   <Typography variant="caption" className={`text-xs ${theme.textMuted}`}>
-                    {isRtl ? 'يعمل بـ Groq · Llama 3.3' : 'Powered by Groq · Llama 3.3'}
+                    {isRtl ? 'يعمل بـ Cohere · Command A' : 'Powered by Cohere · Command A'}
                   </Typography>
 
                   {/* Mic Button */}
@@ -293,6 +364,16 @@ export function HomeScreen() {
                   <Icon name="check" size={14} color={magicIdea.trim() ? '#ffffff' : theme.colors.icon} />
                 </TouchableOpacity>
               </View>
+            </View>
+
+            {/* Hint: More detail = better results */}
+            <View className="flex-row items-center gap-1.5 mt-2 px-1">
+              <Typography className="text-[10px]">💡</Typography>
+              <Typography className={`text-xs ${theme.textMuted}`}>
+                {isRtl
+                  ? 'كلما كان وصفك أكثر تفصيلاً، كانت النتائج أفضل'
+                  : 'The more detailed your description, the better the results'}
+              </Typography>
             </View>
 
             {/* Complexity Mode Selector */}
@@ -373,12 +454,46 @@ export function HomeScreen() {
               </Typography>
               <View className={`flex-1 h-px ${theme.isDark ? 'bg-white/10' : 'bg-black/10'}`} />
             </View>
-          </View>
+          </motion.div>
 
           {/* Categories Grid */}
           <View className="flex-row flex-wrap justify-start">
-            {filteredWorkflows.map((cat) => (
-              <View key={cat.id} className="w-1/2 md:w-1/3 lg:w-1/5 p-1.5 md:p-2">
+            {/* Study & Education Fixed Card */}
+            <motion.div
+              initial={{ opacity: 0, y: 30, scale: 0.9 }}
+              whileInView={{ opacity: 1, y: 0, scale: 1 }}
+              viewport={{ once: true, margin: "-40px" }}
+              transition={{ duration: 0.4, delay: 0, ease: "easeOut" }}
+              className="w-1/2 md:w-1/3 lg:w-1/5 p-1.5 md:p-2"
+            >
+              <TouchableOpacity
+                activeOpacity={0.7}
+                className={`w-full overflow-hidden rounded-3xl border ${theme.cardBorder} ${theme.cardBg} ${theme.cardShadow}`}
+                onPress={() => push(`/category/study`)}
+              >
+                <View className="p-5">
+                  <View className={`w-12 h-12 rounded-2xl items-center justify-center mb-5 bg-blue-500/10 border border-blue-500/20`}>
+                    <Icon name="text" size={24} color="#3b82f6" strokeWidth={2.5} />
+                  </View>
+                  <Typography variant="h2" className={`text-lg font-bold mb-1 ${theme.text}`}>
+                    {isRtl ? 'الدراسة والتعليم' : 'Education'}
+                  </Typography>
+                  <Typography variant="caption" className={`text-xs font-medium ${theme.textMuted}`}>
+                    {isRtl ? 'تلقينات نصية' : 'Text Prompts'}
+                  </Typography>
+                </View>
+              </TouchableOpacity>
+            </motion.div>
+
+            {filteredWorkflows.map((cat, index) => (
+              <motion.div
+                key={cat.id}
+                initial={{ opacity: 0, y: 30, scale: 0.9 }}
+                whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                viewport={{ once: true, margin: "-40px" }}
+                transition={{ duration: 0.4, delay: (index % 5 + 1) * 0.1, ease: "easeOut" }}
+                className="w-1/2 md:w-1/3 lg:w-1/5 p-1.5 md:p-2"
+              >
                 <TouchableOpacity
                   activeOpacity={0.7}
                   className={`w-full overflow-hidden rounded-3xl border ${theme.cardBorder} ${theme.cardBg} ${theme.cardShadow}`}
@@ -396,7 +511,7 @@ export function HomeScreen() {
                     </Typography>
                   </View>
                 </TouchableOpacity>
-              </View>
+              </motion.div>
             ))}
           </View>
         </View>
@@ -425,6 +540,11 @@ export function HomeScreen() {
           </View>
         </View>
       </View>
+
+      <PreferencesDrawer 
+        isOpen={isPreferencesOpen} 
+        onClose={() => setIsPreferencesOpen(false)} 
+      />
     </ScreenContainer>
   );
 }
