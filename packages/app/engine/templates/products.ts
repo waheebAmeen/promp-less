@@ -1,3 +1,4 @@
+
 export const productsPrompts = {
   // 1. التفرع الأول: منتجات تقنية وأجهزة ذكية (Apple Style Minimalist)
   tech_minimalist: {

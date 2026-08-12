@@ -7,7 +7,9 @@ export type TargetModel =
   | 'recraft' 
   | 'leonardo'
   | 'chatgpt'
-  | 'claude';
+  | 'claude'
+  | 'gemini'
+  | 'mistral';
 
 export type QuestionType = 'select' | 'multiselect' | 'text' | 'textarea' | 'slider';
 

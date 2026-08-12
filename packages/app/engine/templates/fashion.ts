@@ -1,3 +1,4 @@
+
 export const fashionPrompts = {
   // 1. التفرع الأول: أزياء راقية (Haute Couture)
   haute_couture: {

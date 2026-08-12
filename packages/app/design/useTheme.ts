@@ -57,14 +57,14 @@ export function useTheme() {
 
     // ── Raw Colors ──
     colors: {
-      primary: '#5D5FEF',
-      primaryGlow: '#c1c1ff',
-      primaryDeep: '#4343D5',
-      secondary: '#A5A6F6',
-      icon: isDark ? '#94a3b8' : '#767586',
-      iconActive: '#5D5FEF',
-      switchTrackOff: isDark ? '#1e293b' : '#e2e8f0',
-      switchTrackOn: '#5D5FEF',
+      primary: '#1a56db',
+      primaryGlow: '#93c5fd',
+      primaryDeep: '#0e3fa3',
+      secondary: '#60a5fa',
+      icon: isDark ? '#93c5fd' : '#4b6cb7',
+      iconActive: '#1a56db',
+      switchTrackOff: isDark ? '#0d2044' : '#dce8fb',
+      switchTrackOn: '#1a56db',
       thumbColor: '#f8fafc',
     },
   };

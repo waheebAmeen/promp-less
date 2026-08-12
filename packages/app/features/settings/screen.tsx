@@ -2,7 +2,6 @@ import React from 'react';
 import { View, ScrollView, ScreenContainer, TouchableOpacity, DecorativeBackground } from '../../design/view';
 import { Alert, Platform } from 'react-native';
 import { Typography } from '../../components/Typography';
-import { Button } from '../../components/Button';
 import { Icon } from '../../components/Icon';
 import { CustomSwitch as Switch } from '../../components/Switch';
 import { useTranslation } from 'react-i18next';
@@ -15,7 +14,7 @@ export function SettingsScreen() {
   const theme = useTheme();
   const { t, i18n } = useTranslation();
   const { language, setLanguage, darkMode, toggleDarkMode, clearHistory } = useAppStore();
-  const { back } = useRouter();
+  const { back, push } = useRouter();
 
   const handleLanguageToggle = () => {
     const newLang = language === 'ar' ? 'en' : 'ar';
@@ -86,8 +85,35 @@ export function SettingsScreen() {
               thumbColor={theme.colors.thumbColor}
             />
           </View>
+
+          {/* ── Edit Onboarding Preferences ── */}
+          <View className="mt-4">
+            <Typography className={`mb-4 font-bold uppercase tracking-widest text-xs px-2 ${theme.textMuted}`}>
+              {i18n.language === 'ar' ? 'تفضيلاتي' : 'My Preferences'}
+            </Typography>
+            <TouchableOpacity
+              onPress={() => push('/onboarding')}
+              className={`${theme.cardBg} border ${theme.cardBorder} ${theme.cardShadow} p-6 rounded-3xl md:rounded-4xl flex-row items-center justify-between`}
+              activeOpacity={0.8}
+            >
+              <View className="flex-row items-center gap-4 flex-1">
+                <View className="w-12 h-12 rounded-2xl bg-primary/10 border border-primary/20 items-center justify-center">
+                  <Icon name="custom" size={22} color="#5D5FEF" />
+                </View>
+                <View className="flex-1">
+                  <Typography className={`text-lg font-bold ${theme.text}`}>
+                    {i18n.language === 'ar' ? 'تعديل التفضيلات' : 'Edit Preferences'}
+                  </Typography>
+                  <Typography variant="caption" className={`font-medium ${theme.textMuted}`}>
+                    {i18n.language === 'ar' ? 'تغيير المجال والنمط البصري ومستوى الخبرة' : 'Change field, visual style & experience level'}
+                  </Typography>
+                </View>
+              </View>
+              <Icon name="arrow-right" size={20} color={theme.colors.icon} />
+            </TouchableOpacity>
+          </View>
           
-          <View className="mt-12">
+          <View className="mt-8">
             <Typography className={`mb-4 font-bold uppercase tracking-widest text-xs px-2 ${theme.textMuted}`}>Data Management</Typography>
             <TouchableOpacity 
               onPress={handleClearHistory} 

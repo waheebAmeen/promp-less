@@ -1,4 +1,5 @@
 import { TargetModel } from './types';
+import { UserPreferences } from '../storage/store';
 
 export const generateQuestions = (query: string): string[] => {
   // Example: Generate 5 questions based on the query
@@ -93,6 +94,8 @@ export const formatPromptForModel = (basePrompt: string, targetModel: TargetMode
 
     case 'chatgpt':
     case 'claude':
+    case 'gemini':
+    case 'mistral':
       // Text generation models
       formatted = formatted.replace(/--ar\s+[0-9]+:[0-9]+/gi, '');
       formatted = formatted.replace(/--[a-z0-9-]+\s+\S+/gi, '');
@@ -116,7 +119,8 @@ export const generatePrompt = (
   idea: string,
   answers: Record<string, string>,
   boosters: string[] = [],
-  targetModel: TargetModel = 'midjourney'
+  targetModel: TargetModel = 'midjourney',
+  preferences?: UserPreferences | null
 ): string => {
   let prompt = template;
   
@@ -141,18 +145,39 @@ export const generatePrompt = (
 
   // Clean up any unanswered placeholders
   prompt = prompt.replace(/\$\{.*?\}/g, '');
-  
-  // Professional quality boosters (added only if not already present)
-  boosters.forEach(booster => {
-    if (!prompt.toLowerCase().includes(booster.toLowerCase())) {
+
+  // If vibe is present from preferences
+  if (preferences?.vibe) {
+     const vibeMapping: Record<string, string> = {
+       cinematic: "cinematic atmosphere, cinematic lighting, 8k",
+       anime: "anime style, Makoto Shinkai, highly detailed illustration",
+       photorealistic: "hyper-realistic, highly detailed photograph, sharp focus",
+       "3d": "3D Pixar style, unreal engine 5 render"
+     };
+     const vibeString = vibeMapping[preferences.vibe];
+     if (vibeString && !prompt.toLowerCase().includes(vibeString.split(',')[0].toLowerCase())) {
         if (prompt.includes(' --')) {
           const parts = prompt.split(' --');
-          prompt = `${parts[0]}, ${booster} --${parts.slice(1).join(' --')}`;
+          prompt = `${parts[0]}, ${vibeString} --${parts.slice(1).join(' --')}`;
         } else {
-          prompt = `${prompt}, ${booster}`;
+          prompt = `${prompt}, ${vibeString}`;
         }
-    }
-  });
+     }
+  }
+  
+  // Professional quality boosters (added only if not already present)
+  if (preferences?.experienceLevel !== 'pro') {
+    boosters.forEach(booster => {
+      if (!prompt.toLowerCase().includes(booster.toLowerCase())) {
+          if (prompt.includes(' --')) {
+            const parts = prompt.split(' --');
+            prompt = `${parts[0]}, ${booster} --${parts.slice(1).join(' --')}`;
+          } else {
+            prompt = `${prompt}, ${booster}`;
+          }
+      }
+    });
+  }
 
   // Apply model-specific formatting
   return formatPromptForModel(prompt, targetModel);

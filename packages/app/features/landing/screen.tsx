@@ -10,6 +10,43 @@ import { useRouter } from 'solito/router';
 import { useAppStore } from '../../storage/store';
 import { configureRTL } from '../../locales';
 
+const ScrollReveal = ({ children, delay = 0, className = "w-full flex-col" }: { children: React.ReactNode, delay?: number, className?: string }) => {
+  const [isVisible, setIsVisible] = React.useState(Platform.OS !== 'web');
+  const ref = React.useRef<any>(null);
+
+  React.useEffect(() => {
+    if (Platform.OS === 'web' && typeof window !== 'undefined' && 'IntersectionObserver' in window && ref.current) {
+      const observer = new window.IntersectionObserver(
+        ([entry]) => {
+          if (entry.isIntersecting) {
+            setTimeout(() => setIsVisible(true), delay); 
+            observer.disconnect();
+          }
+        },
+        { threshold: 0.15, rootMargin: '0px 0px -50px 0px' }
+      );
+      observer.observe(ref.current as any);
+      return () => observer.disconnect();
+    } else {
+      setIsVisible(true);
+    }
+  }, [delay]);
+
+  return (
+    <View ref={ref} className={className}>
+      <View 
+        style={{ 
+          opacity: isVisible ? 1 : 0, 
+          transform: [{ translateY: isVisible ? 0 : 40 }],
+          ...(Platform.OS === 'web' ? { transition: 'opacity 0.7s ease-out, transform 0.7s cubic-bezier(0.16, 1, 0.3, 1)' } as any : {})
+        }}
+      >
+        {children}
+      </View>
+    </View>
+  );
+};
+
 export function LandingScreen() {
   const { t, i18n } = useTranslation();
   const { push } = useRouter();
@@ -116,46 +153,54 @@ export function LandingScreen() {
         {/* ── HERO SECTION ── */}
         <View className="max-w-6xl mx-auto w-full px-6 pt-20 pb-16 items-center">
           {/* Badge */}
-          <View className="bg-primary/10 border border-primary/20 px-5 py-2 rounded-full mb-8">
-            <Typography className="text-primary font-bold text-xs tracking-widest uppercase">
-              {t('landing.hero_badge')}
-            </Typography>
-          </View>
+          <ScrollReveal delay={0} className="items-center">
+            <View className="bg-primary/10 border border-primary/20 px-5 py-2 rounded-full mb-8">
+              <Typography className="text-primary font-bold text-xs tracking-widest uppercase">
+                {t('landing.hero_badge')}
+              </Typography>
+            </View>
+          </ScrollReveal>
 
           {/* Main Heading */}
-          <Typography
-            variant="h1"
-            className={`text-center mb-6 font-black leading-tight tracking-tighter ${theme.text}`}
-            style={{ fontSize: 48, lineHeight: 56 }}
-          >
-            {t('landing.hero_title')}
-          </Typography>
+          <ScrollReveal delay={150} className="items-center w-full">
+            <Typography
+              variant="h1"
+              className={`text-center mb-6 font-black leading-tight tracking-tighter ${theme.text}`}
+              style={{ fontSize: 48, lineHeight: 56 }}
+            >
+              {t('landing.hero_title')}
+            </Typography>
+          </ScrollReveal>
 
           {/* Subtitle */}
-          <Typography
-            className={`text-center text-lg mb-12 max-w-xl leading-relaxed ${theme.textMuted}`}
-          >
-            {t('landing.hero_subtitle')}
-          </Typography>
+          <ScrollReveal delay={300} className="items-center w-full">
+            <Typography
+              className={`text-center text-lg mb-12 max-w-xl leading-relaxed ${theme.textMuted}`}
+            >
+              {t('landing.hero_subtitle')}
+            </Typography>
+          </ScrollReveal>
 
           {/* CTA Buttons */}
-          <View className={`flex-row items-center gap-4 ${isRtl ? 'flex-row-reverse' : ''}`}>
-            <TouchableOpacity
-              onPress={() => push('/login')}
-              className="bg-primary py-4 px-10 rounded-2xl shadow-neon-primary"
-              activeOpacity={0.8}
-            >
-              <Typography className="text-white font-bold text-lg">{t('landing.hero_cta')}</Typography>
-            </TouchableOpacity>
+          <ScrollReveal delay={450} className="items-center w-full">
+            <View className={`flex-row items-center gap-4 justify-center ${isRtl ? 'flex-row-reverse' : ''}`}>
+              <TouchableOpacity
+                onPress={() => push('/login')}
+                className="bg-primary py-4 px-10 rounded-2xl shadow-neon-primary"
+                activeOpacity={0.8}
+              >
+                <Typography className="text-white font-bold text-lg">{t('landing.hero_cta')}</Typography>
+              </TouchableOpacity>
 
-            <TouchableOpacity
-              onPress={() => push('/login')}
-              className={`py-4 px-10 rounded-2xl border-2 border-primary/30 ${theme.isDark ? 'bg-primary/5' : 'bg-primary/5'}`}
-              activeOpacity={0.8}
-            >
-              <Typography className="text-primary font-bold text-lg">{t('landing.hero_cta2')}</Typography>
-            </TouchableOpacity>
-          </View>
+              <TouchableOpacity
+                onPress={() => push('/login')}
+                className={`py-4 px-10 rounded-2xl border-2 border-primary/30 ${theme.isDark ? 'bg-primary/5' : 'bg-primary/5'}`}
+                activeOpacity={0.8}
+              >
+                <Typography className="text-primary font-bold text-lg">{t('landing.hero_cta2')}</Typography>
+              </TouchableOpacity>
+            </View>
+          </ScrollReveal>
 
           {/* Decorative Glow */}
           <View className="mt-16 w-full h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
@@ -163,152 +208,231 @@ export function LandingScreen() {
 
         {/* ── HOW IT WORKS ── */}
         <View className="max-w-6xl mx-auto w-full px-6 py-16 items-center">
-          <Typography className="text-primary font-bold text-xs tracking-[0.3em] uppercase mb-4">
-            {t('landing.how_badge')}
-          </Typography>
-          <Typography variant="h1" className={`text-center text-3xl font-black mb-16 tracking-tight ${theme.text}`}>
-            {t('landing.how_title')}
-          </Typography>
+          <ScrollReveal delay={100} className="items-center">
+            <Typography className="text-primary font-bold text-xs tracking-[0.3em] uppercase mb-4">
+              {t('landing.how_badge')}
+            </Typography>
+            <Typography variant="h1" className={`text-center text-3xl font-black mb-16 tracking-tight ${theme.text}`}>
+              {t('landing.how_title')}
+            </Typography>
+          </ScrollReveal>
 
-          <View className={`flex-row flex-wrap justify-center gap-5 ${isRtl ? 'flex-row-reverse' : ''}`}>
-            {steps.map((step, idx) => (
-              <View
-                key={idx}
-                className={`${theme.glassBg} border ${theme.glassBorder} rounded-3xl p-7 items-center`}
-                style={{ width: 260 }}
-              >
-                {/* Step Number */}
-                <View className="w-12 h-12 rounded-2xl bg-primary items-center justify-center mb-5 shadow-neon-primary">
-                  <Typography className="text-white font-black text-lg">{idx + 1}</Typography>
-                </View>
+          <View className="relative w-full max-w-4xl mt-4 mb-16 mx-auto">
+            {/* ── Mobile Path Line ── */}
+            <View 
+              className={`md:hidden absolute top-0 bottom-0 w-1 bg-gradient-to-b from-primary/10 via-primary/50 to-primary/10 ${isRtl ? 'right-6' : 'left-6'}`} 
+              style={{ transform: [{ translateX: isRtl ? 2 : -2 }] }} 
+            />
 
-                {/* Icon */}
-                <View className="w-14 h-14 rounded-2xl bg-primary/10 border border-primary/20 items-center justify-center mb-5">
-                  <Icon name={step.icon} size={24} color="#5D5FEF" />
-                </View>
+            <View className="flex-col w-full">
+              {steps.map((step, idx) => {
+                const isEven = idx % 2 === 0;
+                const isCardOnLeft = isEven ? !isRtl : isRtl;
 
-                <Typography className={`font-bold text-lg mb-2 text-center ${theme.text}`}>
-                  {step.title}
-                </Typography>
-                <Typography className={`text-center text-sm leading-relaxed ${theme.textMuted}`}>
-                  {step.desc}
-                </Typography>
+                return (
+                  <ScrollReveal key={idx} delay={(idx % 2) * 150} className="w-full flex-col">
+                    <View className={`relative w-full mb-12 md:mb-6 flex ${isEven ? 'md:flex-row' : 'md:flex-row-reverse'} items-center`}>
+                      
+                      {/* Desktop Zigzag Wave */}
+                      <View className="hidden md:flex absolute top-0 bottom-0 left-1/2 w-[120px] -ml-[60px] z-0">
+                        {isCardOnLeft ? (
+                          // Left Wave (<)
+                          <View className="absolute top-0 bottom-0 right-1/2 w-[60px]">
+                            <View className="absolute top-0 left-0 right-0 border-primary/40" style={{ height: '50%', borderRightWidth: 3, borderBottomWidth: 3, borderBottomRightRadius: 40 }} />
+                            <View className="absolute bottom-0 left-0 right-0 border-primary/40" style={{ top: '50%', marginTop: -3, borderRightWidth: 3, borderTopWidth: 3, borderTopRightRadius: 40 }} />
+                          </View>
+                        ) : (
+                          // Right Wave (>)
+                          <View className="absolute top-0 bottom-0 left-1/2 w-[60px]">
+                            <View className="absolute top-0 left-0 right-0 border-primary/40" style={{ height: '50%', borderLeftWidth: 3, borderBottomWidth: 3, borderBottomLeftRadius: 40 }} />
+                            <View className="absolute bottom-0 left-0 right-0 border-primary/40" style={{ top: '50%', marginTop: -3, borderLeftWidth: 3, borderTopWidth: 3, borderTopLeftRadius: 40 }} />
+                          </View>
+                        )}
+                      </View>
 
-                {/* Connector Arrow (not on last) */}
-                {idx < steps.length - 1 && (
-                  <View className="absolute -right-4 top-1/2 hidden md:flex">
-                    <Typography className="text-primary/40 text-2xl">→</Typography>
-                  </View>
-                )}
-              </View>
-            ))}
+                      {/* Desktop Horizontal Connector Line (from Peak to Card) */}
+                      <View 
+                        className="hidden md:flex absolute top-1/2 h-0.5 bg-primary/40 z-0" 
+                        style={{ 
+                          width: 36,
+                          left: '50%',
+                          marginLeft: isCardOnLeft ? -96 : 60,
+                          transform: [{ translateY: -1 }] 
+                        }} 
+                      />
+
+                      {/* Desktop Node Dot */}
+                      <View 
+                        className="hidden md:flex absolute top-1/2 w-5 h-5 rounded-full bg-primary/20 items-center justify-center shadow-neon-primary z-10" 
+                        style={{ 
+                          left: '50%', 
+                          marginLeft: isCardOnLeft ? -60 : 60,
+                          transform: [{ translateX: -10 }, { translateY: -10 }] 
+                        }}
+                      >
+                        <View className="w-2.5 h-2.5 bg-primary rounded-full shadow-neon-primary" />
+                      </View>
+
+                      {/* Mobile Node Dot */}
+                      <View 
+                        className={`md:hidden absolute top-1/2 w-5 h-5 rounded-full bg-primary/20 items-center justify-center shadow-neon-primary z-10 ${isRtl ? 'right-6' : 'left-6'}`} 
+                        style={{ transform: [{ translateX: isRtl ? 10 : -10 }, { translateY: -10 }] }}
+                      >
+                        <View className="w-2.5 h-2.5 bg-primary rounded-full shadow-neon-primary" />
+                      </View>
+
+                      {/* Card Container */}
+                      <View className={`w-full md:w-1/2 ${isRtl ? 'pr-20 md:pr-0' : 'pl-20 md:pl-0'} ${isCardOnLeft ? 'md:pr-24 md:pl-0' : 'md:pl-24 md:pr-0'} py-4 items-center md:${isEven ? 'items-end' : 'items-start'}`}>
+                        
+                        <View className={`${theme.glassBg} border ${theme.glassBorder} rounded-3xl p-6 items-center shadow-lg w-full max-w-[320px] relative`}>
+                          
+                          {/* Step Number */}
+                          <View className={`absolute -top-5 ${isEven ? (isRtl ? 'md:-left-5' : 'md:-right-5') : (isRtl ? 'md:-right-5' : 'md:-left-5')} md:top-auto md:bottom-auto w-10 h-10 rounded-xl bg-primary items-center justify-center shadow-neon-primary z-20`}>
+                            <Typography className="text-white font-black text-lg">{idx + 1}</Typography>
+                          </View>
+
+                          <View className="w-14 h-14 rounded-2xl bg-primary/10 border border-primary/20 items-center justify-center mb-5 mt-2">
+                            <Icon name={step.icon} size={28} color="#5D5FEF" />
+                          </View>
+
+                          <Typography className={`font-bold text-xl mb-3 text-center ${theme.text}`}>
+                            {step.title}
+                          </Typography>
+                          <Typography className={`text-center text-sm leading-relaxed ${theme.textMuted}`}>
+                            {step.desc}
+                          </Typography>
+                          
+                        </View>
+                      </View>
+
+                    </View>
+                  </ScrollReveal>
+                );
+              })}
+            </View>
           </View>
         </View>
 
         {/* ── FEATURES ── */}
         <View className="max-w-6xl mx-auto w-full px-6 py-16 items-center">
-          <Typography className="text-primary font-bold text-xs tracking-[0.3em] uppercase mb-4">
-            {t('landing.features_badge')}
-          </Typography>
-          <Typography variant="h1" className={`text-center text-3xl font-black mb-16 tracking-tight ${theme.text}`}>
-            {t('landing.features_title')}
-          </Typography>
+          <ScrollReveal delay={100} className="items-center">
+            <Typography className="text-primary font-bold text-xs tracking-[0.3em] uppercase mb-4">
+              {t('landing.features_badge')}
+            </Typography>
+            <Typography variant="h1" className={`text-center text-3xl font-black mb-16 tracking-tight ${theme.text}`}>
+              {t('landing.features_title')}
+            </Typography>
+          </ScrollReveal>
 
-          <View className={`flex-row flex-wrap justify-center gap-5 ${isRtl ? 'flex-row-reverse' : ''}`} style={{ maxWidth: 900 }}>
+          <View className={`flex-row flex-wrap justify-center gap-5 w-full ${isRtl ? 'flex-row-reverse' : ''}`} style={{ maxWidth: 900 }}>
             {features.map((feature, idx) => (
-              <View
+              <ScrollReveal
                 key={idx}
-                className={`${theme.cardBg} border ${theme.cardBorder} ${theme.cardShadow} rounded-3xl p-6`}
-                style={{ width: 270 }}
+                delay={(idx % 3) * 150}
+                className="w-auto flex-col"
               >
-                <View className={`w-12 h-12 rounded-2xl items-center justify-center mb-5 ${
-                  theme.isDark ? 'bg-primary/15 border border-primary/20' : 'bg-primary/10 border border-primary/15'
-                }`}>
-                  <Icon name={feature.icon} size={22} color="#5D5FEF" />
+                <View
+                  className={`${theme.cardBg} border ${theme.cardBorder} ${theme.cardShadow} rounded-3xl p-6`}
+                  style={{ width: 270 }}
+                >
+                  <View className={`w-12 h-12 rounded-2xl items-center justify-center mb-5 ${
+                    theme.isDark ? 'bg-primary/15 border border-primary/20' : 'bg-primary/10 border border-primary/15'
+                  }`}>
+                    <Icon name={feature.icon} size={22} color="#5D5FEF" />
+                  </View>
+                  <Typography className={`font-bold text-lg mb-2 ${theme.text}`}>{feature.title}</Typography>
+                  <Typography className={`text-sm leading-relaxed ${theme.textMuted}`}>{feature.desc}</Typography>
                 </View>
-                <Typography className={`font-bold text-lg mb-2 ${theme.text}`}>{feature.title}</Typography>
-                <Typography className={`text-sm leading-relaxed ${theme.textMuted}`}>{feature.desc}</Typography>
-              </View>
+              </ScrollReveal>
             ))}
           </View>
         </View>
 
         {/* ── STATS / TRUST SECTION ── */}
         <View className="max-w-6xl mx-auto w-full px-6 py-16 items-center">
-          <Typography className="text-primary font-bold text-xs tracking-[0.3em] uppercase mb-8">
-            {t('landing.stats_badge')}
-          </Typography>
+          <ScrollReveal delay={100} className="items-center">
+            <Typography className="text-primary font-bold text-xs tracking-[0.3em] uppercase mb-8">
+              {t('landing.stats_badge')}
+            </Typography>
+          </ScrollReveal>
 
-          <View className={`${theme.glassBg} border ${theme.glassBorder} rounded-4xl p-10 w-full`} style={{ maxWidth: 800 }}>
-            <View className={`flex-row justify-around items-center ${isRtl ? 'flex-row-reverse' : ''}`}>
-              {stats.map((stat, idx) => (
-                <View key={idx} className="items-center px-4">
-                  <Typography className="text-primary font-black mb-2" style={{ fontSize: 48 }}>
-                    {stat.value}
-                  </Typography>
-                  <Typography className={`text-center font-medium ${theme.textMuted}`}>{stat.label}</Typography>
-                </View>
-              ))}
+          <ScrollReveal delay={200} className="w-full items-center">
+            <View className={`${theme.glassBg} border ${theme.glassBorder} rounded-4xl p-10 w-full`} style={{ maxWidth: 800 }}>
+              <View className={`flex-row justify-around items-center ${isRtl ? 'flex-row-reverse' : ''}`}>
+                {stats.map((stat, idx) => (
+                  <View key={idx} className="items-center px-4">
+                    <Typography className="text-primary font-black mb-2" style={{ fontSize: 48 }}>
+                      {stat.value}
+                    </Typography>
+                    <Typography className={`text-center font-medium ${theme.textMuted}`}>{stat.label}</Typography>
+                  </View>
+                ))}
+              </View>
             </View>
-          </View>
+          </ScrollReveal>
         </View>
 
         {/* ── FAQ ── */}
         <View className="max-w-6xl mx-auto w-full px-6 py-16 items-center">
-          <Typography className="text-primary font-bold text-xs tracking-[0.3em] uppercase mb-4">
-            {t('landing.faq_badge')}
-          </Typography>
-          <Typography variant="h1" className={`text-center text-3xl font-black mb-16 tracking-tight ${theme.text}`}>
-            {t('landing.faq_title')}
-          </Typography>
+          <ScrollReveal delay={100} className="items-center">
+            <Typography className="text-primary font-bold text-xs tracking-[0.3em] uppercase mb-4">
+              {t('landing.faq_badge')}
+            </Typography>
+            <Typography variant="h1" className={`text-center text-3xl font-black mb-16 tracking-tight ${theme.text}`}>
+              {t('landing.faq_title')}
+            </Typography>
+          </ScrollReveal>
 
           <View className="w-full" style={{ maxWidth: 700 }}>
             {faqs.map((faq, idx) => (
-              <TouchableOpacity
-                key={idx}
-                activeOpacity={0.8}
-                onPress={() => setOpenFaq(openFaq === idx ? null : idx)}
-                className={`mb-3 ${theme.cardBg} border ${theme.cardBorder} ${theme.cardShadow} rounded-2xl overflow-hidden`}
-              >
-                <View className={`p-5 flex-row items-center justify-between ${isRtl ? 'flex-row-reverse' : ''}`}>
-                  <Typography className={`font-bold text-base flex-1 ${theme.text} ${isRtl ? 'text-right mr-0 ml-4' : 'text-left mr-4'}`}>
-                    {faq.q}
-                  </Typography>
-                  <View className={`w-8 h-8 rounded-full items-center justify-center ${openFaq === idx ? 'bg-primary/20' : theme.isDark ? 'bg-white/5' : 'bg-light-surface-container'}`}>
-                    <Typography className={`font-bold ${openFaq === idx ? 'text-primary' : theme.textMuted}`}>
-                      {openFaq === idx ? '−' : '+'}
+              <ScrollReveal key={idx} delay={(idx % 5) * 100} className="w-full">
+                <TouchableOpacity
+                  activeOpacity={0.8}
+                  onPress={() => setOpenFaq(openFaq === idx ? null : idx)}
+                  className={`mb-3 ${theme.cardBg} border ${theme.cardBorder} ${theme.cardShadow} rounded-2xl overflow-hidden`}
+                >
+                  <View className={`p-5 flex-row items-center justify-between ${isRtl ? 'flex-row-reverse' : ''}`}>
+                    <Typography className={`font-bold text-base flex-1 ${theme.text} ${isRtl ? 'text-right mr-0 ml-4' : 'text-left mr-4'}`}>
+                      {faq.q}
                     </Typography>
+                    <View className={`w-8 h-8 rounded-full items-center justify-center ${openFaq === idx ? 'bg-primary/20' : theme.isDark ? 'bg-white/5' : 'bg-light-surface-container'}`}>
+                      <Typography className={`font-bold ${openFaq === idx ? 'text-primary' : theme.textMuted}`}>
+                        {openFaq === idx ? '−' : '+'}
+                      </Typography>
+                    </View>
                   </View>
-                </View>
-                {openFaq === idx && (
-                  <View className={`px-5 pb-5 border-t ${theme.borderSubtle} pt-4`}>
-                    <Typography className={`text-sm leading-relaxed ${theme.textMuted} ${isRtl ? 'text-right' : 'text-left'}`}>
-                      {faq.a}
-                    </Typography>
-                  </View>
-                )}
-              </TouchableOpacity>
+                  {openFaq === idx && (
+                    <View className={`px-5 pb-5 border-t ${theme.borderSubtle} pt-4`}>
+                      <Typography className={`text-sm leading-relaxed ${theme.textMuted} ${isRtl ? 'text-right' : 'text-left'}`}>
+                        {faq.a}
+                      </Typography>
+                    </View>
+                  )}
+                </TouchableOpacity>
+              </ScrollReveal>
             ))}
           </View>
         </View>
 
         {/* ── FINAL CTA ── */}
         <View className="max-w-6xl mx-auto w-full px-6 py-16 items-center">
-          <View className={`bg-primary/5 border border-primary/15 rounded-4xl p-12 w-full items-center ${theme.isDark ? 'bg-primary/10 border-primary/20' : ''}`} style={{ maxWidth: 800 }}>
-            <Typography variant="h1" className={`text-center text-3xl font-black mb-4 tracking-tight ${theme.text}`}>
-              {t('landing.cta_title')}
-            </Typography>
-            <Typography className={`text-center text-lg mb-10 max-w-md leading-relaxed ${theme.textMuted}`}>
-              {t('landing.cta_subtitle')}
-            </Typography>
-            <TouchableOpacity
-              onPress={() => push('/login')}
-              className="bg-primary py-4 px-12 rounded-2xl shadow-neon-primary"
-              activeOpacity={0.8}
-            >
-              <Typography className="text-white font-bold text-lg">{t('landing.cta_button')}</Typography>
-            </TouchableOpacity>
-          </View>
+          <ScrollReveal delay={150} className="w-full items-center">
+            <View className={`bg-primary/5 border border-primary/15 rounded-4xl p-12 w-full items-center ${theme.isDark ? 'bg-primary/10 border-primary/20' : ''}`} style={{ maxWidth: 800 }}>
+              <Typography variant="h1" className={`text-center text-3xl font-black mb-4 tracking-tight ${theme.text}`}>
+                {t('landing.cta_title')}
+              </Typography>
+              <Typography className={`text-center text-lg mb-10 max-w-md leading-relaxed ${theme.textMuted}`}>
+                {t('landing.cta_subtitle')}
+              </Typography>
+              <TouchableOpacity
+                onPress={() => push('/login')}
+                className="bg-primary py-4 px-12 rounded-2xl shadow-neon-primary"
+                activeOpacity={0.8}
+              >
+                <Typography className="text-white font-bold text-lg">{t('landing.cta_button')}</Typography>
+              </TouchableOpacity>
+            </View>
+          </ScrollReveal>
         </View>
 
         {/* ── FOOTER ── */}

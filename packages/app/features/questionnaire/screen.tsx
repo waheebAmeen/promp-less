@@ -19,13 +19,13 @@ export function QuestionnaireScreen() {
   const [idea] = useParam('idea');
   const { i18n } = useTranslation();
   const { push, back } = useRouter();
-  const { workflows, qualityBoosters } = useAppStore();
+  const { workflows, qualityBoosters, preferences } = useAppStore();
 
   const workflow = workflows.find(w => w.id === category);
 
   const handleGenerate = (answers: Record<string, string>) => {
     if (!workflow || !idea) return;
-    const generatedPrompt = generatePrompt(workflow.template, idea, answers, qualityBoosters, 'midjourney');
+    const generatedPrompt = generatePrompt(workflow.template, idea, answers, qualityBoosters, (preferences?.defaultEngine as any) || 'midjourney', preferences);
     push({
       pathname: '/preview',
       query: { generatedPrompt, category },

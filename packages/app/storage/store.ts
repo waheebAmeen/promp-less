@@ -51,6 +51,44 @@ export type GlobalHistoryEntry = {
   createdAt: string;
 };
 
+export interface UserPreferences {
+  // Legacy fields (kept for compatibility)
+  field: string;
+  vibe: string;
+  experienceLevel: string;
+  defaultEngine: string;
+
+  // General Identity
+  nativeLang: string;        // اللغة الأم للمستخدم
+  preferredOutputLang: string; // لغة الإخراج المفضلة
+
+  // Persona & Role
+  occupation: string;        // المجال المهني
+  role: string;              // الدور الذي يريده من الذكاء الاصطناعي
+
+  // Expertise
+  expertiseLevel: string;    // مستوى الخبرة العامة
+  preferredDepth: string;    // عمق الإجابات
+
+  // Communication Style
+  tone: string;              // نبرة التواصل
+  responseLength: string;    // طول الردود
+  preferredFormat: string;   // شكل الإخراج
+
+  // Audience & Context
+  targetAudience: string;    // الجمهور المستهدف
+  region: string;            // المنطقة الجغرافية
+
+  // Creative Preferences
+  creativityLevel: string;   // مستوى الإبداع والتجديد
+  humorLevel: string;        // مستوى الفكاهة
+
+  // Image AI
+  defaultImageEngine: string; // محرك الصور الافتراضي
+  imageStyle: string;         // أسلوب الصور المفضل
+  imageAspectRatio: string;   // نسبة الأبعاد المفضلة
+}
+
 export type User = {
   id: string;
   name: string;
@@ -68,6 +106,7 @@ interface AppState {
   isGuest: boolean;
   hasCompletedOnboarding: boolean;
   user: User | null;
+  preferences: UserPreferences | null;
   
   // Database-ready state
   users: User[];
@@ -82,7 +121,9 @@ interface AppState {
   setLanguage: (lang: 'ar' | 'en') => void;
   toggleDarkMode: () => void;
   setHasCompletedOnboarding: (completed: boolean) => void;
+  updatePreferences: (updates: Partial<UserPreferences>) => void;
   addPrompt: (prompt: PromptHistory) => void;
+  updatePrompt: (id: string, newText: string) => void;
   removePrompt: (id: string) => void;
   toggleFavorite: (id: string) => void;
   clearHistory: () => void;
@@ -1164,6 +1205,7 @@ export const useAppStore = create<AppState>()(
       isGuest: false,
       hasCompletedOnboarding: false,
       user: null,
+      preferences: null,
       
       users: [
         { 
@@ -1183,6 +1225,31 @@ export const useAppStore = create<AppState>()(
       setLanguage: (lang) => set({ language: lang }),
       toggleDarkMode: () => set((state) => ({ darkMode: !state.darkMode })),
       setHasCompletedOnboarding: (completed) => set({ hasCompletedOnboarding: completed }),
+      updatePreferences: (updates) => set((state) => ({ 
+        preferences: state.preferences ? { ...state.preferences, ...updates } : { 
+          field: 'other', 
+          vibe: 'photorealistic', 
+          experienceLevel: 'intermediate', 
+          defaultEngine: 'midjourney',
+          nativeLang: 'ar',
+          preferredOutputLang: 'ar',
+          occupation: '',
+          role: 'expert',
+          expertiseLevel: 'intermediate',
+          preferredDepth: 'balanced',
+          tone: 'professional',
+          responseLength: 'medium',
+          preferredFormat: 'structured',
+          targetAudience: 'general',
+          region: 'middle-east',
+          creativityLevel: 'balanced',
+          humorLevel: 'minimal',
+          defaultImageEngine: 'midjourney',
+          imageStyle: 'photorealistic',
+          imageAspectRatio: '16:9',
+          ...updates 
+        } 
+      })),
       
       addPrompt: (prompt) => set((state) => {
         const newGlobalEntry: GlobalHistoryEntry = {
@@ -1198,6 +1265,16 @@ export const useAppStore = create<AppState>()(
           globalHistory: [newGlobalEntry, ...state.globalHistory]
         };
       }),
+
+      updatePrompt: (id, newText) =>
+        set((state) => ({
+          history: state.history.map((p) =>
+            p.id === id ? { ...p, prompt: newText } : p
+          ),
+          globalHistory: state.globalHistory.map((g) =>
+            g.id.startsWith(id) ? { ...g, prompt: newText } : g
+          ),
+        })),
 
       removePrompt: (id) =>
         set((state) => ({
