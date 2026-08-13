@@ -1,23 +1,19 @@
 import { Workflow } from '../storage/store';
 
-//<<<<<<< Updated upstream
-// ─── Cohere Configuration ─────────────────────────────────────────────────────
+// ─── Cohere Configuration 
 const COHERE_API_KEY = process.env.EXPO_PUBLIC_COHERE_API_KEY || '';
 const COHERE_API_URL = 'https://api.cohere.com/v2/chat';
-//=======
-// ─── Groq Configuration ───────────────────────────────────────────────────────
+
+// ─── Groq Configuration 
 const GROQ_API_KEY = process.env.GROQ_API_KEY || '';
-//>>>>>>> Stashed changes
 
 /* Controls how many questions to ask and how deep to go */
 export type ComplexityMode = 'simple' | 'complex';
-
 
 /**
  * Primary model — Cohere Command A Plus.
  */
 const PRIMARY_MODEL = 'command-a-plus-05-2026';
-
 
 // ─── Public types ─────────────────────────────────────────────────────────────
 
