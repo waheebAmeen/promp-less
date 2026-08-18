@@ -306,7 +306,11 @@ export function PreferencesDrawer({ isOpen, onClose }: PreferencesDrawerProps) {
       activeOpacity={1}
       onPress={onClose}
       style={{
-        position: 'absolute', inset: 0,
+        position: 'absolute',
+        top: 0,
+        bottom: 0,
+        left: 0,
+        right: 0,
         backgroundColor: 'rgba(0,0,0,0.65)',
         zIndex: 60,
         alignItems: 'center',

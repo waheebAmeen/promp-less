@@ -1,7 +1,7 @@
 import React from 'react';
 
 interface IconProps {
-  name: 'images' | 'apps' | 'text' | 'video' | 'custom' | 'history' | 'settings' | 'back' | 'check' | 'delete' | 'copy' | 'save' | 'share' | 'search' | 'camera' | 'user' | 'clapperboard' | 'architecture' | 'mic' | 'google' | 'close';
+  name: 'images' | 'apps' | 'text' | 'video' | 'custom' | 'history' | 'settings' | 'back' | 'arrow-right' | 'check' | 'delete' | 'copy' | 'save' | 'share' | 'search' | 'camera' | 'user' | 'clapperboard' | 'architecture' | 'mic' | 'google' | 'close';
   size?: number;
   color?: string;
   strokeWidth?: number;
@@ -65,6 +65,8 @@ export const Icon: React.FC<IconProps> = ({ name, size = 24, color = 'white', st
         );
       case 'back':
         return <path d="M19 12H5M12 19l-7-7 7-7" />;
+      case 'arrow-right':
+        return <path d="M5 12h14M12 5l7 7-7 7" />;
       case 'close':
         return <path d="M18 6L6 18M6 6l12 12" />;
       case 'check':
