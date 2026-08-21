@@ -7,11 +7,6 @@ trailingSlash: true,
   // reanimated (and thus, Moti) doesn't work with strict mode currently...
   reactStrictMode: false,
 
-  // Expose NEXT_PUBLIC env vars as EXPO_PUBLIC for the shared 'app' package
-  env: {
-    EXPO_PUBLIC_COHERE_API_KEY: process.env.NEXT_PUBLIC_COHERE_API_KEY,
-  },
-
   transpilePackages: [
     'react-native',
     'react-native-web',

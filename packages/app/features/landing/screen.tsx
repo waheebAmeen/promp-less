@@ -100,33 +100,33 @@ export function LandingScreen() {
       <DecorativeBackground />
 
       {/* ═══════ Sticky Navigation Bar ═══════ */}
-      <View className={`${theme.headerBg} border-b ${theme.headerBorder} z-50 px-6 pt-4 pb-3`}>
+      <View className={`${theme.headerBg} border-b ${theme.headerBorder} z-50 px-4 md:px-6 pt-3 md:pt-4 pb-2 md:pb-3`}>
         <View className={`max-w-6xl mx-auto w-full flex-row items-center justify-between ${isRtl ? 'flex-row-reverse' : ''}`}>
-          <Typography variant="h2" className={`text-xl font-black tracking-tight ${theme.text}`}>
+          <Typography variant="h2" className={`text-lg md:text-xl font-black tracking-tight ${theme.text}`}>
             Promptless
           </Typography>
 
-          <View className={`flex-row items-center gap-4 ${isRtl ? 'flex-row-reverse' : ''}`}>
+          <View className={`flex-row items-center gap-2 md:gap-4 ${isRtl ? 'flex-row-reverse' : ''}`}>
             {/* Theme Toggle */}
             <TouchableOpacity
               onPress={toggleDarkMode}
-              className={`w-9 h-9 rounded-full items-center justify-center ${theme.isDark ? 'bg-white/5' : 'bg-light-surface-container'}`}
+              className={`w-8 h-8 md:w-9 md:h-9 rounded-full items-center justify-center ${theme.isDark ? 'bg-white/5' : 'bg-light-surface-container'}`}
             >
-              <Typography className="text-base">{theme.isDark ? '☀️' : '🌙'}</Typography>
+              <Typography className="text-sm md:text-base">{theme.isDark ? '☀️' : '🌙'}</Typography>
             </TouchableOpacity>
 
             {/* Language Toggle */}
             <TouchableOpacity
               onPress={toggleLanguage}
-              className={`px-3 py-1.5 rounded-full border ${theme.border} ${theme.isDark ? 'bg-white/5' : 'bg-light-surface-container'}`}
+              className={`px-2.5 md:px-3 py-1 md:py-1.5 rounded-full border ${theme.border} ${theme.isDark ? 'bg-white/5' : 'bg-light-surface-container'}`}
             >
               <Typography className={`text-xs font-bold ${theme.textSecondary}`}>
                 {isRtl ? 'EN' : 'عربي'}
               </Typography>
             </TouchableOpacity>
 
-            {/* Sign In Link */}
-            <TouchableOpacity onPress={() => push('/login')} className="py-2 px-3">
+            {/* Sign In Link — hidden on mobile to save space */}
+            <TouchableOpacity onPress={() => push('/login')} className="hidden md:flex py-2 px-3">
               <Typography className={`font-semibold ${theme.textSecondary}`}>
                 {t('landing.nav_signin')}
               </Typography>
@@ -135,10 +135,10 @@ export function LandingScreen() {
             {/* Get Started CTA */}
             <TouchableOpacity
               onPress={() => push('/login')}
-              className="bg-primary py-2.5 px-6 rounded-full shadow-neon-primary"
+              className="bg-primary py-2 md:py-2.5 px-4 md:px-6 rounded-full shadow-neon-primary"
               activeOpacity={0.8}
             >
-              <Typography className="text-white font-bold text-sm">{t('landing.nav_start')}</Typography>
+              <Typography className="text-white font-bold text-xs md:text-sm">{t('landing.nav_start')}</Typography>
             </TouchableOpacity>
           </View>
         </View>
@@ -151,11 +151,11 @@ export function LandingScreen() {
         showsVerticalScrollIndicator={false}
       >
         {/* ── HERO SECTION ── */}
-        <View className="max-w-6xl mx-auto w-full px-6 pt-20 pb-16 items-center">
+        <View className="max-w-6xl mx-auto w-full px-4 md:px-6 pt-10 md:pt-20 pb-10 md:pb-16 items-center">
           {/* Badge */}
           <ScrollReveal delay={0} className="items-center">
-            <View className="bg-primary/10 border border-primary/20 px-5 py-2 rounded-full mb-8">
-              <Typography className="text-primary font-bold text-xs tracking-widest uppercase">
+            <View className="bg-primary/10 border border-primary/20 px-4 md:px-5 py-1.5 md:py-2 rounded-full mb-5 md:mb-8">
+              <Typography className="text-primary font-bold text-[10px] md:text-xs tracking-widest uppercase">
                 {t('landing.hero_badge')}
               </Typography>
             </View>
@@ -165,8 +165,7 @@ export function LandingScreen() {
           <ScrollReveal delay={150} className="items-center w-full">
             <Typography
               variant="h1"
-              className={`text-center mb-6 font-black leading-tight tracking-tighter ${theme.text}`}
-              style={{ fontSize: 48, lineHeight: 56 }}
+              className={`text-center mb-4 md:mb-6 font-black leading-tight tracking-tighter ${theme.text} text-3xl md:text-4xl lg:text-5xl`}
             >
               {t('landing.hero_title')}
             </Typography>
@@ -175,35 +174,35 @@ export function LandingScreen() {
           {/* Subtitle */}
           <ScrollReveal delay={300} className="items-center w-full">
             <Typography
-              className={`text-center text-lg mb-12 max-w-xl leading-relaxed ${theme.textMuted}`}
+              className={`text-center text-sm md:text-lg mb-8 md:mb-12 max-w-xl leading-relaxed ${theme.textMuted}`}
             >
               {t('landing.hero_subtitle')}
             </Typography>
           </ScrollReveal>
 
-          {/* CTA Buttons */}
+          {/* CTA Buttons — stack vertically on mobile */}
           <ScrollReveal delay={450} className="items-center w-full">
-            <View className={`flex-row items-center gap-4 justify-center ${isRtl ? 'flex-row-reverse' : ''}`}>
+            <View className={`flex-col md:flex-row items-center gap-3 md:gap-4 justify-center w-full md:w-auto ${isRtl ? 'md:flex-row-reverse' : ''}`}>
               <TouchableOpacity
                 onPress={() => push('/login')}
-                className="bg-primary py-4 px-10 rounded-2xl shadow-neon-primary"
+                className="bg-primary py-3.5 md:py-4 px-10 rounded-2xl shadow-neon-primary w-full md:w-auto items-center"
                 activeOpacity={0.8}
               >
-                <Typography className="text-white font-bold text-lg">{t('landing.hero_cta')}</Typography>
+                <Typography className="text-white font-bold text-base md:text-lg">{t('landing.hero_cta')}</Typography>
               </TouchableOpacity>
 
               <TouchableOpacity
                 onPress={() => push('/login')}
-                className={`py-4 px-10 rounded-2xl border-2 border-primary/30 ${theme.isDark ? 'bg-primary/5' : 'bg-primary/5'}`}
+                className={`py-3.5 md:py-4 px-10 rounded-2xl border-2 border-primary/30 w-full md:w-auto items-center ${theme.isDark ? 'bg-primary/5' : 'bg-primary/5'}`}
                 activeOpacity={0.8}
               >
-                <Typography className="text-primary font-bold text-lg">{t('landing.hero_cta2')}</Typography>
+                <Typography className="text-primary font-bold text-base md:text-lg">{t('landing.hero_cta2')}</Typography>
               </TouchableOpacity>
             </View>
           </ScrollReveal>
 
           {/* Decorative Glow */}
-          <View className="mt-16 w-full h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
+          <View className="mt-10 md:mt-16 w-full h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
         </View>
 
         {/* ── HOW IT WORKS ── */}

@@ -1,17 +1,22 @@
+
+
+e
+exit
+q1
+q!
+
+
+
 const { withExpo } = require('@expo/next-adapter')
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'export',
-trailingSlash: true,
   // reanimated (and thus, Moti) doesn't work with strict mode currently...
+  // https://github.com/nandorojo/moti/issues/224
+  // https://github.com/necolas/react-native-web/pull/2330
+  // https://github.com/nandorojo/moti/issues/224
+  // once that gets fixed, set this back to true
   reactStrictMode: false,
-
-  // Expose NEXT_PUBLIC env vars as EXPO_PUBLIC for the shared 'app' package
-  env: {
-    EXPO_PUBLIC_COHERE_API_KEY: process.env.NEXT_PUBLIC_COHERE_API_KEY,
-  },
-
   transpilePackages: [
     'react-native',
     'react-native-web',

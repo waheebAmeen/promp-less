@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, ScrollView, ScreenContainer, TouchableOpacity, DecorativeBackground } from '../../design/view';
 import { Linking, Platform, TextInput } from 'react-native';
 import { Typography } from '../../components/Typography';
@@ -10,7 +10,6 @@ import { useSafeArea } from '../../provider/safe-area/use-safe-area';
 import { useTheme } from '../../design/useTheme';
 import { useVoice } from '../../hooks/useVoice';
 import { motion } from "framer-motion";
-import { OnboardingScreen } from '../onboarding/OnboardingScreen';
 import { PreferencesDrawer } from '../settings/PreferencesDrawer';
 
 
@@ -26,9 +25,16 @@ export function HomeScreen() {
   const { t, i18n } = useTranslation();
   const isRtl = i18n.language === 'ar';
   const { push } = useRouter();
-  const { user, isAuthenticated, logout, workflows, hasCompletedOnboarding } = useAppStore();
+  const { user, isAuthenticated, logout, workflows, hasCompletedOnboarding, setHasCompletedOnboarding } = useAppStore();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
+
+  // Auto-open AI Preferences drawer for first-time users
+  useEffect(() => {
+    if (isAuthenticated && !hasCompletedOnboarding) {
+      setIsPreferencesOpen(true);
+    }
+  }, [isAuthenticated, hasCompletedOnboarding]);
   const insets = useSafeArea();
   const theme = useTheme();
   const { isListening, isSupported, startListening, stopListening } = useVoice();
@@ -57,10 +63,6 @@ export function HomeScreen() {
       const indexB = categoryOrder.indexOf(b.id);
       return (indexA === -1 ? 99 : indexA) - (indexB === -1 ? 99 : indexB);
     });
-  // Show onboarding for first-time users
-  if (isAuthenticated && !hasCompletedOnboarding) {
-    return <OnboardingScreen />;
-  }
 
   const handleMagicSubmit = () => {
     const trimmed = magicIdea.trim();
@@ -180,7 +182,7 @@ export function HomeScreen() {
 
       {/* Main Header */}
       <View className={`border-b ${theme.headerBorder} ${theme.headerBg} z-40`}>
-        <View className="max-w-6xl mx-auto w-full px-6 py-4 flex-row justify-between items-center">
+        <View className="max-w-6xl mx-auto w-full px-4 md:px-6 py-3 md:py-4 flex-row justify-between items-center">
           <TouchableOpacity onPress={() => setIsMenuOpen(true)} className={`w-10 h-10 ${theme.cardBg} rounded-xl items-center justify-center border ${theme.border}`}>
             <View className="gap-1 items-center">
                 <View className={`w-5 h-0.5 rounded-full ${theme.isDark ? 'bg-slate-400' : 'bg-slate-600'}`} />
@@ -200,18 +202,18 @@ export function HomeScreen() {
       <ScrollView 
         className="flex-1" 
         contentContainerStyle={{ 
-          paddingBottom: 160,
+          paddingBottom: 120,
           flexGrow: 1
         }}
         showsVerticalScrollIndicator={false}
       >
-        <View className="max-w-6xl mx-auto w-full px-6 pt-12">
+        <View className="max-w-6xl mx-auto w-full px-4 md:px-6 pt-6 md:pt-12">
           {/* Professional Hero Section */}
 <motion.div
   initial={{ opacity: 0, y: 30 }}
   animate={{ opacity: 1, y: 0 }}
   transition={{ duration: 0.7, ease: "easeOut" }}
-  className="mb-12"
+  className="mb-6 md:mb-12"
 >
 
 
@@ -224,10 +226,11 @@ export function HomeScreen() {
     <Typography
       variant="h1"
       className={`${theme.text}
-      text-5xl
-      md:text-7xl
+      text-3xl
+      md:text-5xl
+      lg:text-7xl
       font-black
-      leading-[1.05]
+      leading-[1.1]
       tracking-tight
       max-w-4xl`}
     >
@@ -240,14 +243,15 @@ export function HomeScreen() {
     initial={{ opacity: 0, y: 20 }}
     animate={{ opacity: 1, y: 0 }}
     transition={{ delay: 0.4 }}
-    className="mt-8"
+    className="mt-4 md:mt-8"
   >
     <Typography
       variant="caption"
       className={`
-        text-lg
-        md:text-xl
-        leading-9
+        text-sm
+        md:text-lg
+        leading-7
+        md:leading-9
         max-w-2xl
         font-medium
         ${theme.textMuted}
@@ -265,7 +269,7 @@ export function HomeScreen() {
             initial={{ opacity: 0, scale: 0.95, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             transition={{ delay: 0.5, duration: 0.5, type: "spring", stiffness: 100 }}
-            className="mb-12 relative"
+            className="mb-6 md:mb-12 relative"
           >
             {/* Breathing Aura Glow Behind Input */}
             <motion.div
@@ -286,7 +290,7 @@ export function HomeScreen() {
             </View>
 
             {/* Input Container */}
-            <View className={`rounded-3xl border-2 overflow-hidden backdrop-blur-3xl ${theme.border} ${theme.cardBg}`}>
+            <View className={`rounded-2xl md:rounded-3xl border-2 overflow-hidden backdrop-blur-3xl ${theme.border} ${theme.cardBg}`}>
               <TextInput
                 value={magicIdea}
                 onChangeText={(text) => {
@@ -303,10 +307,10 @@ export function HomeScreen() {
                 numberOfLines={3}
                 style={{
                   color: theme.isDark ? '#f1f5f9' : '#1e293b',
-                  fontSize: 16,
-                  lineHeight: 24,
-                  padding: 20,
-                  minHeight: 90,
+                  fontSize: 14,
+                  lineHeight: 22,
+                  padding: 16,
+                  minHeight: 70,
                   textAlignVertical: 'top',
                   fontFamily: Platform.OS === 'web' ? 'inherit' : undefined,
                   direction: isRtl ? 'rtl' : 'ltr',
@@ -440,9 +444,9 @@ export function HomeScreen() {
             )}
 
             {/* Separator */}
-            <View className="flex-row items-center gap-4 mt-8 mb-2">
+            <View className="flex-row items-center gap-3 md:gap-4 mt-5 md:mt-8 mb-2">
               <View className={`flex-1 h-px ${theme.isDark ? 'bg-white/10' : 'bg-black/10'}`} />
-              <Typography className={`text-xs font-bold uppercase tracking-widest ${theme.textMuted}`}>
+              <Typography className={`text-[10px] md:text-xs font-bold uppercase tracking-widest ${theme.textMuted}`}>
                 {isRtl ? 'أو اختر تدفقاً' : 'or choose a workflow'}
               </Typography>
               <View className={`flex-1 h-px ${theme.isDark ? 'bg-white/10' : 'bg-black/10'}`} />
@@ -512,8 +516,8 @@ export function HomeScreen() {
 
       {/* Minimal Bottom Bar */}
       <View 
-        className="absolute left-0 right-0 z-40 px-8"
-        style={{ bottom: Math.max(insets.bottom, 24) }}
+        className="absolute left-0 right-0 z-40 px-4 md:px-8"
+        style={{ bottom: Math.max(insets.bottom, 16) }}
       >
         <View className="max-w-md mx-auto w-full">
           <View className={`h-16 ${theme.navBg} border ${theme.navBorder} rounded-full shadow-premium flex-row items-center justify-around px-2`}>
@@ -536,7 +540,13 @@ export function HomeScreen() {
 
       <PreferencesDrawer 
         isOpen={isPreferencesOpen} 
-        onClose={() => setIsPreferencesOpen(false)} 
+        onClose={() => {
+          setIsPreferencesOpen(false);
+          // Mark onboarding as complete when the drawer is closed for the first time
+          if (!hasCompletedOnboarding) {
+            setHasCompletedOnboarding(true);
+          }
+        }} 
       />
     </ScreenContainer>
   );
