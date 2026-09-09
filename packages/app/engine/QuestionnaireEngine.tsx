@@ -151,7 +151,7 @@ export const QuestionnaireEngine: React.FC<Props> = ({ questionnaire, onGenerate
                       className={`py-4 md:py-5 px-5 md:px-6 rounded-2xl md:rounded-3xl border-2 transition-all duration-300 ${
                         isSelected 
                           ? 'border-primary bg-primary/20 shadow-neon-blue' 
-                          : '${theme.borderSubtle} ${theme.surface}/50'
+                          : `${theme.borderSubtle} ${theme.surface}/50`
                       }`}
                     >
                       <View className="flex-row items-center justify-between">

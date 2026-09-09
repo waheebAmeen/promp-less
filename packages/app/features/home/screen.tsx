@@ -31,10 +31,10 @@ export function HomeScreen() {
 
   // Auto-open AI Preferences drawer for first-time users
   useEffect(() => {
-    if (isAuthenticated && !hasCompletedOnboarding) {
+    if (!hasCompletedOnboarding) {
       setIsPreferencesOpen(true);
     }
-  }, [isAuthenticated, hasCompletedOnboarding]);
+  }, [hasCompletedOnboarding]);
   const insets = useSafeArea();
   const theme = useTheme();
   const { isListening, isSupported, startListening, stopListening } = useVoice();
@@ -107,7 +107,6 @@ export function HomeScreen() {
                       { id: 'home', label: isRtl ? 'استكشاف' : 'Explore', icon: 'apps', route: '/' },
                       { id: 'history', label: isRtl ? 'مكتبتي' : 'My Library', icon: 'history', route: '/history' },
                       { id: 'settings', label: isRtl ? 'الإعدادات' : 'Settings', icon: 'settings', route: '/settings' },
-                      { id: 'landing', label: isRtl ? 'الصفحة الرئيسية' : 'About', icon: 'images', route: '/landing' },
                     ].map(item => (
                       <TouchableOpacity 
                         key={item.id}
@@ -171,9 +170,12 @@ export function HomeScreen() {
 
               {/* Sidebar Footer */}
               <View className={`p-4 border-t ${theme.borderSubtle}`}>
-                 <TouchableOpacity onPress={logout} className="flex-row items-center gap-3 px-4 py-3 rounded-xl bg-red-500/10 border border-red-500/20">
-                    <Icon name="delete" size={16} color="#f87171" />
-                    <Typography className="text-red-400 font-bold text-sm">{isRtl ? 'تسجيل الخروج' : 'Sign Out'}</Typography>
+                 <TouchableOpacity 
+                   onPress={() => { setIsMenuOpen(false); setIsPreferencesOpen(true); }} 
+                   className="flex-row items-center gap-3 px-4 py-3 rounded-xl bg-primary/10 border border-primary/20"
+                 >
+                    <Icon name="custom" size={16} color="#3b82f6" />
+                    <Typography className="text-primary-glow font-bold text-sm">{isRtl ? 'تعديل التفضيلات' : 'Edit Preferences'}</Typography>
                  </TouchableOpacity>
               </View>
            </TouchableOpacity>
@@ -182,20 +184,84 @@ export function HomeScreen() {
 
       {/* Main Header */}
       <View className={`border-b ${theme.headerBorder} ${theme.headerBg} z-40`}>
-        <View className="max-w-6xl mx-auto w-full px-4 md:px-6 py-3 md:py-4 flex-row justify-between items-center">
-          <TouchableOpacity onPress={() => setIsMenuOpen(true)} className={`w-10 h-10 ${theme.cardBg} rounded-xl items-center justify-center border ${theme.border}`}>
-            <View className="gap-1 items-center">
-                <View className={`w-5 h-0.5 rounded-full ${theme.isDark ? 'bg-slate-400' : 'bg-slate-600'}`} />
-                <View className={`w-3 h-0.5 rounded-full ${theme.isDark ? 'bg-slate-400' : 'bg-slate-600'}`} />
-                <View className={`w-5 h-0.5 rounded-full ${theme.isDark ? 'bg-slate-400' : 'bg-slate-600'}`} />
+        <View className="max-w-6xl mx-auto w-full px-4 md:px-8 py-3.5 flex-row justify-between items-center">
+          {/* Logo & Mobile Drawer Toggle */}
+          <View className="flex-row items-center gap-3">
+            <TouchableOpacity 
+              onPress={() => setIsMenuOpen(true)} 
+              className="w-10 h-10 rounded-xl items-center justify-center hover:bg-[#006666]/20 transition-all duration-200"
+              activeOpacity={0.7}
+            >
+              <View className="gap-1 items-center">
+                  <View className="w-5 h-0.5 rounded-full bg-[#33CCCC]" />
+                  <View className="w-3.5 h-0.5 rounded-full bg-[#33CCCC]" />
+                  <View className="w-5 h-0.5 rounded-full bg-[#33CCCC]" />
+              </View>
+            </TouchableOpacity>
+            
+            <TouchableOpacity onPress={() => push('/')} activeOpacity={0.8} className="flex-row items-center gap-2">
+              <View className="w-8 h-8 rounded-lg bg-[#006666]/30 border border-[#33CCCC]/40 items-center justify-center">
+                <Typography className="text-[#33CCCC] font-black text-base">P</Typography>
+              </View>
+              <Typography 
+                variant="h2" 
+                className="text-xl md:text-2xl font-black tracking-tight text-white" 
+                style={{ fontFamily: 'IBM Plex Sans, sans-serif' }}
+              >
+                Promptless
+              </Typography>
+            </TouchableOpacity>
+          </View>
+
+          {/* Action Buttons (Clean Ghost Buttons) */}
+          <View className="flex-row items-center gap-1 sm:gap-2">
+            {/* Desktop Action Links */}
+            <View className="hidden md:flex flex-row items-center gap-1">
+              {[
+                { id: 'home', label: isRtl ? 'استكشاف' : 'Explore', icon: 'apps', route: '/' },
+                { id: 'history', label: isRtl ? 'مكتبتي' : 'My Library', icon: 'history', route: '/history' },
+              ].map(item => (
+                <TouchableOpacity
+                  key={item.id}
+                  onPress={() => push(item.route)}
+                  className="flex-row items-center gap-2 px-3.5 py-2 rounded-xl hover:bg-[#006666]/25 transition-all duration-200"
+                  activeOpacity={0.7}
+                >
+                  <Icon name={item.icon as any} size={16} color={item.id === 'home' ? '#33CCCC' : '#94a3b8'} />
+                  <Typography 
+                    className={`text-xs md:text-sm font-semibold ${item.id === 'home' ? 'text-[#33CCCC]' : 'text-slate-300'}`} 
+                    style={{ fontFamily: isRtl ? 'IBM Plex Sans Arabic, sans-serif' : 'IBM Plex Sans, sans-serif' }}
+                  >
+                    {item.label}
+                  </Typography>
+                </TouchableOpacity>
+              ))}
             </View>
-          </TouchableOpacity>
-          
-          <Typography variant="h2" className={`text-xl font-black tracking-tight ${theme.text}`}>Promptless</Typography>
-          
-          <TouchableOpacity onPress={() => push('/settings')} className={`w-10 h-10 ${theme.cardBg} rounded-xl items-center justify-center border ${theme.border} overflow-hidden`}>
-             <Icon name="settings" size={20} color={theme.colors.icon} />
-          </TouchableOpacity>
+
+            {/* AI Preferences Ghost Button */}
+            <TouchableOpacity 
+              onPress={() => setIsPreferencesOpen(true)} 
+              className="flex-row items-center gap-2 px-3.5 py-2 rounded-xl hover:bg-[#006666]/25 transition-all duration-200"
+              activeOpacity={0.7}
+            >
+               <Icon name="custom" size={16} color="#33CCCC" />
+               <Typography 
+                 className="hidden sm:flex text-xs md:text-sm font-semibold text-slate-300 hover:text-[#33CCCC]" 
+                 style={{ fontFamily: isRtl ? 'IBM Plex Sans Arabic, sans-serif' : 'IBM Plex Sans, sans-serif' }}
+               >
+                 {isRtl ? 'التفضيلات' : 'Preferences'}
+               </Typography>
+            </TouchableOpacity>
+
+            {/* Settings Ghost Button */}
+            <TouchableOpacity 
+              onPress={() => push('/settings')} 
+              className="w-10 h-10 rounded-xl items-center justify-center hover:bg-[#006666]/25 transition-all duration-200"
+              activeOpacity={0.7}
+            >
+               <Icon name="settings" size={18} color="#94a3b8" />
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
 
@@ -207,90 +273,112 @@ export function HomeScreen() {
         }}
         showsVerticalScrollIndicator={false}
       >
-        <View className="max-w-6xl mx-auto w-full px-4 md:px-6 pt-6 md:pt-12">
+        <View className="max-w-6xl mx-auto w-full px-4 md:px-6">
           {/* Professional Hero Section */}
-<motion.div
-  initial={{ opacity: 0, y: 30 }}
-  animate={{ opacity: 1, y: 0 }}
-  transition={{ duration: 0.7, ease: "easeOut" }}
-  className="mb-6 md:mb-12"
->
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, ease: "easeOut" }}
+            className="mt-16 md:mt-20 text-center items-center"
+          >
+            {/* Main Heading */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.25 }}
+            >
+              <Typography
+                variant="h1"
+                className={`${theme.text} text-center mx-auto text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold leading-[1.2] tracking-tight max-w-4xl`}
+                style={{
+                  fontFamily: isRtl ? 'IBM Plex Sans Arabic, sans-serif' : 'IBM Plex Sans, sans-serif',
+                }}
+              >
+                {isRtl ? 'رفيقك الذكي لهندسة الأوامر' : 'Your Smart Prompt Engineering Companion'}
+              </Typography>
+            </motion.div>
 
+            {/* Description */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4 }}
+              className="mt-6 mb-12"
+            >
+              <Typography
+                variant="caption"
+                className={`text-center mx-auto text-base sm:text-lg md:text-xl font-normal leading-[1.7] md:leading-[1.8] max-w-2xl md:max-w-3xl ${theme.textMuted}`}
+                style={{
+                  fontFamily: isRtl ? 'IBM Plex Sans Arabic, sans-serif' : 'IBM Plex Sans, sans-serif',
+                  lineHeight: 32,
+                }}
+              >
+                {isRtl
+                  ? 'لا تحتاج لخبرة مسبقة؛ حول أفكارك البسيطة إلى أوامر احترافية ودقيقة في ثوانٍ معدودة. أنشئ مطالبات بصرية احترافية باستخدام تدفقات عمل ذكية، وتوجيه فني متقدم، وأدوات تساعدك على إنتاج نتائج عالية الجودة بسرعة ودقة.'
+                  : 'No prior experience needed; effortlessly transform your simple ideas into professional prompts and precise visual directions in seconds. Create high-grade visual prompts with smart creative workflows, advanced art direction, and tools built for speed and precision.'}
+              </Typography>
+            </motion.div>
+          </motion.div>
 
-  {/* Title */}
-  <motion.div
-    initial={{ opacity: 0, y: 20 }}
-    animate={{ opacity: 1, y: 0 }}
-    transition={{ delay: 0.25 }}
-  >
-    <Typography
-      variant="h1"
-      className={`${theme.text}
-      text-3xl
-      md:text-5xl
-      lg:text-7xl
-      font-black
-      leading-[1.1]
-      tracking-tight
-      max-w-4xl`}
-    >
-      نظام المدير الإبداعي
-    </Typography>
-  </motion.div>
-
-  {/* Description */}
-  <motion.div
-    initial={{ opacity: 0, y: 20 }}
-    animate={{ opacity: 1, y: 0 }}
-    transition={{ delay: 0.4 }}
-    className="mt-4 md:mt-8"
-  >
-    <Typography
-      variant="caption"
-      className={`
-        text-sm
-        md:text-lg
-        leading-7
-        md:leading-9
-        max-w-2xl
-        font-medium
-        ${theme.textMuted}
-      `}
-    >
-      أنشئ مطالبات بصرية احترافية باستخدام تدفقات عمل ذكية،
-      وتوجيه فني متقدم، وأدوات تساعدك على إنتاج نتائج عالية الجودة
-      بسرعة ودقة.
-    </Typography>
-  </motion.div>
-</motion.div>
-
-          {/* ✨ Magic AI Input */}
+          {/* ✨ Magic AI Input Box */}
           <motion.div 
-            initial={{ opacity: 0, scale: 0.95, y: 20 }}
+            initial={{ opacity: 0, scale: 0.96, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             transition={{ delay: 0.5, duration: 0.5, type: "spring", stiffness: 100 }}
-            className="mb-6 md:mb-12 relative"
+            className="mb-12 md:mb-16 relative max-w-4xl mx-auto w-full"
           >
-            {/* Breathing Aura Glow Behind Input */}
+            {/* Ambient Background Glow with Dark Green #006666 */}
             <motion.div
-              animate={{ opacity: [0.3, 0.6, 0.3], scale: [0.98, 1.02, 0.98] }}
+              animate={{ opacity: [0.25, 0.45, 0.25], scale: [0.98, 1.02, 0.98] }}
               transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
-              className="absolute inset-0 rounded-3xl bg-primary/20 blur-xl"
+              className="absolute -inset-1 rounded-3xl bg-[#006666]/30 blur-2xl pointer-events-none"
               style={{ zIndex: -1 }}
             />
 
-            {/* Glowing Label */}
-            <View className="flex-row items-center gap-2 mb-3">
-              <View className="w-5 h-5 rounded-full bg-primary/20 border border-primary/40 items-center justify-center">
-                <Typography className="text-[8px]">✨</Typography>
+            {/* Header / Label */}
+            <View className="flex-row items-center justify-between mb-3 px-1">
+              <View className="flex-row items-center gap-2">
+                <View className="w-5 h-5 rounded-full bg-[#006666]/40 border border-[#33CCCC]/40 items-center justify-center">
+                  <Typography className="text-[10px]">✨</Typography>
+                </View>
+                <Typography className="text-[#33CCCC] font-extrabold text-xs uppercase tracking-[0.2em]" style={{ fontFamily: isRtl ? 'IBM Plex Sans Arabic, sans-serif' : 'IBM Plex Sans, sans-serif' }}>
+                  {isRtl ? 'المدخل الذكي — اكتب فكرتك' : 'Magic Input — Type your idea'}
+                </Typography>
               </View>
-              <Typography className="text-primary-glow font-black text-xs uppercase tracking-[0.2em]">
-                {isRtl ? 'المدخل الذكي — اكتب فكرتك' : 'Magic Input — Type your idea'}
+
+              <Typography variant="caption" className="text-xs text-slate-400 font-medium" style={{ fontFamily: isRtl ? 'IBM Plex Sans Arabic, sans-serif' : 'IBM Plex Sans, sans-serif' }}>
+                {isRtl ? 'محرك أوامر الصور الاحترافي' : 'Professional AI Image Prompter'}
               </Typography>
             </View>
 
-            {/* Input Container */}
-            <View className={`rounded-2xl md:rounded-3xl border-2 overflow-hidden backdrop-blur-3xl ${theme.border} ${theme.cardBg}`}>
+            {/* Quick Tags (Sparks) — Interactive Gold/Sand #C8B47C on hover */}
+            <View className="mb-3.5">
+              <ScrollView horizontal showsHorizontalScrollIndicator={false} className="flex-row py-1">
+                {[
+                  { label: isRtl ? '🎬 بورتريه سينمائي' : '🎬 Cinematic Portrait', prompt: isRtl ? 'بورتريه سينمائي لشخصية وقورة بإضاءة درامية خافتة وعدسة 85mm' : 'Cinematic 85mm portrait with dramatic chiaroscuro lighting and shallow depth of field' },
+                  { label: isRtl ? '📦 إعلان منتج فاخر' : '📦 Luxury Product', prompt: isRtl ? 'صورة تجارية احترافية لزجاجة عطر فاخرة على منصة رخامية سوداء مع إضاءة استوديو ناعمة' : 'Commercial luxury perfume bottle on black marble pedestal with soft studio lighting' },
+                  { label: isRtl ? '✨ مشهد خيالي ملحمي' : '✨ Epic Fantasy', prompt: isRtl ? 'قلعة عملاقة عائمة في السحاب فوق جبال خضراء وقت الغسق بأسلوب فانتازي سينمائي' : 'Epic floating castle in clouds over emerald mountains during sunset twilight' },
+                  { label: isRtl ? '🏛️ عمارة حديثة' : '🏛️ Modern Architecture', prompt: isRtl ? 'تصميم معماري مستقبلي مستوحى من الطراز العربي الحديث بإضاءات ليلية مذهلة' : 'Futuristic architectural photography inspired by modern Islamic geometry with night lights' },
+                ].map((chip, i) => (
+                  <TouchableOpacity
+                    key={i}
+                    onPress={() => setMagicIdea(chip.prompt)}
+                    className="group px-3.5 py-1.5 rounded-full border border-white/10 bg-[#071630]/90 flex-row items-center mr-2 shadow-sm transition-all duration-300 hover:border-[#C8B47C] hover:bg-[#C8B47C]/10"
+                    activeOpacity={0.7}
+                  >
+                    <Typography 
+                      className="text-xs text-slate-300 font-medium transition-colors duration-300 group-hover:text-[#C8B47C]" 
+                      style={{ fontFamily: isRtl ? 'IBM Plex Sans Arabic, sans-serif' : 'IBM Plex Sans, sans-serif' }}
+                    >
+                      {chip.label}
+                    </Typography>
+                  </TouchableOpacity>
+                ))}
+              </ScrollView>
+            </View>
+
+            {/* Elevated Input Container with Drop Shadow #006666 and Glow #33CCCC */}
+            <View className={`rounded-2xl md:rounded-3xl border-2 border-[#006666]/60 overflow-hidden backdrop-blur-3xl ${theme.cardBg} shadow-[0_12px_40px_rgba(0,102,102,0.25)] focus-within:border-[#33CCCC] focus-within:shadow-[0_0_30px_rgba(51,204,204,0.35)] transition-all duration-300`}>
               <TextInput
                 value={magicIdea}
                 onChangeText={(text) => {
@@ -299,31 +387,34 @@ export function HomeScreen() {
                 }}
                 placeholder={
                   isRtl
-                    ? 'مثال: أريد بناء خطة تسويقية لمطعم عربي فاخر...'
-                    : 'e.g. I want a cinematic photo of a knight in a desert storm...'
+                    ? 'اكتب فكرتك هنا وسيقوم النظام بتوجيهك هندسياً (مثال: لقطة سينمائية لغروب الشمس فوق الكثبان الرملية...)'
+                    : 'Describe your vision here (e.g. Cinematic wide-angle shot of sunset over sand dunes...)'
                 }
-                placeholderTextColor={theme.isDark ? '#475569' : '#94a3b8'}
+                placeholderTextColor={theme.isDark ? '#64748b' : '#94a3b8'}
                 multiline
                 numberOfLines={3}
                 style={{
                   color: theme.isDark ? '#f1f5f9' : '#1e293b',
-                  fontSize: 14,
-                  lineHeight: 22,
-                  padding: 16,
-                  minHeight: 70,
+                  fontSize: 15,
+                  lineHeight: 24,
+                  padding: 18,
+                  minHeight: 80,
                   textAlignVertical: 'top',
-                  fontFamily: Platform.OS === 'web' ? 'inherit' : undefined,
+                  fontFamily: isRtl ? 'IBM Plex Sans Arabic, sans-serif' : 'IBM Plex Sans, sans-serif',
                   direction: isRtl ? 'rtl' : 'ltr',
                   textAlign: isRtl ? 'right' : 'left',
                 }}
               />
 
               {/* Bottom Bar of Input */}
-              <View className={`flex-row flex-wrap items-center justify-between gap-3 px-4 py-3 border-t ${theme.borderSubtle} ${theme.isDark ? 'bg-white/3' : 'bg-black/3'}`}>
+              <View className={`flex-row flex-wrap items-center justify-between gap-3 px-5 py-3.5 border-t border-white/10 ${theme.isDark ? 'bg-white/3' : 'bg-black/3'}`}>
                 <View className="flex-row items-center gap-3">
-                  <Typography variant="caption" className={`text-xs ${theme.textMuted}`}>
-                    {isRtl ? 'يعمل بـ Cohere · Command A' : 'Powered by Cohere · Command A'}
-                  </Typography>
+                  <View className="flex-row items-center gap-1.5">
+                    <View className="w-2 h-2 rounded-full bg-[#33CCCC]" />
+                    <Typography variant="caption" className={`text-xs ${theme.textMuted}`} style={{ fontFamily: isRtl ? 'IBM Plex Sans Arabic, sans-serif' : 'IBM Plex Sans, sans-serif' }}>
+                      {isRtl ? 'توليد ذكي فائق الدقة' : 'Ultra-precise Prompt Engine'}
+                    </Typography>
+                  </View>
 
                   {/* Mic Button */}
                   {isSupported && (
@@ -332,75 +423,59 @@ export function HomeScreen() {
                         if (isListening) stopListening();
                         else startListening(magicIdea, (text) => setMagicIdea(text));
                       }}
-                      className={`w-8 h-8 rounded-full items-center justify-center ${
-                        isListening ? 'bg-red-500/20 border border-red-500/40' : `${theme.surface} border ${theme.borderSubtle}`
+                      className={`w-8 h-8 rounded-full items-center justify-center transition-all ${
+                        isListening ? 'bg-red-500/20 border border-red-500/40' : 'bg-[#006666]/30 border border-[#33CCCC]/30 hover:bg-[#006666]/50'
                       }`}
                     >
                       {isListening ? (
                         <View className="w-2.5 h-2.5 bg-red-500 rounded-sm" />
                       ) : (
-                        <Icon name="mic" size={14} color={theme.colors.icon} />
+                        <Icon name="mic" size={14} color="#33CCCC" />
                       )}
                     </TouchableOpacity>
                   )}
                 </View>
 
-                {/* Send Button */}
+                {/* Send Button with Primary Cyan #33CCCC */}
                 <TouchableOpacity
                   onPress={handleMagicSubmit}
                   disabled={!magicIdea.trim()}
-                  className={`flex-row items-center gap-2 px-5 py-2.5 rounded-2xl ${
+                  className={`flex-row items-center gap-2 px-6 py-2.5 rounded-xl transition-all duration-200 ${
                     magicIdea.trim()
-                      ? 'bg-primary shadow-neon-blue'
+                      ? 'bg-[#33CCCC] shadow-[0_4px_20px_rgba(51,204,204,0.4)] hover:brightness-110'
                       : theme.isDark ? 'bg-white/5' : 'bg-black/5'
                   }`}
                 >
-                  <Typography className={`font-bold text-sm ${magicIdea.trim() ? 'text-white' : theme.textMuted}`}>
+                  <Typography className={`font-bold text-sm ${magicIdea.trim() ? 'text-[#020e25]' : theme.textMuted}`} style={{ fontFamily: isRtl ? 'IBM Plex Sans Arabic, sans-serif' : 'IBM Plex Sans, sans-serif' }}>
                     {isRtl ? 'ابدأ بالذكاء الاصطناعي' : 'AI Start'}
                   </Typography>
-                  <Icon name="check" size={14} color={magicIdea.trim() ? '#ffffff' : theme.colors.icon} />
+                  <Icon name="check" size={14} color={magicIdea.trim() ? '#020e25' : theme.colors.icon} />
                 </TouchableOpacity>
               </View>
             </View>
 
-            {/* Hint: More detail = better results */}
-            <View className="flex-row items-center gap-1.5 mt-2 px-1">
-              <Typography className="text-[10px]">💡</Typography>
-              <Typography className={`text-xs ${theme.textMuted}`}>
-                {isRtl
-                  ? 'كلما كان وصفك أكثر تفصيلاً، كانت النتائج أفضل'
-                  : 'The more detailed your description, the better the results'}
-              </Typography>
-            </View>
-
-            {/* Complexity Mode Selector */}
+            {/* Complexity Selector */}
             {magicIdea.trim().length > 0 && (
               <View className="mt-3 flex-row gap-2">
                 <TouchableOpacity
                   onPress={() => setComplexity('simple')}
-                  className={`flex-1 py-3 rounded-2xl border-2 items-center ${
+                  className={`flex-1 py-3 rounded-2xl border-2 items-center transition-all ${
                     complexity === 'simple'
-                      ? 'bg-blue-500/20 border-blue-500'
-                      : theme.isDark
-                        ? 'bg-white/5 border-white/15'
-                        : 'bg-slate-100 border-slate-300'
+                      ? 'bg-[#006666]/30 border-[#33CCCC]'
+                      : 'bg-white/5 border-white/10'
                   }`}
                 >
                   <Typography
                     className={`font-black text-sm ${
-                      complexity === 'simple'
-                        ? 'text-blue-500'
-                        : theme.isDark ? 'text-slate-400' : 'text-slate-600'
+                      complexity === 'simple' ? 'text-[#33CCCC]' : 'text-slate-400'
                     }`}
+                    style={{ fontFamily: isRtl ? 'IBM Plex Sans Arabic, sans-serif' : 'IBM Plex Sans, sans-serif' }}
                   >
                     {isRtl ? '⚡ مبسط' : '⚡ Simple'}
                   </Typography>
                   <Typography
-                    className={`text-[10px] mt-0.5 ${
-                      complexity === 'simple'
-                        ? 'text-blue-400'
-                        : theme.isDark ? 'text-slate-500' : 'text-slate-500'
-                    }`}
+                    className="text-[10px] mt-0.5 text-slate-400"
+                    style={{ fontFamily: isRtl ? 'IBM Plex Sans Arabic, sans-serif' : 'IBM Plex Sans, sans-serif' }}
                   >
                     {isRtl ? 'سريع · 3-10 أسئلة' : 'Fast · 3-10 questions'}
                   </Typography>
@@ -408,115 +483,124 @@ export function HomeScreen() {
 
                 <TouchableOpacity
                   onPress={() => setComplexity('complex')}
-                  className={`flex-1 py-3 rounded-2xl border-2 items-center ${
+                  className={`flex-1 py-3 rounded-2xl border-2 items-center transition-all ${
                     complexity === 'complex'
-                      ? 'bg-violet-500/20 border-violet-500'
-                      : theme.isDark
-                        ? 'bg-white/5 border-white/15'
-                        : 'bg-slate-100 border-slate-300'
+                      ? 'bg-[#006666]/30 border-[#33CCCC]'
+                      : 'bg-white/5 border-white/10'
                   }`}
                 >
                   <Typography
                     className={`font-black text-sm ${
-                      complexity === 'complex'
-                        ? 'text-violet-500'
-                        : theme.isDark ? 'text-slate-400' : 'text-slate-600'
+                      complexity === 'complex' ? 'text-[#33CCCC]' : 'text-slate-400'
                     }`}
+                    style={{ fontFamily: isRtl ? 'IBM Plex Sans Arabic, sans-serif' : 'IBM Plex Sans, sans-serif' }}
                   >
                     {isRtl ? '🎯 مفصل ودقيق' : '🎯 Detailed'}
                   </Typography>
                   <Typography
-                    className={`text-[10px] mt-0.5 ${
-                      complexity === 'complex'
-                        ? 'text-violet-400'
-                        : theme.isDark ? 'text-slate-500' : 'text-slate-500'
-                    }`}
+                    className="text-[10px] mt-0.5 text-slate-400"
+                    style={{ fontFamily: isRtl ? 'IBM Plex Sans Arabic, sans-serif' : 'IBM Plex Sans, sans-serif' }}
                   >
                     {isRtl ? 'دقيق · 10-25 سؤالاً' : 'Deep · 10-25 questions'}
                   </Typography>
                 </TouchableOpacity>
               </View>
             )}
+
             {aiError && (
               <View className="mt-3 px-4 py-3 rounded-2xl bg-red-500/10 border border-red-500/20 flex-row items-start gap-2">
-                <Typography className="text-red-400 text-sm leading-relaxed">{aiError}</Typography>
+                <Typography className="text-red-400 text-sm leading-relaxed" style={{ fontFamily: isRtl ? 'IBM Plex Sans Arabic, sans-serif' : 'IBM Plex Sans, sans-serif' }}>{aiError}</Typography>
               </View>
             )}
 
             {/* Separator */}
-            <View className="flex-row items-center gap-3 md:gap-4 mt-5 md:mt-8 mb-2">
+            <View className="flex-row items-center gap-3 md:gap-4 mt-8 md:mt-12 mb-4">
               <View className={`flex-1 h-px ${theme.isDark ? 'bg-white/10' : 'bg-black/10'}`} />
-              <Typography className={`text-[10px] md:text-xs font-bold uppercase tracking-widest ${theme.textMuted}`}>
-                {isRtl ? 'أو اختر تدفقاً' : 'or choose a workflow'}
+              <Typography className={`text-[11px] md:text-xs font-bold uppercase tracking-widest ${theme.textMuted}`} style={{ fontFamily: isRtl ? 'IBM Plex Sans Arabic, sans-serif' : 'IBM Plex Sans, sans-serif' }}>
+                {isRtl ? 'أو اختر مساراً متخصصاً' : 'or choose a creative workflow'}
               </Typography>
               <View className={`flex-1 h-px ${theme.isDark ? 'bg-white/10' : 'bg-black/10'}`} />
             </View>
           </motion.div>
 
-          {/* Categories Grid */}
-          <View className="flex-row flex-wrap justify-start">
-            {/* Study & Education Fixed Card */}
-            <motion.div
-              initial={{ opacity: 0, y: 30, scale: 0.9 }}
-              whileInView={{ opacity: 1, y: 0, scale: 1 }}
-              viewport={{ once: true, margin: "-40px" }}
-              transition={{ duration: 0.4, delay: 0, ease: "easeOut" }}
-              className="w-1/2 md:w-1/3 lg:w-1/5 p-1.5 md:p-2"
-            >
-              <TouchableOpacity
-                activeOpacity={0.7}
-                className={`w-full overflow-hidden rounded-3xl border ${theme.cardBorder} ${theme.cardBg} ${theme.cardShadow}`}
-                onPress={() => push(`/category/study`)}
-              >
-                <View className="p-5">
-                  <View className={`w-12 h-12 rounded-2xl items-center justify-center mb-5 bg-blue-500/10 border border-blue-500/20`}>
-                    <Icon name="text" size={24} color="#3b82f6" strokeWidth={2.5} />
-                  </View>
-                  <Typography variant="h2" className={`text-lg font-bold mb-1 ${theme.text}`}>
-                    {isRtl ? 'الدراسة والتعليم' : 'Education'}
-                  </Typography>
-                  <Typography variant="caption" className={`text-xs font-medium ${theme.textMuted}`}>
-                    {isRtl ? 'تلقينات نصية' : 'Text Prompts'}
-                  </Typography>
-                </View>
-              </TouchableOpacity>
-            </motion.div>
+          {/* Categories Grid (Workflow Cards) */}
+          <View className="flex-row flex-wrap justify-start -m-2 md:-m-2.5">
+            {filteredWorkflows.map((cat, index) => {
+              // Highlight the first workflow as "Featured" with Gold/Sand #C8B47C
+              const isFeatured = index === 0;
 
-            {filteredWorkflows.map((cat, index) => (
-              <motion.div
-                key={cat.id}
-                initial={{ opacity: 0, y: 30, scale: 0.9 }}
-                whileInView={{ opacity: 1, y: 0, scale: 1 }}
-                viewport={{ once: true, margin: "-40px" }}
-                transition={{ duration: 0.4, delay: (index % 5 + 1) * 0.1, ease: "easeOut" }}
-                className="w-1/2 md:w-1/3 lg:w-1/5 p-1.5 md:p-2"
-              >
-                <TouchableOpacity
-                  activeOpacity={0.7}
-                  className={`w-full overflow-hidden rounded-3xl border ${theme.cardBorder} ${theme.cardBg} ${theme.cardShadow}`}
-                  onPress={() => push(`/category/${cat.id}`)}
+              return (
+                <motion.div
+                  key={cat.id}
+                  initial={{ opacity: 0, y: 30, scale: 0.95 }}
+                  whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                  viewport={{ once: true, margin: "-40px" }}
+                  transition={{ duration: 0.4, delay: (index % 5 + 1) * 0.06, ease: "easeOut" }}
+                  className="w-1/2 md:w-1/3 lg:w-1/4 p-2 md:p-2.5"
                 >
-                  <View className="p-5">
-                    <View className={`w-12 h-12 rounded-2xl items-center justify-center mb-5 ${cat.color} border ${cat.borderColor}`}>
-                      <Icon name={cat.icon as any} size={24} color={cat.iconColor} strokeWidth={2.5} />
+                  <TouchableOpacity
+                    activeOpacity={0.7}
+                    className={`group w-full h-full overflow-hidden rounded-3xl border ${
+                      isFeatured ? 'border-[#C8B47C]/40 bg-[#071630]' : 'border-white/10 bg-[#071630]'
+                    } ${theme.cardShadow} transition-all duration-300 hover:-translate-y-2 hover:border-[#33CCCC] hover:shadow-[0_12px_30px_rgba(51,204,204,0.18)]`}
+                    onPress={() => push(`/category/${cat.id}`)}
+                  >
+                    <View className="p-6 flex-1 justify-between">
+                      {/* Icon Container with #006666 or #C8B47C */}
+                      <View className="flex-row items-center justify-between mb-5">
+                        <View className={`w-12 h-12 rounded-2xl items-center justify-center transition-transform duration-300 group-hover:scale-110 ${
+                          isFeatured
+                            ? 'bg-[#C8B47C]/15 border border-[#C8B47C]/40'
+                            : 'bg-[#006666]/20 border border-[#006666]/40'
+                        }`}>
+                          <Icon 
+                            name={cat.icon as any} 
+                            size={22} 
+                            color={isFeatured ? '#C8B47C' : '#33CCCC'} 
+                            strokeWidth={2.5} 
+                          />
+                        </View>
+
+                        {isFeatured && (
+                          <View className="px-2.5 py-0.5 rounded-full bg-[#C8B47C]/15 border border-[#C8B47C]/40">
+                            <Typography className="text-[10px] font-bold text-[#C8B47C]" style={{ fontFamily: isRtl ? 'IBM Plex Sans Arabic, sans-serif' : 'IBM Plex Sans, sans-serif' }}>
+                              {isRtl ? 'مميز ★' : 'Featured ★'}
+                            </Typography>
+                          </View>
+                        )}
+                      </View>
+
+                      {/* Card Title & CTA */}
+                      <View>
+                        <Typography 
+                          variant="h2" 
+                          className="text-lg font-bold mb-2 text-white group-hover:text-[#33CCCC] transition-colors duration-200" 
+                          style={{ fontFamily: isRtl ? 'IBM Plex Sans Arabic, sans-serif' : 'IBM Plex Sans, sans-serif' }}
+                        >
+                          {isRtl ? cat.name_ar : cat.name_en}
+                        </Typography>
+
+                        {/* CTA Subtext in #33CCCC */}
+                        <Typography 
+                          variant="caption" 
+                          className="text-xs font-bold text-[#33CCCC] group-hover:underline" 
+                          style={{ fontFamily: isRtl ? 'IBM Plex Sans Arabic, sans-serif' : 'IBM Plex Sans, sans-serif' }}
+                        >
+                          {isRtl ? 'ابدأ التدفق ←' : 'Start Workflow →'}
+                        </Typography>
+                      </View>
                     </View>
-                    <Typography variant="h2" className={`text-lg font-bold mb-1 ${theme.text}`}>
-                      {isRtl ? cat.name_ar : cat.name_en}
-                    </Typography>
-                    <Typography variant="caption" className={`text-xs font-medium ${theme.textMuted}`}>
-                      Start Workflow
-                    </Typography>
-                  </View>
-                </TouchableOpacity>
-              </motion.div>
-            ))}
+                  </TouchableOpacity>
+                </motion.div>
+              );
+            })}
           </View>
         </View>
       </ScrollView>
 
-      {/* Minimal Bottom Bar */}
+      {/* Minimal Bottom Bar — Mobile Only */}
       <View 
-        className="absolute left-0 right-0 z-40 px-4 md:px-8"
+        className="md:hidden absolute left-0 right-0 z-40 px-4"
         style={{ bottom: Math.max(insets.bottom, 16) }}
       >
         <View className="max-w-md mx-auto w-full">

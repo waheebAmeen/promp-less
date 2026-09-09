@@ -65,7 +65,7 @@ export function IdeaInputScreen() {
                    <Icon name="text" size={14} color="#475569" />
                    <Typography variant="caption" className={`${theme.textMuted} font-bold text-xs md:text-sm`}>Smart Input</Typography>
                 </View>
-                <Typography variant="caption" className={`font-bold text-xs md:text-sm ${idea.length > 100 ? 'text-primary' : '${theme.textMuted}'}`}>
+                <Typography variant="caption" className={`font-bold text-xs md:text-sm ${idea.length > 100 ? 'text-primary' : theme.textMuted}`}>
                   {idea.length} {t('input.char_count', { defaultValue: 'chars' })}
                 </Typography>
               </View>
@@ -77,7 +77,7 @@ export function IdeaInputScreen() {
               title={t('input.next')} 
               onPress={handleNext} 
               disabled={idea.trim().length === 0}
-              className={`w-full h-14 md:h-16 rounded-2xl md:rounded-3xl ${idea.trim().length === 0 ? 'opacity-30 ${theme.surface} border ${theme.border}' : 'bg-primary'}`}
+              className={`w-full h-14 md:h-16 rounded-2xl md:rounded-3xl ${idea.trim().length === 0 ? `opacity-30 ${theme.surface} border ${theme.border}` : 'bg-primary'}`}
             />
           </View>
         </View>

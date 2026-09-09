@@ -165,12 +165,20 @@ export function DynamicQuestionnaireScreen() {
   // ─── Error handler ───────────────────────────────────────────────────────────
   const handleError = (msg: string) => {
     let display: string;
-    if (msg.includes('network_error')) {
+    if (msg.includes('missing_api_key')) {
+      display = isRtl
+        ? '🔑 لم يتم تعيين مفتاح API. يرجى إضافة EXPO_PUBLIC_COHERE_API_KEY في ملف .env.'
+        : '🔑 Missing API key. Please add EXPO_PUBLIC_COHERE_API_KEY in .env.';
+    } else if (msg.includes('network_timeout')) {
+      display = isRtl
+        ? '⏱️ استغرق الرد وقتاً طويلاً. تحقق من سرعة الاتصال وحاول مرة أخرى.'
+        : '⏱️ Request timed out. Please check your connection and retry.';
+    } else if (msg.includes('network_error')) {
       display = isRtl
         ? '⚠️ تحقق من اتصال الإنترنت وأعد المحاولة.'
         : '⚠️ Check your internet connection and try again.';
     } else if (msg.includes('401') || msg.includes('403')) {
-      display = isRtl ? '🔑 مفتاح API غير صالح.' : '🔑 Invalid API key.';
+      display = isRtl ? '🔑 مفتاح API غير صالح أو منتهي.' : '🔑 Invalid or expired API key.';
     } else if (msg.includes('loading')) {
       display = isRtl
         ? '⏳ النموذج يتهيأ، انتظر 30 ثانية ثم أعد المحاولة.'

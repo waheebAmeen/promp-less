@@ -30,3 +30,13 @@ declare module 'react-native' {
     onClick?: (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => void
   }
 }
+
+declare module 'react-native-svg' {
+  import { ComponentType } from 'react'
+  export const Svg: ComponentType<any>
+  export const Path: ComponentType<any>
+  export const Circle: ComponentType<any>
+  export const Rect: ComponentType<any>
+  export default Svg
+}
+

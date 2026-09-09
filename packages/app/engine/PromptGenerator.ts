@@ -137,7 +137,7 @@ export const generatePrompt = (
   if (answers.custom && !template.includes('${custom}')) {
     if (prompt.includes(' --')) {
       const parts = prompt.split(' --');
-      prompt = `${parts[0]}, ${answers.custom} --${parts.slice(1).join(' --')}`;
+      prompt = `${parts[0] || ''}, ${answers.custom} --${parts.slice(1).join(' --')}`;
     } else {
       prompt = `${prompt}, ${answers.custom}`;
     }
@@ -155,10 +155,11 @@ export const generatePrompt = (
        "3d": "3D Pixar style, unreal engine 5 render"
      };
      const vibeString = vibeMapping[preferences.vibe];
-     if (vibeString && !prompt.toLowerCase().includes(vibeString.split(',')[0].toLowerCase())) {
+     const vibePrefix = vibeString ? vibeString.split(',')[0]?.toLowerCase() : undefined;
+     if (vibeString && vibePrefix && !prompt.toLowerCase().includes(vibePrefix)) {
         if (prompt.includes(' --')) {
           const parts = prompt.split(' --');
-          prompt = `${parts[0]}, ${vibeString} --${parts.slice(1).join(' --')}`;
+          prompt = `${parts[0] || ''}, ${vibeString} --${parts.slice(1).join(' --')}`;
         } else {
           prompt = `${prompt}, ${vibeString}`;
         }
@@ -171,7 +172,7 @@ export const generatePrompt = (
       if (!prompt.toLowerCase().includes(booster.toLowerCase())) {
           if (prompt.includes(' --')) {
             const parts = prompt.split(' --');
-            prompt = `${parts[0]}, ${booster} --${parts.slice(1).join(' --')}`;
+            prompt = `${parts[0] || ''}, ${booster} --${parts.slice(1).join(' --')}`;
           } else {
             prompt = `${prompt}, ${booster}`;
           }

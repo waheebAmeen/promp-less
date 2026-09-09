@@ -1,6 +1,6 @@
 import fetch from 'node-fetch';
 
-const COHERE_API_KEY = process.env.COHERE_API_KEY || 'jWoApVlvyJh3WJ0s03pLqvzX7SZgetvbEfszcWeM';
+const COHERE_API_KEY = process.env.COHERE_API_KEY || '';
 const COHERE_API_URL = 'https://api.cohere.com/v2/chat';
 const PRIMARY_MODEL = 'command-a-plus-05-2026';
 

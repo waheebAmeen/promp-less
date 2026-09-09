@@ -4,7 +4,7 @@
  * This file contains resets, font imports, and locked-root patterns.
  */
 
-@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700;800&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=Be+Vietnam+Pro:wght@300;400;500;600;700;800;900&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -24,9 +24,14 @@ html, body, #__next {
     margin: 0px;
     padding: 0px;
     overflow: hidden;
-    font-family: 'Be Vietnam Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-family: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     transition: background-color 0.3s ease;
 }
+
+[dir="rtl"], html[dir="rtl"], body[dir="rtl"], #__next[dir="rtl"] {
+    font-family: 'IBM Plex Sans Arabic', 'IBM Plex Arabic', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
 
 @supports (height: 100dvh) {
     html, body, #__next {

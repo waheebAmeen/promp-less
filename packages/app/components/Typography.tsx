@@ -47,6 +47,10 @@ export const Typography: React.FC<TypographyProps> = ({
     <StyledText
       className={`${baseStyles} ${variantStyles} ${alignment} ${className}`}
       {...props}
+      style={[
+        { fontFamily: isRTL ? 'IBM Plex Sans Arabic, sans-serif' : 'IBM Plex Sans, sans-serif' },
+        props.style,
+      ]}
     >
       {children}
     </StyledText>

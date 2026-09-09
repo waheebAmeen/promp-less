@@ -43,10 +43,17 @@ export type NextQuestionResult =
 
 // ─── Core fetch with fallback ─────────────────────────────────────────────────
 
-async function callGroqJson(
+async function callCohereApi(
   messages: { role: string; content: string }[],
-  maxTokens = 3000,  // thinking model needs extra budget for internal reasoning
+  maxTokens = 3000,
 ): Promise<any> {
+  if (!COHERE_API_KEY || COHERE_API_KEY === 'your_cohere_api_key_here') {
+    throw new Error('missing_api_key');
+  }
+
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 35000);
+
   try {
     const response = await fetch(COHERE_API_URL, {
       method: 'POST',
@@ -61,6 +68,7 @@ async function callGroqJson(
         temperature: 0.4,
         response_format: { type: 'json_object' },
       }),
+      signal: controller.signal,
     });
 
     if (response.ok) {
@@ -77,9 +85,14 @@ async function callGroqJson(
     if (status === 503) throw new Error('loading');
     throw new Error(`http_${status}`);
   } catch (err: any) {
-    if (['401', 'loading'].some((k) => err.message?.startsWith(k))) throw err;
+    if (err.name === 'AbortError') {
+      throw new Error('network_timeout');
+    }
+    if (['401', 'loading', 'missing_api_key'].some((k) => err.message?.startsWith(k))) throw err;
     if (err.message?.startsWith('http_')) throw err;
     throw new Error(`network_error: ${err.message}`);
+  } finally {
+    clearTimeout(timeoutId);
   }
 }
 
@@ -252,7 +265,7 @@ ${historyText}
 
 هل تحتاج سؤالاً إضافياً؟ إذا نعم، ما هو السؤال الأكثر قيمة الآن؟`;
 
-  const body = await callGroqJson([
+  const body = await callCohereApi([
     { role: 'system', content: systemPrompt },
     { role: 'user', content: userMessage },
   ], 3000);
@@ -370,7 +383,7 @@ ${historyText || '(No questions were asked — infer from the idea alone)'}
 
 Synthesize a professional prompt now.`;
 
-  const body = await callGroqJson(
+  const body = await callCohereApi(
     [
       { role: 'system', content: systemPrompt },
       { role: 'user', content: userMessage },
@@ -417,7 +430,7 @@ export async function generateAiDraft(
 
 Output ONLY a JSON object: { "questions": [ { "id": "camelCase", "question": "...", "options": ["...", "..."], "allowCustom": true } ] }`;
 
-  const body = await callGroqJson([
+  const body = await callCohereApi([
     { role: 'system', content: systemMessage },
     { role: 'user', content: `Generate questions for: "${userIdea}"` },
   ], 3000);
@@ -554,7 +567,7 @@ Return JSON only:
 {
   "enhanced": "The final enhanced prompt text here"
 }`;
-  const body = await callGroqJson(
+  const body = await callCohereApi(
     [
       { role: 'system', content: systemPrompt },
       {
@@ -620,7 +633,7 @@ Return JSON only:
   "translated": "Translated text here"
 }`;
 
-  const body = await callGroqJson([
+  const body = await callCohereApi([
     { role: 'system', content: systemPrompt },
     { role: 'user', content: prompt }
   ], 2000);

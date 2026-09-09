@@ -105,7 +105,7 @@ export function OnboardingScreen({ isEditMode = false }: OnboardingScreenProps) 
     },
   ];
 
-  const currentConfig = STEP_CONFIGS[step - 1];
+  const currentConfig = STEP_CONFIGS[step - 1] ?? STEP_CONFIGS[0]!;
 
   const renderStep1 = () => (
     <View className="flex-row flex-wrap justify-center gap-4">

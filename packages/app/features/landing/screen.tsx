@@ -18,7 +18,7 @@ const ScrollReveal = ({ children, delay = 0, className = "w-full flex-col" }: { 
     if (Platform.OS === 'web' && typeof window !== 'undefined' && 'IntersectionObserver' in window && ref.current) {
       const observer = new window.IntersectionObserver(
         ([entry]) => {
-          if (entry.isIntersecting) {
+          if (entry?.isIntersecting) {
             setTimeout(() => setIsVisible(true), delay); 
             observer.disconnect();
           }

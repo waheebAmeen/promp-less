@@ -1,4 +1,5 @@
 import React from 'react';
+// @ts-ignore
 import { Svg, Path, Circle, Rect } from 'react-native-svg';
 import { styled } from 'nativewind';
 

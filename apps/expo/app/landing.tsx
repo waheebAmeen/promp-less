@@ -1,1 +1,6 @@
-export { LandingScreen as default } from 'app/features/landing/screen'
+import { HomeScreen } from 'app/features/home/screen'
+
+export default function LandingRoute() {
+  return <HomeScreen />
+}
+
